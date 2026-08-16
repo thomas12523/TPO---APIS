@@ -6,7 +6,7 @@ import java.util.Arrays;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import entity.Category;
+import com.uade.tpo.marketplace.entity.Category;
 
 public class CategoriesRepository {
     public ArrayList<Category> categories = new ArrayList<>(

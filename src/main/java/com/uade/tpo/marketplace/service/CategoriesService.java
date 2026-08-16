@@ -6,9 +6,8 @@ import java.util.ArrayList;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.repository.CategoriesRepository;
-
-import entity.Category;
 
 public class CategoriesService {
 

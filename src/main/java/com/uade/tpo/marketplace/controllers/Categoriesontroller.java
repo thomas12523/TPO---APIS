@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.service.CategoriesService;
-
-import entity.Category;
 
 
 @RestController // capa de trafico, con esto delimitamos para eso
