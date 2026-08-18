@@ -20,6 +20,15 @@ public class UsuarioRepository {
         return null;
     }
 
+    public Usuario getUsuarioByEmail(String email) {
+        for (Usuario usuario : this.usuarios) {
+            if (usuario.getEmail().equals(email)) {
+                return usuario;
+            }
+        }
+        return null;
+    }
+
     public Usuario crearUsuario(Usuario usuario) {
         this.usuarios.add(usuario);
         return usuario;

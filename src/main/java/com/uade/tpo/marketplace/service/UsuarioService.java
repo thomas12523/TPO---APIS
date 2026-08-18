@@ -17,6 +17,15 @@ public class UsuarioService {
         return usuarioRepository.getUsuarioById(usuarioId);
     }
 
+    public Usuario login(String email, String contrasenia) {
+        UsuarioRepository usuarioRepository = new UsuarioRepository();
+        Usuario usuario = usuarioRepository.getUsuarioByEmail(email);
+        if (usuario == null || !usuario.getContrasenia().equals(contrasenia)) {
+            return null;
+        }
+        return usuario;
+    }
+
     public Usuario crearUsuario(Usuario usuario) {
         UsuarioRepository usuarioRepository = new UsuarioRepository();
         return usuarioRepository.crearUsuario(usuario);

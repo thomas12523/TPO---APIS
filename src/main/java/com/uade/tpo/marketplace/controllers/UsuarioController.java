@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Usuario;
@@ -28,6 +29,12 @@ public class UsuarioController {
     public Usuario getUsuarioById(@PathVariable int usuarioId) {
         UsuarioService usuarioService = new UsuarioService();
         return usuarioService.getUsuarioById(usuarioId);
+    }
+
+    @PostMapping("login")
+    public Usuario login(@RequestParam String email, @RequestParam String contrasenia) {
+        UsuarioService usuarioService = new UsuarioService();
+        return usuarioService.login(email, contrasenia);
     }
 
     @PostMapping
