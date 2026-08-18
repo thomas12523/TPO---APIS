@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.uade.tpo.marketplace.entity.Carrito;
 
 public class CarritoRepository {
-    public static ArrayList<Carrito> carritos = new ArrayList<>();
+    public ArrayList<Carrito> carritos = new ArrayList<>();
 
     public ArrayList<Carrito> getCarritos() {
         return this.carritos;

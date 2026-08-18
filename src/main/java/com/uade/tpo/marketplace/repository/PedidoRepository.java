@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.uade.tpo.marketplace.entity.Pedido;
 
 public class PedidoRepository {
-    public static ArrayList<Pedido> pedidos = new ArrayList<>();
+    public ArrayList<Pedido> pedidos = new ArrayList<>();
 
     public ArrayList<Pedido> getPedidos() {
         return this.pedidos;

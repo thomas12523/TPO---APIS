@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.uade.tpo.marketplace.entity.Envio;
 
 public class EnvioRepository {
-    public static ArrayList<Envio> envios = new ArrayList<>();
+    public ArrayList<Envio> envios = new ArrayList<>();
 
     public ArrayList<Envio> getEnvios() {
         return this.envios;

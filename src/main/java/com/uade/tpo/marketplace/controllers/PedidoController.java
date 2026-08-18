@@ -30,6 +30,7 @@ public class PedidoController {
         return pedidoService.getPedidoById(pedidoId);
     }
 
+    //CRUD
     @PostMapping
     public Pedido crearPedido(@RequestBody Pedido entity) {
         PedidoService pedidoService = new PedidoService();
@@ -47,4 +48,6 @@ public class PedidoController {
         PedidoService pedidoService = new PedidoService();
         return pedidoService.deletePedido(pedidoId);
     }
+    //SET ESTADO
+    
 }
