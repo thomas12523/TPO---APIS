@@ -1,4 +1,10 @@
 package com.uade.tpo.marketplace.controllers;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Optional;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,40 +14,64 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
-
+import com.uade.tpo.marketplace.entity.DetallePedido;
+import com.uade.tpo.marketplace.entity.dto.DetallePedidoRequest;
+import com.uade.tpo.marketplace.exceptions.DetallePedidoDuplicateException;
+import com.uade.tpo.marketplace.service.DetallePedidoService;
 
 @RestController
 @RequestMapping("DetallePedido")
 public class DetallePedidoController {
+    private DetallePedidoService detallePedidoService;
+
+    public DetallePedidoController() {
+        detallePedidoService = new DetallePedidoService();
+    }
 
     @GetMapping
-    public String getDetallePedidos() {
-        return new String(); // cambiar luego
+    public ResponseEntity<ArrayList<DetallePedido>> getDetallesPedido() {
+        return ResponseEntity.ok(detallePedidoService.getDetallesPedido());
     }
 
     @GetMapping("{detallePedidoId}")
-    public String getDetallePedidoById(@PathVariable int detallePedidoId) {
-        return new String();
+    public ResponseEntity<DetallePedido> getDetallePedidoById(@PathVariable int detallePedidoId) {
+        Optional<DetallePedido> result = detallePedidoService.getDetallePedidoById(detallePedidoId);
+        if (result.isPresent())
+            return ResponseEntity.ok(result.get());
+
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping
-    public String crearDetallePedido(@RequestBody String entity) { // REQUESTBODY porque mando un cuerpo de solicitud
-        //TODO: process POST request
-        return new String();
+    public ResponseEntity<Object> crearDetallePedido(@RequestBody DetallePedidoRequest detallePedidoRequest) throws DetallePedidoDuplicateException {
+        DetallePedido detallePedido = DetallePedido.builder()
+                .detallePedidoId(detallePedidoRequest.getDetallePedidoId())
+                .pedidoId(detallePedidoRequest.getPedidoId())
+                .productoId(detallePedidoRequest.getProductoId())
+                .cantidad(detallePedidoRequest.getCantidad())
+                .precioUnitario(detallePedidoRequest.getPrecioUnitario())
+                .observaciones(detallePedidoRequest.getObservaciones())
+                .subtotal(detallePedidoRequest.getSubtotal())
+                .build();
+        DetallePedido result = detallePedidoService.crearDetallePedido(detallePedido);
+        return ResponseEntity.created(URI.create("/DetallePedido/" + result.getDetallePedidoId())).body(result);
     }
 
     @PutMapping("{detallePedidoId}")
-    public String actualizarDetallePedido(@PathVariable int detallePedidoId, @RequestBody String entity){
-        
-        return new String();
-    }
-    
-    @DeleteMapping("{detallePedidoId}")
-    public String deleteDetallePedido(@PathVariable int detallePedidoId) {
-        //TODO: process DELETE request
-        return new String();
+    public ResponseEntity<DetallePedido> actualizarDetallePedido(@PathVariable int detallePedidoId, @RequestBody DetallePedido entity) {
+        DetallePedido result = detallePedidoService.actualizarDetallePedido(detallePedidoId, entity);
+        if (result == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(result);
     }
 
+    @DeleteMapping("{detallePedidoId}")
+    public ResponseEntity<Void> deleteDetallePedido(@PathVariable int detallePedidoId) {
+        boolean deleted = detallePedidoService.deleteDetallePedido(detallePedidoId);
+        if (!deleted)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.noContent().build();
+    }
 }

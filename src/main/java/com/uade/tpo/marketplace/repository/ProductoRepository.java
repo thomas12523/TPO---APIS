@@ -1,23 +1,23 @@
 package com.uade.tpo.marketplace.repository;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.uade.tpo.marketplace.entity.Producto;
 
 public class ProductoRepository {
-    public ArrayList<Producto> productos = new ArrayList<>();
+    private ArrayList<Producto> productos;
+
+    public ProductoRepository() {
+        productos = new ArrayList<Producto>();
+    }
 
     public ArrayList<Producto> getProductos() {
         return this.productos;
     }
 
-    public Producto getProductoById(int productoId) {
-        for (Producto producto : this.productos) {
-            if (producto.getProductoId() == productoId) {
-                return producto;
-            }
-        }
-        return null;
+    public Optional<Producto> getProductoById(int productoId) {
+        return this.productos.stream().filter(p -> p.getProductoId() == productoId).findAny();
     }
 
     public Producto crearProducto(Producto producto) {
@@ -26,20 +26,20 @@ public class ProductoRepository {
     }
 
     public Producto actualizarProducto(int productoId, Producto productoActualizado) {
-        Producto producto = getProductoById(productoId);
-        if (producto == null) {
+        Optional<Producto> producto = getProductoById(productoId);
+        if (producto.isEmpty()) {
             return null;
         }
-        this.productos.remove(producto);
+        this.productos.remove(producto.get());
         this.productos.add(productoActualizado);
         return productoActualizado;
     }
 
     public boolean deleteProducto(int productoId) {
-        Producto producto = getProductoById(productoId);
-        if (producto == null) {
+        Optional<Producto> producto = getProductoById(productoId);
+        if (producto.isEmpty()) {
             return false;
         }
-        return this.productos.remove(producto);
+        return this.productos.remove(producto.get());
     }
 }

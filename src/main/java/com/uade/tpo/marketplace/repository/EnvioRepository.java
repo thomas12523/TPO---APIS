@@ -1,23 +1,23 @@
 package com.uade.tpo.marketplace.repository;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.uade.tpo.marketplace.entity.Envio;
 
 public class EnvioRepository {
-    public ArrayList<Envio> envios = new ArrayList<>();
+    private ArrayList<Envio> envios;
+
+    public EnvioRepository() {
+        envios = new ArrayList<Envio>();
+    }
 
     public ArrayList<Envio> getEnvios() {
         return this.envios;
     }
 
-    public Envio getEnvioById(int envioId) {
-        for (Envio envio : this.envios) {
-            if (envio.getEnvioId() == envioId) {
-                return envio;
-            }
-        }
-        return null;
+    public Optional<Envio> getEnvioById(int envioId) {
+        return this.envios.stream().filter(e -> e.getEnvioId() == envioId).findAny();
     }
 
     public Envio crearEnvio(Envio envio) {
@@ -26,20 +26,20 @@ public class EnvioRepository {
     }
 
     public Envio actualizarEnvio(int envioId, Envio envioActualizado) {
-        Envio envio = getEnvioById(envioId);
-        if (envio == null) {
+        Optional<Envio> envio = getEnvioById(envioId);
+        if (envio.isEmpty()) {
             return null;
         }
-        this.envios.remove(envio);
+        this.envios.remove(envio.get());
         this.envios.add(envioActualizado);
         return envioActualizado;
     }
 
     public boolean deleteEnvio(int envioId) {
-        Envio envio = getEnvioById(envioId);
-        if (envio == null) {
+        Optional<Envio> envio = getEnvioById(envioId);
+        if (envio.isEmpty()) {
             return false;
         }
-        return this.envios.remove(envio);
+        return this.envios.remove(envio.get());
     }
 }

@@ -1,40 +1,38 @@
 package com.uade.tpo.marketplace.service;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import java.util.ArrayList;
+import java.util.Optional;
+
+import com.uade.tpo.marketplace.entity.DetallePedido;
+import com.uade.tpo.marketplace.exceptions.DetallePedidoDuplicateException;
+import com.uade.tpo.marketplace.repository.DetallePedidoRepository;
 
 public class DetallePedidoService {
-    
-    @GetMapping
-    public String getDetallePedidos() {
-        return new String(); // cambiar luego
+    private DetallePedidoRepository detallePedidoRepository;
+
+    public DetallePedidoService() {
+        detallePedidoRepository = new DetallePedidoRepository();
     }
 
-    @GetMapping("{detallePedidoId}")
-    public String getDetallePedidoById(@PathVariable int detallePedidoId) {
-        return new String();
+    public ArrayList<DetallePedido> getDetallesPedido() {
+        return detallePedidoRepository.getDetallesPedido();
     }
 
-    @PostMapping
-    public String crearDetallePedido(@RequestBody String entity) { // REQUESTBODY porque mando un cuerpo de solicitud
-        //TODO: process POST request
-        return entity;
+    public Optional<DetallePedido> getDetallePedidoById(int detallePedidoId) {
+        return detallePedidoRepository.getDetallePedidoById(detallePedidoId);
     }
 
-    @PutMapping("{detallePedidoId}")
-    public String actualizarDetallePedido(@PathVariable int detallePedidoId, @RequestBody String entity){
-        
-        return new String();
-    }
-    
-    @DeleteMapping("{detallePedidoId}")
-    public String deleteDetallePedido(@PathVariable int detallePedidoId) {
-        //TODO: process DELETE request
-        return new String();
+    public DetallePedido crearDetallePedido(DetallePedido detallePedido) throws DetallePedidoDuplicateException {
+        if (detallePedidoRepository.getDetallePedidoById(detallePedido.getDetallePedidoId()).isPresent())
+            throw new DetallePedidoDuplicateException();
+        return detallePedidoRepository.crearDetallePedido(detallePedido);
     }
 
+    public DetallePedido actualizarDetallePedido(int detallePedidoId, DetallePedido detallePedido) {
+        return detallePedidoRepository.actualizarDetallePedido(detallePedidoId, detallePedido);
+    }
+
+    public boolean deleteDetallePedido(int detallePedidoId) {
+        return detallePedidoRepository.deleteDetallePedido(detallePedidoId);
+    }
 }

@@ -1,43 +1,46 @@
 package com.uade.tpo.marketplace.service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.uade.tpo.marketplace.entity.Usuario;
+import com.uade.tpo.marketplace.exceptions.UsuarioDuplicateException;
 import com.uade.tpo.marketplace.repository.UsuarioRepository;
 
 public class UsuarioService {
+    private UsuarioRepository usuarioRepository;
+
+    public UsuarioService() {
+        usuarioRepository = new UsuarioRepository();
+    }
 
     public ArrayList<Usuario> getUsuarios() {
-        UsuarioRepository usuarioRepository = new UsuarioRepository();
         return usuarioRepository.getUsuarios();
     }
 
-    public Usuario getUsuarioById(int usuarioId) {
-        UsuarioRepository usuarioRepository = new UsuarioRepository();
+    public Optional<Usuario> getUsuarioById(int usuarioId) {
         return usuarioRepository.getUsuarioById(usuarioId);
     }
 
-    public Usuario login(String email, String contrasenia) {
-        UsuarioRepository usuarioRepository = new UsuarioRepository();
-        Usuario usuario = usuarioRepository.getUsuarioByEmail(email);
-        if (usuario == null || !usuario.getContrasenia().equals(contrasenia)) {
-            return null;
+    public Optional<Usuario> login(String email, String contrasenia) {
+        Optional<Usuario> usuario = usuarioRepository.getUsuarioByEmail(email);
+        if (usuario.isEmpty() || !usuario.get().getContrasenia().equals(contrasenia)) {
+            return Optional.empty();
         }
         return usuario;
     }
 
-    public Usuario crearUsuario(Usuario usuario) {
-        UsuarioRepository usuarioRepository = new UsuarioRepository();
+    public Usuario crearUsuario(Usuario usuario) throws UsuarioDuplicateException {
+        if (usuarioRepository.getUsuarioById(usuario.getUsuarioId()).isPresent())
+            throw new UsuarioDuplicateException();
         return usuarioRepository.crearUsuario(usuario);
     }
 
     public Usuario actualizarUsuario(int usuarioId, Usuario usuario) {
-        UsuarioRepository usuarioRepository = new UsuarioRepository();
         return usuarioRepository.actualizarUsuario(usuarioId, usuario);
     }
 
     public boolean deleteUsuario(int usuarioId) {
-        UsuarioRepository usuarioRepository = new UsuarioRepository();
         return usuarioRepository.deleteUsuario(usuarioId);
     }
 }

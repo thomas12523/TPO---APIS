@@ -1,39 +1,45 @@
 package com.uade.tpo.marketplace.repository;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import java.util.ArrayList;
+import java.util.Optional;
+
+import com.uade.tpo.marketplace.entity.DetallePedido;
 
 public class DetallePedidoRepository {
-    @GetMapping
-    public String getDetallePedidos() {
-        return null; // cambiar luego
+    private ArrayList<DetallePedido> detallesPedido;
+
+    public DetallePedidoRepository() {
+        detallesPedido = new ArrayList<DetallePedido>();
     }
 
-    @GetMapping("{detallePedidoId}")
-    public String getDetallePedidoById(@PathVariable int detallePedidoId) {
-        return null;
+    public ArrayList<DetallePedido> getDetallesPedido() {
+        return this.detallesPedido;
     }
 
-    @PostMapping
-    public String crearDetallePedido(@RequestBody String entity) { // REQUESTBODY porque mando un cuerpo de solicitud
-        //TODO: process POST request
-        return null;
+    public Optional<DetallePedido> getDetallePedidoById(int detallePedidoId) {
+        return this.detallesPedido.stream().filter(d -> d.getDetallePedidoId() == detallePedidoId).findAny();
     }
 
-    @PutMapping("{detallePedidoId}")
-    public String actualizarDetallePedido(@PathVariable int detallePedidoId, @RequestBody String entity){
-        
-        return null;
-    }
-    
-    @DeleteMapping("{detallePedidoId}")
-    public String deleteDetallePedido(@PathVariable int detallePedidoId) {
-        //TODO: process DELETE request
-        return null;
+    public DetallePedido crearDetallePedido(DetallePedido detallePedido) {
+        this.detallesPedido.add(detallePedido);
+        return detallePedido;
     }
 
+    public DetallePedido actualizarDetallePedido(int detallePedidoId, DetallePedido detallePedidoActualizado) {
+        Optional<DetallePedido> detallePedido = getDetallePedidoById(detallePedidoId);
+        if (detallePedido.isEmpty()) {
+            return null;
+        }
+        this.detallesPedido.remove(detallePedido.get());
+        this.detallesPedido.add(detallePedidoActualizado);
+        return detallePedidoActualizado;
+    }
+
+    public boolean deleteDetallePedido(int detallePedidoId) {
+        Optional<DetallePedido> detallePedido = getDetallePedidoById(detallePedidoId);
+        if (detallePedido.isEmpty()) {
+            return false;
+        }
+        return this.detallesPedido.remove(detallePedido.get());
+    }
 }

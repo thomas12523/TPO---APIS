@@ -1,23 +1,23 @@
 package com.uade.tpo.marketplace.repository;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.uade.tpo.marketplace.entity.Carrito;
 
 public class CarritoRepository {
-    public ArrayList<Carrito> carritos = new ArrayList<>();
+    private ArrayList<Carrito> carritos;
+
+    public CarritoRepository() {
+        carritos = new ArrayList<Carrito>();
+    }
 
     public ArrayList<Carrito> getCarritos() {
         return this.carritos;
     }
 
-    public Carrito getCarritoById(int carritoId) {
-        for (Carrito carrito : this.carritos) {
-            if (carrito.getCarritoId() == carritoId) {
-                return carrito;
-            }
-        }
-        return null;
+    public Optional<Carrito> getCarritoById(int carritoId) {
+        return this.carritos.stream().filter(c -> c.getCarritoId() == carritoId).findAny();
     }
 
     public Carrito crearCarrito(Carrito carrito) {
@@ -26,20 +26,20 @@ public class CarritoRepository {
     }
 
     public Carrito actualizarCarrito(int carritoId, Carrito carritoActualizado) {
-        Carrito carrito = getCarritoById(carritoId);
-        if (carrito == null) {
+        Optional<Carrito> carrito = getCarritoById(carritoId);
+        if (carrito.isEmpty()) {
             return null;
         }
-        this.carritos.remove(carrito);
+        this.carritos.remove(carrito.get());
         this.carritos.add(carritoActualizado);
         return carritoActualizado;
     }
 
     public boolean deleteCarrito(int carritoId) {
-        Carrito carrito = getCarritoById(carritoId);
-        if (carrito == null) {
+        Optional<Carrito> carrito = getCarritoById(carritoId);
+        if (carrito.isEmpty()) {
             return false;
         }
-        return this.carritos.remove(carrito);
+        return this.carritos.remove(carrito.get());
     }
 }

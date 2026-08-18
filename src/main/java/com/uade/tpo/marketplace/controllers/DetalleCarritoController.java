@@ -1,7 +1,10 @@
 package com.uade.tpo.marketplace.controllers;
 
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,39 +15,60 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.DetalleCarrito;
+import com.uade.tpo.marketplace.entity.dto.DetalleCarritoRequest;
+import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
 import com.uade.tpo.marketplace.service.DetalleCarritoService;
 
 @RestController
 @RequestMapping("DetalleCarrito")
 public class DetalleCarritoController {
+    private DetalleCarritoService detalleCarritoService;
+
+    public DetalleCarritoController() {
+        detalleCarritoService = new DetalleCarritoService();
+    }
 
     @GetMapping
-    public ArrayList<DetalleCarrito> getDetallesCarrito() {
-        DetalleCarritoService detalleCarritoService = new DetalleCarritoService();
-        return detalleCarritoService.getDetallesCarrito();
+    public ResponseEntity<ArrayList<DetalleCarrito>> getDetallesCarrito() {
+        return ResponseEntity.ok(detalleCarritoService.getDetallesCarrito());
     }
 
     @GetMapping("{carritoId}/{productoId}")
-    public DetalleCarrito getDetalleCarritoById(@PathVariable int carritoId, @PathVariable int productoId) {
-        DetalleCarritoService detalleCarritoService = new DetalleCarritoService();
-        return detalleCarritoService.getDetalleCarritoById(carritoId, productoId);
+    public ResponseEntity<DetalleCarrito> getDetalleCarritoById(@PathVariable int carritoId, @PathVariable int productoId) {
+        Optional<DetalleCarrito> result = detalleCarritoService.getDetalleCarritoById(carritoId, productoId);
+        if (result.isPresent())
+            return ResponseEntity.ok(result.get());
+
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping
-    public DetalleCarrito crearDetalleCarrito(@RequestBody DetalleCarrito entity) {
-        DetalleCarritoService detalleCarritoService = new DetalleCarritoService();
-        return detalleCarritoService.crearDetalleCarrito(entity);
+    public ResponseEntity<Object> crearDetalleCarrito(@RequestBody DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException {
+        DetalleCarrito detalleCarrito = DetalleCarrito.builder()
+                .carritoId(detalleCarritoRequest.getCarritoId())
+                .productoId(detalleCarritoRequest.getProductoId())
+                .cantidad(detalleCarritoRequest.getCantidad())
+                .precioUnitario(detalleCarritoRequest.getPrecioUnitario())
+                .build();
+        DetalleCarrito result = detalleCarritoService.crearDetalleCarrito(detalleCarrito);
+        return ResponseEntity.created(URI.create("/DetalleCarrito/" + result.getCarritoId() + "/" + result.getProductoId())).body(result);
     }
 
     @PutMapping("{carritoId}/{productoId}")
-    public DetalleCarrito actualizarDetalleCarrito(@PathVariable int carritoId, @PathVariable int productoId, @RequestBody DetalleCarrito entity) {
-        DetalleCarritoService detalleCarritoService = new DetalleCarritoService();
-        return detalleCarritoService.actualizarDetalleCarrito(carritoId, productoId, entity);
+    public ResponseEntity<DetalleCarrito> actualizarDetalleCarrito(@PathVariable int carritoId, @PathVariable int productoId, @RequestBody DetalleCarrito entity) {
+        DetalleCarrito result = detalleCarritoService.actualizarDetalleCarrito(carritoId, productoId, entity);
+        if (result == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(result);
     }
 
     @DeleteMapping("{carritoId}/{productoId}")
-    public boolean deleteDetalleCarrito(@PathVariable int carritoId, @PathVariable int productoId) {
-        DetalleCarritoService detalleCarritoService = new DetalleCarritoService();
-        return detalleCarritoService.deleteDetalleCarrito(carritoId, productoId);
+    public ResponseEntity<Void> deleteDetalleCarrito(@PathVariable int carritoId, @PathVariable int productoId) {
+        boolean deleted = detalleCarritoService.deleteDetalleCarrito(carritoId, productoId);
+        if (!deleted)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.noContent().build();
     }
 }

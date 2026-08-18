@@ -1,23 +1,23 @@
 package com.uade.tpo.marketplace.repository;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.uade.tpo.marketplace.entity.Resenia;
 
 public class ReseniaRepository {
-    public ArrayList<Resenia> resenias = new ArrayList<>();
+    private ArrayList<Resenia> resenias;
+
+    public ReseniaRepository() {
+        resenias = new ArrayList<Resenia>();
+    }
 
     public ArrayList<Resenia> getResenias() {
         return this.resenias;
     }
 
-    public Resenia getReseniaById(int reseniaId) {
-        for (Resenia resenia : this.resenias) {
-            if (resenia.getReseniaId() == reseniaId) {
-                return resenia;
-            }
-        }
-        return null;
+    public Optional<Resenia> getReseniaById(int reseniaId) {
+        return this.resenias.stream().filter(r -> r.getReseniaId() == reseniaId).findAny();
     }
 
     public Resenia crearResenia(Resenia resenia) {
@@ -26,20 +26,20 @@ public class ReseniaRepository {
     }
 
     public Resenia actualizarResenia(int reseniaId, Resenia reseniaActualizada) {
-        Resenia resenia = getReseniaById(reseniaId);
-        if (resenia == null) {
+        Optional<Resenia> resenia = getReseniaById(reseniaId);
+        if (resenia.isEmpty()) {
             return null;
         }
-        this.resenias.remove(resenia);
+        this.resenias.remove(resenia.get());
         this.resenias.add(reseniaActualizada);
         return reseniaActualizada;
     }
 
     public boolean deleteResenia(int reseniaId) {
-        Resenia resenia = getReseniaById(reseniaId);
-        if (resenia == null) {
+        Optional<Resenia> resenia = getReseniaById(reseniaId);
+        if (resenia.isEmpty()) {
             return false;
         }
-        return this.resenias.remove(resenia);
+        return this.resenias.remove(resenia.get());
     }
 }

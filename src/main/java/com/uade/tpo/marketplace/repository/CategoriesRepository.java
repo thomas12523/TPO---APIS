@@ -2,31 +2,48 @@ package com.uade.tpo.marketplace.repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import java.util.Optional;
 
 import com.uade.tpo.marketplace.entity.Category;
 
 public class CategoriesRepository {
-    public ArrayList<Category> categories = new ArrayList<>(
-        Arrays.asList(Category.builder().nombre("caballos").id(1).build(),
-        Category.builder().nombre("peluches").id(2).build(),
-        Category.builder().nombre("cafe").id(3).build())
-    );
+    private ArrayList<Category> categories;
+
+    public CategoriesRepository() {
+        categories = new ArrayList<Category>(
+                Arrays.asList(Category.builder().nombre("caballos").id(1).build(),
+                        Category.builder().nombre("peluches").id(2).build(),
+                        Category.builder().nombre("cafe").id(3).build()));
+    }
 
     public ArrayList<Category> getCategories() {
         return this.categories;
     }
 
-    public String getCategoriesById(@PathVariable int categoryId) { //PATH VARIABLE es porque va a cambiar y que lo vaya cambiando
-        return null;
-    }
-    
-    public String createCategory(@RequestBody String entity) { // REQUESTBODY porque mando un cuerpo de solicitud
-        //TODO: process POST request
-        
-        return null;
+    public Optional<Category> getCategoryById(int categoryId) {
+        return this.categories.stream().filter(c -> c.getId() == categoryId).findAny();
     }
 
+    public Category createCategory(Category category) {
+        this.categories.add(category);
+        return category;
+    }
+
+    public Category actualizarCategory(int categoryId, Category categoryActualizada) {
+        Optional<Category> category = getCategoryById(categoryId);
+        if (category.isEmpty()) {
+            return null;
+        }
+        this.categories.remove(category.get());
+        this.categories.add(categoryActualizada);
+        return categoryActualizada;
+    }
+
+    public boolean deleteCategory(int categoryId) {
+        Optional<Category> category = getCategoryById(categoryId);
+        if (category.isEmpty()) {
+            return false;
+        }
+        return this.categories.remove(category.get());
+    }
 }

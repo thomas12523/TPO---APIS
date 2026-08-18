@@ -1,0 +1,10 @@
+package com.uade.tpo.marketplace.entity.dto;
+
+import lombok.Data;
+
+@Data
+public class ImagenRequest {
+    private int imagenId;
+    private int productoId;
+    private String imagenUrl;
+}

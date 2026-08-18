@@ -1,23 +1,23 @@
 package com.uade.tpo.marketplace.repository;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import com.uade.tpo.marketplace.entity.Pedido;
 
 public class PedidoRepository {
-    public ArrayList<Pedido> pedidos = new ArrayList<>();
+    private ArrayList<Pedido> pedidos;
+
+    public PedidoRepository() {
+        pedidos = new ArrayList<Pedido>();
+    }
 
     public ArrayList<Pedido> getPedidos() {
         return this.pedidos;
     }
 
-    public Pedido getPedidoById(int pedidoId) {
-        for (Pedido pedido : this.pedidos) {
-            if (pedido.getPedidoId() == pedidoId) {
-                return pedido;
-            }
-        }
-        return null;
+    public Optional<Pedido> getPedidoById(int pedidoId) {
+        return this.pedidos.stream().filter(p -> p.getPedidoId() == pedidoId).findAny();
     }
 
     public Pedido crearPedido(Pedido pedido) {
@@ -26,20 +26,20 @@ public class PedidoRepository {
     }
 
     public Pedido actualizarPedido(int pedidoId, Pedido pedidoActualizado) {
-        Pedido pedido = getPedidoById(pedidoId);
-        if (pedido == null) {
+        Optional<Pedido> pedido = getPedidoById(pedidoId);
+        if (pedido.isEmpty()) {
             return null;
         }
-        this.pedidos.remove(pedido);
+        this.pedidos.remove(pedido.get());
         this.pedidos.add(pedidoActualizado);
         return pedidoActualizado;
     }
 
     public boolean deletePedido(int pedidoId) {
-        Pedido pedido = getPedidoById(pedidoId);
-        if (pedido == null) {
+        Optional<Pedido> pedido = getPedidoById(pedidoId);
+        if (pedido.isEmpty()) {
             return false;
         }
-        return this.pedidos.remove(pedido);
+        return this.pedidos.remove(pedido.get());
     }
 }
