@@ -1,4 +1,4 @@
-package com.uade.tpo.marketplace.service;
+package com.uade.tpo.marketplace.service.categories;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +12,6 @@ public interface CategoriesService {
     
     public List<Category> getCategories();
     public Optional<Category> getCategoryById(int categoryId);
-    //public Category createCategory(int newCategoryId, String nombre) throws CategoryDuplicateException;
+    public Category createCategory(String nombre) throws CategoryDuplicateException;
     
 }

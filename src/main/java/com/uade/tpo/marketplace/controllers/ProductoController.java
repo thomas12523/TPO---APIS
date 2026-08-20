@@ -1,9 +1,10 @@
 package com.uade.tpo.marketplace.controllers;
 
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,19 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.ProductoRequest;
 import com.uade.tpo.marketplace.exceptions.ProductoDuplicateException;
-import com.uade.tpo.marketplace.service.ProductoService;
+import com.uade.tpo.marketplace.service.producto.ProductoService;
 
 @RestController
 @RequestMapping("Producto")
 public class ProductoController {
+
+    @Autowired
     private ProductoService productoService;
 
-    public ProductoController() {
-        productoService = new ProductoService();
-    }
-
     @GetMapping
-    public ResponseEntity<ArrayList<Producto>> getProductos() {
+    public ResponseEntity<List<Producto>> getProductos() {
         return ResponseEntity.ok(productoService.getProductos());
     }
 
@@ -44,22 +43,13 @@ public class ProductoController {
 
     @PostMapping
     public ResponseEntity<Object> crearProducto(@RequestBody ProductoRequest productoRequest) throws ProductoDuplicateException {
-        Producto producto = Producto.builder()
-                .productoId(productoRequest.getProductoId())
-                .categoriaId(productoRequest.getCategoriaId())
-                .nombreProducto(productoRequest.getNombreProducto())
-                .descripcion(productoRequest.getDescripcion())
-                .precioUnitario(productoRequest.getPrecioUnitario())
-                .stock(productoRequest.getStock())
-                .imagenUrl(productoRequest.getImagenUrl())
-                .build();
-        Producto result = productoService.crearProducto(producto);
+        Producto result = productoService.crearProducto(productoRequest);
         return ResponseEntity.created(URI.create("/Producto/" + result.getProductoId())).body(result);
     }
 
     @PutMapping("{productoId}")
-    public ResponseEntity<Producto> actualizarProducto(@PathVariable int productoId, @RequestBody Producto entity) {
-        Producto result = productoService.actualizarProducto(productoId, entity);
+    public ResponseEntity<Producto> actualizarProducto(@PathVariable int productoId, @RequestBody ProductoRequest productoRequest) {
+        Producto result = productoService.actualizarProducto(productoId, productoRequest);
         if (result == null)
             return ResponseEntity.notFound().build();
 

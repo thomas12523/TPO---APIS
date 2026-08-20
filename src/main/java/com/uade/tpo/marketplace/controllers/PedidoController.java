@@ -1,9 +1,10 @@
 package com.uade.tpo.marketplace.controllers;
 
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,20 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.dto.PedidoRequest;
-import com.uade.tpo.marketplace.exceptions.PedidoDuplicateException;
-import com.uade.tpo.marketplace.service.PedidoService;
+import com.uade.tpo.marketplace.service.pedido.PedidoService;
 
 @RestController
 @RequestMapping("Pedido")
 public class PedidoController {
+
+    @Autowired
     private PedidoService pedidoService;
 
-    public PedidoController() {
-        pedidoService = new PedidoService();
-    }
-
     @GetMapping
-    public ResponseEntity<ArrayList<Pedido>> getPedidos() {
+    public ResponseEntity<List<Pedido>> getPedidos() {
         return ResponseEntity.ok(pedidoService.getPedidos());
     }
 
@@ -43,23 +41,14 @@ public class PedidoController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> crearPedido(@RequestBody PedidoRequest pedidoRequest) throws PedidoDuplicateException {
-        Pedido pedido = Pedido.builder()
-                .pedidoId(pedidoRequest.getPedidoId())
-                .usuarioId(pedidoRequest.getUsuarioId())
-                .fechaCreacion(pedidoRequest.getFechaCreacion())
-                .estado(pedidoRequest.getEstado())
-                .subtotal(pedidoRequest.getSubtotal())
-                .total(pedidoRequest.getTotal())
-                .metodoPago(pedidoRequest.getMetodoPago())
-                .build();
-        Pedido result = pedidoService.crearPedido(pedido);
+    public ResponseEntity<Object> crearPedido(@RequestBody PedidoRequest pedidoRequest) {
+        Pedido result = pedidoService.crearPedido(pedidoRequest);
         return ResponseEntity.created(URI.create("/Pedido/" + result.getPedidoId())).body(result);
     }
 
     @PutMapping("{pedidoId}")
-    public ResponseEntity<Pedido> actualizarPedido(@PathVariable int pedidoId, @RequestBody Pedido entity) {
-        Pedido result = pedidoService.actualizarPedido(pedidoId, entity);
+    public ResponseEntity<Pedido> actualizarPedido(@PathVariable int pedidoId, @RequestBody PedidoRequest pedidoRequest) {
+        Pedido result = pedidoService.actualizarPedido(pedidoId, pedidoRequest);
         if (result == null)
             return ResponseEntity.notFound().build();
 

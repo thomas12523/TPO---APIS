@@ -1,0 +1,66 @@
+package com.uade.tpo.marketplace.service.carrito;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.uade.tpo.marketplace.entity.Carrito;
+import com.uade.tpo.marketplace.entity.Usuario;
+import com.uade.tpo.marketplace.entity.dto.CarritoRequest;
+import com.uade.tpo.marketplace.repository.CarritoRepository;
+import com.uade.tpo.marketplace.repository.UsuarioRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+
+@Service
+public class CarritoServiceImpl implements CarritoService {
+
+    @Autowired
+    private CarritoRepository carritoRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    public List<Carrito> getCarritos() {
+        return carritoRepository.findAll();
+    }
+
+    public Optional<Carrito> getCarritoById(int carritoId) {
+        return carritoRepository.findById(carritoId);
+    }
+
+    public Carrito crearCarrito(CarritoRequest carritoRequest) {
+        Usuario usuario = usuarioRepository.findById(carritoRequest.getUsuarioId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
+        Carrito carrito = Carrito.builder()
+                .usuario(usuario)
+                .fechaCarrito(carritoRequest.getFechaCarrito())
+                .build();
+        return carritoRepository.save(carrito);
+    }
+
+    public Carrito actualizarCarrito(int carritoId, CarritoRequest carritoRequest) {
+        Optional<Carrito> existente = carritoRepository.findById(carritoId);
+        if (existente.isEmpty())
+            return null;
+
+        Usuario usuario = usuarioRepository.findById(carritoRequest.getUsuarioId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+
+        Carrito carrito = existente.get();
+        carrito.setUsuario(usuario);
+        carrito.setFechaCarrito(carritoRequest.getFechaCarrito());
+        return carritoRepository.save(carrito);
+    }
+
+    public boolean deleteCarrito(int carritoId) {
+        if (carritoRepository.findById(carritoId).isEmpty())
+            return false;
+
+        carritoRepository.deleteById(carritoId);
+        return true;
+    }
+}

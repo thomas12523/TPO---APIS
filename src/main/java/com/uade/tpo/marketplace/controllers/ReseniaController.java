@@ -1,9 +1,10 @@
 package com.uade.tpo.marketplace.controllers;
 
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,19 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.Resenia;
 import com.uade.tpo.marketplace.entity.dto.ReseniaRequest;
 import com.uade.tpo.marketplace.exceptions.ReseniaDuplicateException;
-import com.uade.tpo.marketplace.service.ReseniaService;
+import com.uade.tpo.marketplace.service.resenia.ReseniaService;
 
 @RestController
 @RequestMapping("Resenia")
 public class ReseniaController {
+
+    @Autowired
     private ReseniaService reseniaService;
 
-    public ReseniaController() {
-        reseniaService = new ReseniaService();
-    }
-
     @GetMapping
-    public ResponseEntity<ArrayList<Resenia>> getResenias() {
+    public ResponseEntity<List<Resenia>> getResenias() {
         return ResponseEntity.ok(reseniaService.getResenias());
     }
 
@@ -44,21 +43,13 @@ public class ReseniaController {
 
     @PostMapping
     public ResponseEntity<Object> crearResenia(@RequestBody ReseniaRequest reseniaRequest) throws ReseniaDuplicateException {
-        Resenia resenia = Resenia.builder()
-                .reseniaId(reseniaRequest.getReseniaId())
-                .usuarioId(reseniaRequest.getUsuarioId())
-                .productoId(reseniaRequest.getProductoId())
-                .calificacion(reseniaRequest.getCalificacion())
-                .comentario(reseniaRequest.getComentario())
-                .fechaCreacion(reseniaRequest.getFechaCreacion())
-                .build();
-        Resenia result = reseniaService.crearResenia(resenia);
+        Resenia result = reseniaService.crearResenia(reseniaRequest);
         return ResponseEntity.created(URI.create("/Resenia/" + result.getReseniaId())).body(result);
     }
 
     @PutMapping("{reseniaId}")
-    public ResponseEntity<Resenia> actualizarResenia(@PathVariable int reseniaId, @RequestBody Resenia entity) {
-        Resenia result = reseniaService.actualizarResenia(reseniaId, entity);
+    public ResponseEntity<Resenia> actualizarResenia(@PathVariable int reseniaId, @RequestBody ReseniaRequest reseniaRequest) {
+        Resenia result = reseniaService.actualizarResenia(reseniaId, reseniaRequest);
         if (result == null)
             return ResponseEntity.notFound().build();
 

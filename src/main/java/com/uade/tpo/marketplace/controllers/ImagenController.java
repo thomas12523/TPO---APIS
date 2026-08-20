@@ -1,9 +1,10 @@
 package com.uade.tpo.marketplace.controllers;
 
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,19 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.Imagen;
 import com.uade.tpo.marketplace.entity.dto.ImagenRequest;
 import com.uade.tpo.marketplace.exceptions.ImagenDuplicateException;
-import com.uade.tpo.marketplace.service.ImagenService;
+import com.uade.tpo.marketplace.service.imagen.ImagenService;
 
 @RestController
 @RequestMapping("Imagen")
 public class ImagenController {
+
+    @Autowired
     private ImagenService imagenService;
 
-    public ImagenController() {
-        imagenService = new ImagenService();
-    }
-
     @GetMapping
-    public ResponseEntity<ArrayList<Imagen>> getImagenes() {
+    public ResponseEntity<List<Imagen>> getImagenes() {
         return ResponseEntity.ok(imagenService.getImagenes());
     }
 
@@ -44,18 +43,13 @@ public class ImagenController {
 
     @PostMapping
     public ResponseEntity<Object> crearImagen(@RequestBody ImagenRequest imagenRequest) throws ImagenDuplicateException {
-        Imagen imagen = Imagen.builder()
-                .imagenId(imagenRequest.getImagenId())
-                .productoId(imagenRequest.getProductoId())
-                .imagenUrl(imagenRequest.getImagenUrl())
-                .build();
-        Imagen result = imagenService.crearImagen(imagen);
+        Imagen result = imagenService.crearImagen(imagenRequest);
         return ResponseEntity.created(URI.create("/Imagen/" + result.getImagenId())).body(result);
     }
 
     @PutMapping("{imagenId}")
-    public ResponseEntity<Imagen> actualizarImagen(@PathVariable int imagenId, @RequestBody Imagen entity) {
-        Imagen result = imagenService.actualizarImagen(imagenId, entity);
+    public ResponseEntity<Imagen> actualizarImagen(@PathVariable int imagenId, @RequestBody ImagenRequest imagenRequest) {
+        Imagen result = imagenService.actualizarImagen(imagenId, imagenRequest);
         if (result == null)
             return ResponseEntity.notFound().build();
 

@@ -1,0 +1,67 @@
+package com.uade.tpo.marketplace.service.imagen;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.uade.tpo.marketplace.entity.Imagen;
+import com.uade.tpo.marketplace.entity.Producto;
+import com.uade.tpo.marketplace.entity.dto.ImagenRequest;
+import com.uade.tpo.marketplace.exceptions.ImagenDuplicateException;
+import com.uade.tpo.marketplace.repository.ImagenRepository;
+import com.uade.tpo.marketplace.repository.ProductoRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+
+@Service
+public class ImagenServiceImpl implements ImagenService {
+
+    @Autowired
+    private ImagenRepository imagenRepository;
+
+    @Autowired
+    private ProductoRepository productoRepository;
+
+    public List<Imagen> getImagenes() {
+        return imagenRepository.findAll();
+    }
+
+    public Optional<Imagen> getImagenById(int imagenId) {
+        return imagenRepository.findById(imagenId);
+    }
+
+    public Imagen crearImagen(ImagenRequest imagenRequest) throws ImagenDuplicateException {
+        if (imagenRepository.findByProducto_ProductoIdAndImagenUrl(
+                imagenRequest.getProductoId(), imagenRequest.getImagenUrl()).isPresent())
+            throw new ImagenDuplicateException();
+
+        Producto producto = productoRepository.findById(imagenRequest.getProductoId())
+                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+
+        Imagen imagen = Imagen.builder()
+                .producto(producto)
+                .imagenUrl(imagenRequest.getImagenUrl())
+                .build();
+        return imagenRepository.save(imagen);
+    }
+
+    public Imagen actualizarImagen(int imagenId, ImagenRequest imagenRequest) {
+        Optional<Imagen> existente = imagenRepository.findById(imagenId);
+        if (existente.isEmpty())
+            return null;
+
+        Imagen imagen = existente.get();
+        imagen.setImagenUrl(imagenRequest.getImagenUrl());
+        return imagenRepository.save(imagen);
+    }
+
+    public boolean deleteImagen(int imagenId) {
+        if (imagenRepository.findById(imagenId).isEmpty())
+            return false;
+
+        imagenRepository.deleteById(imagenId);
+        return true;
+    }
+}

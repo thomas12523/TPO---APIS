@@ -1,9 +1,10 @@
 package com.uade.tpo.marketplace.controllers;
 
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,20 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Carrito;
 import com.uade.tpo.marketplace.entity.dto.CarritoRequest;
-import com.uade.tpo.marketplace.exceptions.CarritoDuplicateException;
-import com.uade.tpo.marketplace.service.CarritoService;
+import com.uade.tpo.marketplace.service.carrito.CarritoService;
 
 @RestController
 @RequestMapping("Carrito")
 public class CarritoController {
+
+    @Autowired
     private CarritoService carritoService;
 
-    public CarritoController() {
-        carritoService = new CarritoService();
-    }
-
     @GetMapping
-    public ResponseEntity<ArrayList<Carrito>> getCarritos() {
+    public ResponseEntity<List<Carrito>> getCarritos() {
         return ResponseEntity.ok(carritoService.getCarritos());
     }
 
@@ -43,19 +41,14 @@ public class CarritoController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> crearCarrito(@RequestBody CarritoRequest carritoRequest) throws CarritoDuplicateException {
-        Carrito carrito = Carrito.builder()
-                .carritoId(carritoRequest.getCarritoId())
-                .usuarioId(carritoRequest.getUsuarioId())
-                .fechaCarrito(carritoRequest.getFechaCarrito())
-                .build();
-        Carrito result = carritoService.crearCarrito(carrito);
+    public ResponseEntity<Object> crearCarrito(@RequestBody CarritoRequest carritoRequest) {
+        Carrito result = carritoService.crearCarrito(carritoRequest);
         return ResponseEntity.created(URI.create("/Carrito/" + result.getCarritoId())).body(result);
     }
 
     @PutMapping("{carritoId}")
-    public ResponseEntity<Carrito> actualizarCarrito(@PathVariable int carritoId, @RequestBody Carrito entity) {
-        Carrito result = carritoService.actualizarCarrito(carritoId, entity);
+    public ResponseEntity<Carrito> actualizarCarrito(@PathVariable int carritoId, @RequestBody CarritoRequest carritoRequest) {
+        Carrito result = carritoService.actualizarCarrito(carritoId, carritoRequest);
         if (result == null)
             return ResponseEntity.notFound().build();
 

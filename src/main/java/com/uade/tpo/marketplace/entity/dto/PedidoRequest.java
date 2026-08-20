@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class PedidoRequest {
-    private int pedidoId;
     private int usuarioId;
     private String fechaCreacion;
     private String estado;

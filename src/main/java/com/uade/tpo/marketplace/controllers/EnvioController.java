@@ -1,9 +1,10 @@
 package com.uade.tpo.marketplace.controllers;
 
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,19 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.Envio;
 import com.uade.tpo.marketplace.entity.dto.EnvioRequest;
 import com.uade.tpo.marketplace.exceptions.EnvioDuplicateException;
-import com.uade.tpo.marketplace.service.EnvioService;
+import com.uade.tpo.marketplace.service.envio.EnvioService;
 
 @RestController
 @RequestMapping("Envio")
 public class EnvioController {
+
+    @Autowired
     private EnvioService envioService;
 
-    public EnvioController() {
-        envioService = new EnvioService();
-    }
-
     @GetMapping
-    public ResponseEntity<ArrayList<Envio>> getEnvios() {
+    public ResponseEntity<List<Envio>> getEnvios() {
         return ResponseEntity.ok(envioService.getEnvios());
     }
 
@@ -44,20 +43,13 @@ public class EnvioController {
 
     @PostMapping
     public ResponseEntity<Object> crearEnvio(@RequestBody EnvioRequest envioRequest) throws EnvioDuplicateException {
-        Envio envio = Envio.builder()
-                .envioId(envioRequest.getEnvioId())
-                .pedidoId(envioRequest.getPedidoId())
-                .direccion(envioRequest.getDireccion())
-                .metodoEnvio(envioRequest.getMetodoEnvio())
-                .costoEnvio(envioRequest.getCostoEnvio())
-                .build();
-        Envio result = envioService.crearEnvio(envio);
+        Envio result = envioService.crearEnvio(envioRequest);
         return ResponseEntity.created(URI.create("/Envio/" + result.getEnvioId())).body(result);
     }
 
     @PutMapping("{envioId}")
-    public ResponseEntity<Envio> actualizarEnvio(@PathVariable int envioId, @RequestBody Envio entity) {
-        Envio result = envioService.actualizarEnvio(envioId, entity);
+    public ResponseEntity<Envio> actualizarEnvio(@PathVariable int envioId, @RequestBody EnvioRequest envioRequest) {
+        Envio result = envioService.actualizarEnvio(envioId, envioRequest);
         if (result == null)
             return ResponseEntity.notFound().build();
 

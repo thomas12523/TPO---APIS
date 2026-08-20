@@ -1,0 +1,78 @@
+package com.uade.tpo.marketplace.service.detallecarrito;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.uade.tpo.marketplace.entity.Carrito;
+import com.uade.tpo.marketplace.entity.DetalleCarrito;
+import com.uade.tpo.marketplace.entity.Producto;
+import com.uade.tpo.marketplace.entity.dto.DetalleCarritoRequest;
+import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
+import com.uade.tpo.marketplace.repository.CarritoRepository;
+import com.uade.tpo.marketplace.repository.DetalleCarritoRepository;
+import com.uade.tpo.marketplace.repository.ProductoRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+
+@Service
+public class DetalleCarritoServiceImpl implements DetalleCarritoService {
+
+    @Autowired
+    private DetalleCarritoRepository detalleCarritoRepository;
+
+    @Autowired
+    private CarritoRepository carritoRepository;
+
+    @Autowired
+    private ProductoRepository productoRepository;
+
+    public List<DetalleCarrito> getDetallesCarrito() {
+        return detalleCarritoRepository.findAll();
+    }
+
+    public Optional<DetalleCarrito> getDetalleCarritoById(int carritoId, int productoId) {
+        return detalleCarritoRepository.findByCarrito_CarritoIdAndProducto_ProductoId(carritoId, productoId);
+    }
+
+    public DetalleCarrito crearDetalleCarrito(DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException {
+        if (detalleCarritoRepository.findByCarrito_CarritoIdAndProducto_ProductoId(
+                detalleCarritoRequest.getCarritoId(), detalleCarritoRequest.getProductoId()).isPresent())
+            throw new DetalleCarritoDuplicateException();
+
+        Carrito carrito = carritoRepository.findById(detalleCarritoRequest.getCarritoId())
+                .orElseThrow(() -> new EntityNotFoundException("Carrito no encontrado"));
+        Producto producto = productoRepository.findById(detalleCarritoRequest.getProductoId())
+                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+
+        DetalleCarrito detalleCarrito = DetalleCarrito.builder()
+                .carrito(carrito)
+                .producto(producto)
+                .cantidad(detalleCarritoRequest.getCantidad())
+                .precioUnitario(detalleCarritoRequest.getPrecioUnitario())
+                .build();
+        return detalleCarritoRepository.save(detalleCarrito);
+    }
+
+    public DetalleCarrito actualizarDetalleCarrito(int carritoId, int productoId, DetalleCarritoRequest detalleCarritoRequest) {
+        Optional<DetalleCarrito> existente = detalleCarritoRepository.findByCarrito_CarritoIdAndProducto_ProductoId(carritoId, productoId);
+        if (existente.isEmpty())
+            return null;
+
+        DetalleCarrito detalleCarrito = existente.get();
+        detalleCarrito.setCantidad(detalleCarritoRequest.getCantidad());
+        detalleCarrito.setPrecioUnitario(detalleCarritoRequest.getPrecioUnitario());
+        return detalleCarritoRepository.save(detalleCarrito);
+    }
+
+    public boolean deleteDetalleCarrito(int carritoId, int productoId) {
+        Optional<DetalleCarrito> existente = detalleCarritoRepository.findByCarrito_CarritoIdAndProducto_ProductoId(carritoId, productoId);
+        if (existente.isEmpty())
+            return false;
+
+        detalleCarritoRepository.deleteById(existente.get().getDetalleCarritoId());
+        return true;
+    }
+}

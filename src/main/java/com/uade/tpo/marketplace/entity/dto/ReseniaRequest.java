@@ -6,7 +6,6 @@ import lombok.Data;
 
 @Data
 public class ReseniaRequest {
-    private int reseniaId;
     private int usuarioId;
     private int productoId;
     private int calificacion;

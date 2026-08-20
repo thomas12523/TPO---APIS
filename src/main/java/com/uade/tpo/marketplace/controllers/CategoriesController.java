@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.entity.dto.CategoryRequest;
 import com.uade.tpo.marketplace.exceptions.CategoryDuplicateException;
-import com.uade.tpo.marketplace.service.CategoriesService;
+import com.uade.tpo.marketplace.service.categories.CategoriesService;
 
 @RestController // capa de trafico, con esto delimitamos para eso
 @RequestMapping("Categories") //ENDPOINT mappea request con lo siguiente del localhost/Categories
@@ -42,12 +42,12 @@ public class CategoriesController {
 
         return ResponseEntity.noContent().build();
     }
-/*
+
     @PostMapping
     public ResponseEntity<Object> createCategory(@RequestBody CategoryRequest categoryRequest) throws CategoryDuplicateException {
-        Category result = categoriesService.createCategory(categoryRequest.getId(), categoryRequest.getNombre());
+        Category result = categoriesService.createCategory(categoryRequest.getNombre());
         return ResponseEntity.created(URI.create("/Categories/" + result.getId())).body(result);
     }
- */
+ 
     
 }

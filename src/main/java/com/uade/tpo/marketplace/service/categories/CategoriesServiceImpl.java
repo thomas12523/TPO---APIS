@@ -1,6 +1,5 @@
-package com.uade.tpo.marketplace.service;
+package com.uade.tpo.marketplace.service.categories;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,15 +24,18 @@ public class CategoriesServiceImpl implements CategoriesService {
     public Optional<Category> getCategoryById(int categoryId) {
         return categoriesRepository.findById(categoryId);
     }
-/*
-    public Category createCategory(int newCategoryId, String nombre) throws CategoryDuplicateException {
-        List<Category> categories = categoriesRepository.findAll();
-        if (categories.stream().anyMatch(category -> category.getId()==newCategoryId && category.getNombre().equals(nombre)))
-            throw new CategoryDuplicateException();
 
-        return categoriesRepository.createCategory(newCategoryId,nombre);
+    public Category createCategory(String nombre) throws CategoryDuplicateException {
+        List<Category> categories = categoriesRepository.findByNombre(nombre);
+        if (categories.isEmpty())
+            return categoriesRepository.save(new Category(nombre));
+
+        throw new CategoryDuplicateException();
     }
- */
+
+    
+
+ 
     
 }
     
