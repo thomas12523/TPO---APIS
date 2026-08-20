@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Imagen;
@@ -28,8 +29,8 @@ public class ImagenController {
     private ImagenService imagenService;
 
     @GetMapping
-    public ResponseEntity<List<Imagen>> getImagenes() {
-        return ResponseEntity.ok(imagenService.getImagenes());
+    public ResponseEntity<List<Imagen>> getImagenes(@RequestParam(required = false) Integer productoId) {
+        return ResponseEntity.ok(imagenService.getImagenes(productoId));
     }
 
     @GetMapping("{imagenId}")

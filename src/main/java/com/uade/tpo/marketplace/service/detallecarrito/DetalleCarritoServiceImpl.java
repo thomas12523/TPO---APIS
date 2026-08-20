@@ -11,6 +11,7 @@ import com.uade.tpo.marketplace.entity.DetalleCarrito;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.DetalleCarritoRequest;
 import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
+import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.repository.CarritoRepository;
 import com.uade.tpo.marketplace.repository.DetalleCarritoRepository;
 import com.uade.tpo.marketplace.repository.ProductoRepository;
@@ -37,7 +38,7 @@ public class DetalleCarritoServiceImpl implements DetalleCarritoService {
         return detalleCarritoRepository.findByCarrito_CarritoIdAndProducto_ProductoId(carritoId, productoId);
     }
 
-    public DetalleCarrito crearDetalleCarrito(DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException {
+    public DetalleCarrito crearDetalleCarrito(DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException, StockInsuficienteException {
         if (detalleCarritoRepository.findByCarrito_CarritoIdAndProducto_ProductoId(
                 detalleCarritoRequest.getCarritoId(), detalleCarritoRequest.getProductoId()).isPresent())
             throw new DetalleCarritoDuplicateException();
@@ -47,22 +48,28 @@ public class DetalleCarritoServiceImpl implements DetalleCarritoService {
         Producto producto = productoRepository.findById(detalleCarritoRequest.getProductoId())
                 .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
 
+        if (detalleCarritoRequest.getCantidad() > producto.getStock())
+            throw new StockInsuficienteException();
+
         DetalleCarrito detalleCarrito = new DetalleCarrito();
         detalleCarrito.setCarrito(carrito);
         detalleCarrito.setProducto(producto);
         detalleCarrito.setCantidad(detalleCarritoRequest.getCantidad());
-        detalleCarrito.setPrecioUnitario(detalleCarritoRequest.getPrecioUnitario());
+        detalleCarrito.setPrecioUnitario(producto.getPrecioUnitario());
         return detalleCarritoRepository.save(detalleCarrito);
     }
 
-    public DetalleCarrito actualizarDetalleCarrito(int carritoId, int productoId, DetalleCarritoRequest detalleCarritoRequest) {
+    public DetalleCarrito actualizarDetalleCarrito(int carritoId, int productoId, DetalleCarritoRequest detalleCarritoRequest) throws StockInsuficienteException {
         Optional<DetalleCarrito> existente = detalleCarritoRepository.findByCarrito_CarritoIdAndProducto_ProductoId(carritoId, productoId);
         if (existente.isEmpty())
             return null;
 
         DetalleCarrito detalleCarrito = existente.get();
+        if (detalleCarritoRequest.getCantidad() > detalleCarrito.getProducto().getStock())
+            throw new StockInsuficienteException();
+
         detalleCarrito.setCantidad(detalleCarritoRequest.getCantidad());
-        detalleCarrito.setPrecioUnitario(detalleCarritoRequest.getPrecioUnitario());
+        detalleCarrito.setPrecioUnitario(detalleCarrito.getProducto().getPrecioUnitario());
         return detalleCarritoRepository.save(detalleCarrito);
     }
 

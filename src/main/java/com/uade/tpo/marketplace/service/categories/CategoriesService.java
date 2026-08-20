@@ -13,5 +13,7 @@ public interface CategoriesService {
     public List<Category> getCategories();
     public Optional<Category> getCategoryById(int categoryId);
     public Category createCategory(String nombre) throws CategoryDuplicateException;
-    
+    public Category actualizarCategory(int categoryId, String nombre);
+    public boolean deleteCategory(int categoryId);
+
 }

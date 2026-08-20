@@ -24,7 +24,14 @@ public class ProductoServiceImpl implements ProductoService {
     @Autowired
     private CategoriesRepository categoriesRepository;
 
-    public List<Producto> getProductos() {
+    public List<Producto> getProductos(Integer categoriaId, String nombre) {
+        if (categoriaId != null && nombre != null)
+            return productoRepository.findByCategoria_IdAndNombreProductoContainingIgnoreCase(categoriaId, nombre);
+        if (categoriaId != null)
+            return productoRepository.findByCategoria_Id(categoriaId);
+        if (nombre != null)
+            return productoRepository.findByNombreProductoContainingIgnoreCase(nombre);
+
         return productoRepository.findAll();
     }
 

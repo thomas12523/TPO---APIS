@@ -48,6 +48,23 @@ public class CategoriesController {
         Category result = categoriesService.createCategory(categoryRequest.getNombre());
         return ResponseEntity.created(URI.create("/Categories/" + result.getId())).body(result);
     }
- 
-    
+
+    @PutMapping("{categoryId}")
+    public ResponseEntity<Category> actualizarCategory(@PathVariable int categoryId, @RequestBody CategoryRequest categoryRequest) {
+        Category result = categoriesService.actualizarCategory(categoryId, categoryRequest.getNombre());
+        if (result == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(result);
+    }
+
+    @DeleteMapping("{categoryId}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable int categoryId) {
+        boolean deleted = categoriesService.deleteCategory(categoryId);
+        if (!deleted)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.noContent().build();
+    }
+
 }

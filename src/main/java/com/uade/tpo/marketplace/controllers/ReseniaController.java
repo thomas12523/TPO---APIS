@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Resenia;
@@ -28,8 +29,8 @@ public class ReseniaController {
     private ReseniaService reseniaService;
 
     @GetMapping
-    public ResponseEntity<List<Resenia>> getResenias() {
-        return ResponseEntity.ok(reseniaService.getResenias());
+    public ResponseEntity<List<Resenia>> getResenias(@RequestParam(required = false) Integer productoId) {
+        return ResponseEntity.ok(reseniaService.getResenias(productoId));
     }
 
     @GetMapping("{reseniaId}")

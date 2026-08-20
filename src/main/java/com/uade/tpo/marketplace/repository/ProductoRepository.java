@@ -13,4 +13,10 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
     @Query(value = "select p from Producto p where p.nombreProducto = ?1")
     List<Producto> findByNombreProducto(String nombreProducto);
+
+    List<Producto> findByCategoria_Id(int categoriaId);
+
+    List<Producto> findByNombreProductoContainingIgnoreCase(String nombreProducto);
+
+    List<Producto> findByCategoria_IdAndNombreProductoContainingIgnoreCase(int categoriaId, String nombreProducto);
 }

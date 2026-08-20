@@ -9,7 +9,7 @@ import com.uade.tpo.marketplace.exceptions.ProductoDuplicateException;
 
 public interface ProductoService {
 
-    public List<Producto> getProductos();
+    public List<Producto> getProductos(Integer categoriaId, String nombre);
 
     public Optional<Producto> getProductoById(int productoId);
 

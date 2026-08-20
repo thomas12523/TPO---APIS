@@ -9,7 +9,7 @@ import com.uade.tpo.marketplace.exceptions.ReseniaDuplicateException;
 
 public interface ReseniaService {
 
-    public List<Resenia> getResenias();
+    public List<Resenia> getResenias(Integer productoId);
 
     public Optional<Resenia> getReseniaById(int reseniaId);
 

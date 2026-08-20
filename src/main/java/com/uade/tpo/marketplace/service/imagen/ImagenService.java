@@ -9,7 +9,7 @@ import com.uade.tpo.marketplace.exceptions.ImagenDuplicateException;
 
 public interface ImagenService {
 
-    public List<Imagen> getImagenes();
+    public List<Imagen> getImagenes(Integer productoId);
 
     public Optional<Imagen> getImagenById(int imagenId);
 

@@ -51,9 +51,9 @@ public class DetallePedidoServiceImpl implements DetallePedidoService {
         detallePedido.setPedido(pedido);
         detallePedido.setProducto(producto);
         detallePedido.setCantidad(detallePedidoRequest.getCantidad());
-        detallePedido.setPrecioUnitario(detallePedidoRequest.getPrecioUnitario());
+        detallePedido.setPrecioUnitario(producto.getPrecioUnitario());
         detallePedido.setObservaciones(detallePedidoRequest.getObservaciones());
-        detallePedido.setSubtotal(detallePedidoRequest.getSubtotal());
+        detallePedido.setSubtotal(detallePedidoRequest.getCantidad() * producto.getPrecioUnitario());
         return detallePedidoRepository.save(detallePedido);
     }
 
@@ -64,15 +64,21 @@ public class DetallePedidoServiceImpl implements DetallePedidoService {
 
         DetallePedido detallePedido = existente.get();
         detallePedido.setCantidad(detallePedidoRequest.getCantidad());
-        detallePedido.setPrecioUnitario(detallePedidoRequest.getPrecioUnitario());
+        detallePedido.setPrecioUnitario(detallePedido.getProducto().getPrecioUnitario());
         detallePedido.setObservaciones(detallePedidoRequest.getObservaciones());
-        detallePedido.setSubtotal(detallePedidoRequest.getSubtotal());
+        detallePedido.setSubtotal(detallePedidoRequest.getCantidad() * detallePedido.getProducto().getPrecioUnitario());
         return detallePedidoRepository.save(detallePedido);
     }
 
     public boolean deleteDetallePedido(int detallePedidoId) {
-        if (detallePedidoRepository.findById(detallePedidoId).isEmpty())
+        Optional<DetallePedido> existente = detallePedidoRepository.findById(detallePedidoId);
+        if (existente.isEmpty())
             return false;
+
+        DetallePedido detallePedido = existente.get();
+        Producto producto = detallePedido.getProducto();
+        producto.setStock(producto.getStock() + detallePedido.getCantidad());
+        productoRepository.save(producto);
 
         detallePedidoRepository.deleteById(detallePedidoId);
         return true;

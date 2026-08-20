@@ -1,5 +1,6 @@
 package com.uade.tpo.marketplace.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,4 +12,6 @@ import com.uade.tpo.marketplace.entity.Imagen;
 public interface ImagenRepository extends JpaRepository<Imagen, Integer> {
 
     Optional<Imagen> findByProducto_ProductoIdAndImagenUrl(int productoId, String imagenUrl);
+
+    List<Imagen> findByProducto_ProductoId(int productoId);
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Pedido;
@@ -27,8 +28,8 @@ public class PedidoController {
     private PedidoService pedidoService;
 
     @GetMapping
-    public ResponseEntity<List<Pedido>> getPedidos() {
-        return ResponseEntity.ok(pedidoService.getPedidos());
+    public ResponseEntity<List<Pedido>> getPedidos(@RequestParam(required = false) Integer usuarioId) {
+        return ResponseEntity.ok(pedidoService.getPedidos(usuarioId));
     }
 
     @GetMapping("{pedidoId}")
@@ -49,6 +50,15 @@ public class PedidoController {
     @PutMapping("{pedidoId}")
     public ResponseEntity<Pedido> actualizarPedido(@PathVariable int pedidoId, @RequestBody PedidoRequest pedidoRequest) {
         Pedido result = pedidoService.actualizarPedido(pedidoId, pedidoRequest);
+        if (result == null)
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("{pedidoId}/cancelar")
+    public ResponseEntity<Pedido> cancelarPedido(@PathVariable int pedidoId) {
+        Pedido result = pedidoService.cancelarPedido(pedidoId);
         if (result == null)
             return ResponseEntity.notFound().build();
 

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.DetalleCarrito;
 import com.uade.tpo.marketplace.entity.dto.DetalleCarritoRequest;
 import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
+import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.service.detallecarrito.DetalleCarritoService;
 
 @RestController
@@ -42,13 +43,13 @@ public class DetalleCarritoController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> crearDetalleCarrito(@RequestBody DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException {
+    public ResponseEntity<Object> crearDetalleCarrito(@RequestBody DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException, StockInsuficienteException {
         DetalleCarrito result = detalleCarritoService.crearDetalleCarrito(detalleCarritoRequest);
         return ResponseEntity.created(URI.create("/DetalleCarrito/" + result.getCarrito().getCarritoId() + "/" + result.getProducto().getProductoId())).body(result);
     }
 
     @PutMapping("{carritoId}/{productoId}")
-    public ResponseEntity<DetalleCarrito> actualizarDetalleCarrito(@PathVariable int carritoId, @PathVariable int productoId, @RequestBody DetalleCarritoRequest detalleCarritoRequest) {
+    public ResponseEntity<DetalleCarrito> actualizarDetalleCarrito(@PathVariable int carritoId, @PathVariable int productoId, @RequestBody DetalleCarritoRequest detalleCarritoRequest) throws StockInsuficienteException {
         DetalleCarrito result = detalleCarritoService.actualizarDetalleCarrito(carritoId, productoId, detalleCarritoRequest);
         if (result == null)
             return ResponseEntity.notFound().build();

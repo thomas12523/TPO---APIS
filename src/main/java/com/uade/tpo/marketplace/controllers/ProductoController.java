@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Producto;
@@ -28,8 +29,10 @@ public class ProductoController {
     private ProductoService productoService;
 
     @GetMapping
-    public ResponseEntity<List<Producto>> getProductos() {
-        return ResponseEntity.ok(productoService.getProductos());
+    public ResponseEntity<List<Producto>> getProductos(
+            @RequestParam(required = false) Integer categoriaId,
+            @RequestParam(required = false) String nombre) {
+        return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre));
     }
 
     @GetMapping("{productoId}")

@@ -29,7 +29,10 @@ public class ReseniaServiceImpl implements ReseniaService {
     @Autowired
     private ProductoRepository productoRepository;
 
-    public List<Resenia> getResenias() {
+    public List<Resenia> getResenias(Integer productoId) {
+        if (productoId != null)
+            return reseniaRepository.findByProducto_ProductoId(productoId);
+
         return reseniaRepository.findAll();
     }
 

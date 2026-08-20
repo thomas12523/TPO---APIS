@@ -24,7 +24,10 @@ public class ImagenServiceImpl implements ImagenService {
     @Autowired
     private ProductoRepository productoRepository;
 
-    public List<Imagen> getImagenes() {
+    public List<Imagen> getImagenes(Integer productoId) {
+        if (productoId != null)
+            return imagenRepository.findByProducto_ProductoId(productoId);
+
         return imagenRepository.findAll();
     }
 

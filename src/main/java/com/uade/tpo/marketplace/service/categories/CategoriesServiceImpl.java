@@ -33,10 +33,24 @@ public class CategoriesServiceImpl implements CategoriesService {
         throw new CategoryDuplicateException();
     }
 
-    
+    public Category actualizarCategory(int categoryId, String nombre) {
+        Optional<Category> existente = categoriesRepository.findById(categoryId);
+        if (existente.isEmpty())
+            return null;
 
- 
-    
+        Category category = existente.get();
+        category.setNombre(nombre);
+        return categoriesRepository.save(category);
+    }
+
+    public boolean deleteCategory(int categoryId) {
+        if (categoriesRepository.findById(categoryId).isEmpty())
+            return false;
+
+        categoriesRepository.deleteById(categoryId);
+        return true;
+    }
+
 }
     
     
