@@ -47,13 +47,12 @@ public class ReseniaServiceImpl implements ReseniaService {
         Producto producto = productoRepository.findById(reseniaRequest.getProductoId())
                 .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
 
-        Resenia resenia = Resenia.builder()
-                .usuario(usuario)
-                .producto(producto)
-                .calificacion(reseniaRequest.getCalificacion())
-                .comentario(reseniaRequest.getComentario())
-                .fechaCreacion(reseniaRequest.getFechaCreacion())
-                .build();
+        Resenia resenia = new Resenia();
+        resenia.setUsuario(usuario);
+        resenia.setProducto(producto);
+        resenia.setCalificacion(reseniaRequest.getCalificacion());
+        resenia.setComentario(reseniaRequest.getComentario());
+        resenia.setFechaCreacion(reseniaRequest.getFechaCreacion());
         return reseniaRepository.save(resenia);
     }
 

@@ -39,12 +39,11 @@ public class EnvioServiceImpl implements EnvioService {
         Pedido pedido = pedidoRepository.findById(envioRequest.getPedidoId())
                 .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado"));
 
-        Envio envio = Envio.builder()
-                .pedido(pedido)
-                .direccion(envioRequest.getDireccion())
-                .metodoEnvio(envioRequest.getMetodoEnvio())
-                .costoEnvio(envioRequest.getCostoEnvio())
-                .build();
+        Envio envio = new Envio();
+        envio.setPedido(pedido);
+        envio.setDireccion(envioRequest.getDireccion());
+        envio.setMetodoEnvio(envioRequest.getMetodoEnvio());
+        envio.setCostoEnvio(envioRequest.getCostoEnvio());
         return envioRepository.save(envio);
     }
 

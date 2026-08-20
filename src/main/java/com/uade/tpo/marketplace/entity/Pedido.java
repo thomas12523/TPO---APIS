@@ -7,17 +7,26 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class Pedido {
+
+    public Pedido() {
+    }
+
+    public Pedido(int pedidoId, Usuario usuario, String fechaCreacion, String estado, double subtotal, double total,
+            String metodoPago) {
+        this.pedidoId = pedidoId;
+        this.usuario = usuario;
+        this.fechaCreacion = fechaCreacion;
+        this.estado = estado;
+        this.subtotal = subtotal;
+        this.total = total;
+        this.metodoPago = metodoPago;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pedidoId;

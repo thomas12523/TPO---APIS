@@ -35,14 +35,13 @@ public class PedidoServiceImpl implements PedidoService {
         Usuario usuario = usuarioRepository.findById(pedidoRequest.getUsuarioId())
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
-        Pedido pedido = Pedido.builder()
-                .usuario(usuario)
-                .fechaCreacion(pedidoRequest.getFechaCreacion())
-                .estado(pedidoRequest.getEstado())
-                .subtotal(pedidoRequest.getSubtotal())
-                .total(pedidoRequest.getTotal())
-                .metodoPago(pedidoRequest.getMetodoPago())
-                .build();
+        Pedido pedido = new Pedido();
+        pedido.setUsuario(usuario);
+        pedido.setFechaCreacion(pedidoRequest.getFechaCreacion());
+        pedido.setEstado(pedidoRequest.getEstado());
+        pedido.setSubtotal(pedidoRequest.getSubtotal());
+        pedido.setTotal(pedidoRequest.getTotal());
+        pedido.setMetodoPago(pedidoRequest.getMetodoPago());
         return pedidoRepository.save(pedido);
     }
 

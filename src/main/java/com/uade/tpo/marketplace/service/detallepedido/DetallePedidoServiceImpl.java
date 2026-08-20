@@ -47,14 +47,13 @@ public class DetallePedidoServiceImpl implements DetallePedidoService {
         Producto producto = productoRepository.findById(detallePedidoRequest.getProductoId())
                 .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
 
-        DetallePedido detallePedido = DetallePedido.builder()
-                .pedido(pedido)
-                .producto(producto)
-                .cantidad(detallePedidoRequest.getCantidad())
-                .precioUnitario(detallePedidoRequest.getPrecioUnitario())
-                .observaciones(detallePedidoRequest.getObservaciones())
-                .subtotal(detallePedidoRequest.getSubtotal())
-                .build();
+        DetallePedido detallePedido = new DetallePedido();
+        detallePedido.setPedido(pedido);
+        detallePedido.setProducto(producto);
+        detallePedido.setCantidad(detallePedidoRequest.getCantidad());
+        detallePedido.setPrecioUnitario(detallePedidoRequest.getPrecioUnitario());
+        detallePedido.setObservaciones(detallePedidoRequest.getObservaciones());
+        detallePedido.setSubtotal(detallePedidoRequest.getSubtotal());
         return detallePedidoRepository.save(detallePedido);
     }
 

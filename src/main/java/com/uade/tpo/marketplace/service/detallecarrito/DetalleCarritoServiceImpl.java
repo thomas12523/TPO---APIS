@@ -47,12 +47,11 @@ public class DetalleCarritoServiceImpl implements DetalleCarritoService {
         Producto producto = productoRepository.findById(detalleCarritoRequest.getProductoId())
                 .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
 
-        DetalleCarrito detalleCarrito = DetalleCarrito.builder()
-                .carrito(carrito)
-                .producto(producto)
-                .cantidad(detalleCarritoRequest.getCantidad())
-                .precioUnitario(detalleCarritoRequest.getPrecioUnitario())
-                .build();
+        DetalleCarrito detalleCarrito = new DetalleCarrito();
+        detalleCarrito.setCarrito(carrito);
+        detalleCarrito.setProducto(producto);
+        detalleCarrito.setCantidad(detalleCarritoRequest.getCantidad());
+        detalleCarrito.setPrecioUnitario(detalleCarritoRequest.getPrecioUnitario());
         return detalleCarritoRepository.save(detalleCarrito);
     }
 

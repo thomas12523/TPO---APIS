@@ -8,19 +8,26 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class Usuario {
+
+    public Usuario() {
+    }
+
+    public Usuario(int usuarioId, int dni, String email, String nombre, String apellido, String contrasenia,
+            List<Pedido> pedidos) {
+        this.usuarioId = usuarioId;
+        this.dni = dni;
+        this.email = email;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.contrasenia = contrasenia;
+        this.pedidos = pedidos;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int usuarioId;
@@ -40,9 +47,6 @@ public class Usuario {
     @Column
     private String contrasenia;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @Builder.Default
     @OneToMany(mappedBy = "usuario")
-    private List<Pedido> pedidos = new java.util.ArrayList<>();
+    private List<Pedido> pedidos;
 }

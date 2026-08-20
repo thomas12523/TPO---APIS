@@ -35,10 +35,9 @@ public class CarritoServiceImpl implements CarritoService {
         Usuario usuario = usuarioRepository.findById(carritoRequest.getUsuarioId())
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
-        Carrito carrito = Carrito.builder()
-                .usuario(usuario)
-                .fechaCarrito(carritoRequest.getFechaCarrito())
-                .build();
+        Carrito carrito = new Carrito();
+        carrito.setUsuario(usuario);
+        carrito.setFechaCarrito(carritoRequest.getFechaCarrito());
         return carritoRepository.save(carrito);
     }
 

@@ -40,10 +40,9 @@ public class ImagenServiceImpl implements ImagenService {
         Producto producto = productoRepository.findById(imagenRequest.getProductoId())
                 .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
 
-        Imagen imagen = Imagen.builder()
-                .producto(producto)
-                .imagenUrl(imagenRequest.getImagenUrl())
-                .build();
+        Imagen imagen = new Imagen();
+        imagen.setProducto(producto);
+        imagen.setImagenUrl(imagenRequest.getImagenUrl());
         return imagenRepository.save(imagen);
     }
 

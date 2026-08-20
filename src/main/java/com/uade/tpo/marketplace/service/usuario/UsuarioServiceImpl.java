@@ -37,13 +37,12 @@ public class UsuarioServiceImpl implements UsuarioService {
         if (usuarioRepository.findByEmail(usuarioRequest.getEmail()).isPresent())
             throw new UsuarioDuplicateException();
 
-        Usuario usuario = Usuario.builder()
-                .dni(usuarioRequest.getDni())
-                .email(usuarioRequest.getEmail())
-                .nombre(usuarioRequest.getNombre())
-                .apellido(usuarioRequest.getApellido())
-                .contrasenia(usuarioRequest.getContrasenia())
-                .build();
+        Usuario usuario = new Usuario();
+        usuario.setDni(usuarioRequest.getDni());
+        usuario.setEmail(usuarioRequest.getEmail());
+        usuario.setNombre(usuarioRequest.getNombre());
+        usuario.setApellido(usuarioRequest.getApellido());
+        usuario.setContrasenia(usuarioRequest.getContrasenia());
         return usuarioRepository.save(usuario);
     }
 

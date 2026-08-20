@@ -7,17 +7,26 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class Producto {
+
+    public Producto() {
+    }
+
+    public Producto(int productoId, Category categoria, String nombreProducto, String descripcion,
+            double precioUnitario, int stock, String imagenUrl) {
+        this.productoId = productoId;
+        this.categoria = categoria;
+        this.nombreProducto = nombreProducto;
+        this.descripcion = descripcion;
+        this.precioUnitario = precioUnitario;
+        this.stock = stock;
+        this.imagenUrl = imagenUrl;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int productoId;

@@ -39,14 +39,13 @@ public class ProductoServiceImpl implements ProductoService {
         Category categoria = categoriesRepository.findById(productoRequest.getCategoriaId())
                 .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
 
-        Producto producto = Producto.builder()
-                .categoria(categoria)
-                .nombreProducto(productoRequest.getNombreProducto())
-                .descripcion(productoRequest.getDescripcion())
-                .precioUnitario(productoRequest.getPrecioUnitario())
-                .stock(productoRequest.getStock())
-                .imagenUrl(productoRequest.getImagenUrl())
-                .build();
+        Producto producto = new Producto();
+        producto.setCategoria(categoria);
+        producto.setNombreProducto(productoRequest.getNombreProducto());
+        producto.setDescripcion(productoRequest.getDescripcion());
+        producto.setPrecioUnitario(productoRequest.getPrecioUnitario());
+        producto.setStock(productoRequest.getStock());
+        producto.setImagenUrl(productoRequest.getImagenUrl());
         return productoRepository.save(producto);
     }
 
