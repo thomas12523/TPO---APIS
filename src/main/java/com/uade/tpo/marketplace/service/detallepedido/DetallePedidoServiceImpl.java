@@ -45,10 +45,17 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
                 detallePedidoRequest.getPedidoId(), detallePedidoRequest.getProductoId()).isPresent())
             throw new DetallePedidoDuplicateException();
 
-        Pedido pedido = pedidoRepository.findById(detallePedidoRequest.getPedidoId())
-                .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado"));
-        Producto producto = productoRepository.findById(detallePedidoRequest.getProductoId())
-                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+        Optional<Pedido> pedidoOpt = pedidoRepository.findById(detallePedidoRequest.getPedidoId());
+        if (pedidoOpt.isEmpty()) {
+            throw new EntityNotFoundException("Pedido no encontrado");
+        }
+        Pedido pedido = pedidoOpt.get();
+
+        Optional<Producto> productoOpt = productoRepository.findById(detallePedidoRequest.getProductoId());
+        if (productoOpt.isEmpty()) {
+            throw new EntityNotFoundException("Producto no encontrado");
+        }
+        Producto producto = productoOpt.get();
 
         DetallePedido detallePedido = new DetallePedido();
         detallePedido.setPedido(pedido);

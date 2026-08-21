@@ -39,8 +39,11 @@ public class EnvioServiceImpl implements IEnvioService {
         if (envioRepository.findByPedido_PedidoId(envioRequest.getPedidoId()).isPresent())
             throw new EnvioDuplicateException();
 
-        Pedido pedido = pedidoRepository.findById(envioRequest.getPedidoId())
-                .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado"));
+        Optional<Pedido> pedidoOpt = pedidoRepository.findById(envioRequest.getPedidoId());
+        if (pedidoOpt.isEmpty()) {
+            throw new EntityNotFoundException("Pedido no encontrado");
+        }
+        Pedido pedido = pedidoOpt.get();
 
         Envio envio = new Envio();
         envio.setPedido(pedido);

@@ -40,8 +40,11 @@ public class ImagenServiceImpl implements IImagenService {
                 imagenRequest.getProductoId(), imagenRequest.getImagenUrl()).isPresent())
             throw new ImagenDuplicateException();
 
-        Producto producto = productoRepository.findById(imagenRequest.getProductoId())
-                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+        Optional<Producto> productoOpt = productoRepository.findById(imagenRequest.getProductoId());
+        if (productoOpt.isEmpty()) {
+            throw new EntityNotFoundException("Producto no encontrado");
+        }
+        Producto producto = productoOpt.get();
 
         Imagen imagen = new Imagen();
         imagen.setProducto(producto);
