@@ -1,11 +1,11 @@
 package com.uade.tpo.marketplace.controllers;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,24 +14,29 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.entity.dto.CategoryRequest;
 import com.uade.tpo.marketplace.exceptions.CategoryDuplicateException;
-import com.uade.tpo.marketplace.service.categories.CategoriesService;
+import com.uade.tpo.marketplace.service.categories.ICategoriesService;
 
 @RestController // capa de trafico, con esto delimitamos para eso
 @RequestMapping("Categories") //ENDPOINT mappea request con lo siguiente del localhost/Categories
 public class CategoriesController {
     
     @Autowired // para que spring sepa que tiene que inyectar la dependencia
-    private CategoriesService categoriesService;
+    private ICategoriesService categoriesService;
 
     
     @GetMapping //localhost/8080/Categories
-    public ResponseEntity<List<Category>> getCategories() {
-        return ResponseEntity.ok(categoriesService.getCategories());
+    public ResponseEntity<Page<Category>> getCategories(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
+        if (page == null || size == null)
+            return ResponseEntity.ok(categoriesService.getCategories(PageRequest.of(0, Integer.MAX_VALUE)));
+        return ResponseEntity.ok(categoriesService.getCategories(PageRequest.of(page, size)));
     }
 
     @GetMapping("{categoryId}") //localhost/8080/Categories/id

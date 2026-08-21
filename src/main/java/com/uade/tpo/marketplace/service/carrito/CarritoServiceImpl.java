@@ -9,19 +9,19 @@ import org.springframework.stereotype.Service;
 import com.uade.tpo.marketplace.entity.Carrito;
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.CarritoRequest;
-import com.uade.tpo.marketplace.repository.CarritoRepository;
-import com.uade.tpo.marketplace.repository.UsuarioRepository;
+import com.uade.tpo.marketplace.repository.ICarritoRepository;
+import com.uade.tpo.marketplace.repository.IUsuarioRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class CarritoServiceImpl implements CarritoService {
+public class CarritoServiceImpl implements ICarritoService {
 
     @Autowired
-    private CarritoRepository carritoRepository;
+    private ICarritoRepository carritoRepository;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private IUsuarioRepository usuarioRepository;
 
     public List<Carrito> getCarritos() {
         return carritoRepository.findAll();

@@ -7,7 +7,7 @@ import com.uade.tpo.marketplace.entity.DetallePedido;
 import com.uade.tpo.marketplace.entity.dto.DetallePedidoRequest;
 import com.uade.tpo.marketplace.exceptions.DetallePedidoDuplicateException;
 
-public interface DetallePedidoService {
+public interface IDetallePedidoService {
 
     public List<DetallePedido> getDetallesPedido();
 

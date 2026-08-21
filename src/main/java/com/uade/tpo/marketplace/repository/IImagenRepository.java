@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.uade.tpo.marketplace.entity.Imagen;
 
 @Repository
-public interface ImagenRepository extends JpaRepository<Imagen, Integer> {
+public interface IImagenRepository extends JpaRepository<Imagen, Integer> {
 
     Optional<Imagen> findByProducto_ProductoIdAndImagenUrl(int productoId, String imagenUrl);
 

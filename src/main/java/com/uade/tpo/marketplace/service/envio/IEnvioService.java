@@ -7,7 +7,7 @@ import com.uade.tpo.marketplace.entity.Envio;
 import com.uade.tpo.marketplace.entity.dto.EnvioRequest;
 import com.uade.tpo.marketplace.exceptions.EnvioDuplicateException;
 
-public interface EnvioService {
+public interface IEnvioService {
 
     public List<Envio> getEnvios();
 

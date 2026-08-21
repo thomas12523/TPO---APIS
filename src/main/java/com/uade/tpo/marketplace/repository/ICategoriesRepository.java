@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.uade.tpo.marketplace.entity.Category;
 @Repository
-public interface CategoriesRepository extends JpaRepository<Category, Integer> {
+public interface ICategoriesRepository extends JpaRepository<Category, Integer> {
 
     @Query(value = "select c from Category c where c.nombre = ?1")
     List<Category> findByNombre(String nombre);

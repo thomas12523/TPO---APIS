@@ -6,7 +6,7 @@ import java.util.Optional;
 import com.uade.tpo.marketplace.entity.Carrito;
 import com.uade.tpo.marketplace.entity.dto.CarritoRequest;
 
-public interface CarritoService {
+public interface ICarritoService {
 
     public List<Carrito> getCarritos();
 

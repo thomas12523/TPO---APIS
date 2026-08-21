@@ -4,35 +4,37 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.ProductoRequest;
 import com.uade.tpo.marketplace.exceptions.ProductoDuplicateException;
-import com.uade.tpo.marketplace.repository.CategoriesRepository;
-import com.uade.tpo.marketplace.repository.ProductoRepository;
+import com.uade.tpo.marketplace.repository.ICategoriesRepository;
+import com.uade.tpo.marketplace.repository.IProductoRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class ProductoServiceImpl implements ProductoService {
+public class ProductoServiceImpl implements IProductoService {
 
     @Autowired
-    private ProductoRepository productoRepository;
+    private IProductoRepository productoRepository;
 
     @Autowired
-    private CategoriesRepository categoriesRepository;
+    private ICategoriesRepository categoriesRepository;
 
-    public List<Producto> getProductos(Integer categoriaId, String nombre) {
+    public Page<Producto> getProductos(Integer categoriaId, String nombre, PageRequest pageRequest) {
         if (categoriaId != null && nombre != null)
-            return productoRepository.findByCategoria_IdAndNombreProductoContainingIgnoreCase(categoriaId, nombre);
+            return productoRepository.findByCategoria_IdAndNombreProductoContainingIgnoreCase(categoriaId, nombre, pageRequest);
         if (categoriaId != null)
-            return productoRepository.findByCategoria_Id(categoriaId);
+            return productoRepository.findByCategoria_Id(categoriaId, pageRequest);
         if (nombre != null)
-            return productoRepository.findByNombreProductoContainingIgnoreCase(nombre);
+            return productoRepository.findByNombreProductoContainingIgnoreCase(nombre, pageRequest);
 
-        return productoRepository.findAll();
+        return productoRepository.findAll(pageRequest);
     }
 
     public Optional<Producto> getProductoById(int productoId) {

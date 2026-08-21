@@ -1,10 +1,11 @@
 package com.uade.tpo.marketplace.controllers;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,18 +20,22 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.UsuarioRequest;
 import com.uade.tpo.marketplace.exceptions.UsuarioDuplicateException;
-import com.uade.tpo.marketplace.service.usuario.UsuarioService;
+import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 
 @RestController
 @RequestMapping("Usuario")
 public class UsuarioController {
 
     @Autowired
-    private UsuarioService usuarioService;
+    private IUsuarioService usuarioService;
 
     @GetMapping
-    public ResponseEntity<List<Usuario>> getUsuarios() {
-        return ResponseEntity.ok(usuarioService.getUsuarios());
+    public ResponseEntity<Page<Usuario>> getUsuarios(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
+        if (page == null || size == null)
+            return ResponseEntity.ok(usuarioService.getUsuarios(PageRequest.of(0, Integer.MAX_VALUE)));
+        return ResponseEntity.ok(usuarioService.getUsuarios(PageRequest.of(page, size)));
     }
 
     @GetMapping("{usuarioId}")

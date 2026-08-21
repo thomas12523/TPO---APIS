@@ -1,15 +1,17 @@
 package com.uade.tpo.marketplace.service.usuario;
 
-import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.UsuarioRequest;
 import com.uade.tpo.marketplace.exceptions.UsuarioDuplicateException;
 
-public interface UsuarioService {
+public interface IUsuarioService {
 
-    public List<Usuario> getUsuarios();
+    public Page<Usuario> getUsuarios(PageRequest pageRequest);
 
     public Optional<Usuario> getUsuarioById(int usuarioId);
 

@@ -1,10 +1,11 @@
 package com.uade.tpo.marketplace.controllers;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,18 +20,23 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.Resenia;
 import com.uade.tpo.marketplace.entity.dto.ReseniaRequest;
 import com.uade.tpo.marketplace.exceptions.ReseniaDuplicateException;
-import com.uade.tpo.marketplace.service.resenia.ReseniaService;
+import com.uade.tpo.marketplace.service.resenia.IReseniaService;
 
 @RestController
 @RequestMapping("Resenia")
 public class ReseniaController {
 
     @Autowired
-    private ReseniaService reseniaService;
+    private IReseniaService reseniaService;
 
     @GetMapping
-    public ResponseEntity<List<Resenia>> getResenias(@RequestParam(required = false) Integer productoId) {
-        return ResponseEntity.ok(reseniaService.getResenias(productoId));
+    public ResponseEntity<Page<Resenia>> getResenias(
+            @RequestParam(required = false) Integer productoId,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
+        if (page == null || size == null)
+            return ResponseEntity.ok(reseniaService.getResenias(productoId, PageRequest.of(0, Integer.MAX_VALUE)));
+        return ResponseEntity.ok(reseniaService.getResenias(productoId, PageRequest.of(page, size)));
     }
 
     @GetMapping("{reseniaId}")

@@ -1,15 +1,17 @@
 package com.uade.tpo.marketplace.service.resenia;
 
-import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import com.uade.tpo.marketplace.entity.Resenia;
 import com.uade.tpo.marketplace.entity.dto.ReseniaRequest;
 import com.uade.tpo.marketplace.exceptions.ReseniaDuplicateException;
 
-public interface ReseniaService {
+public interface IReseniaService {
 
-    public List<Resenia> getResenias(Integer productoId);
+    public Page<Resenia> getResenias(Integer productoId, PageRequest pageRequest);
 
     public Optional<Resenia> getReseniaById(int reseniaId);
 

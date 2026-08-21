@@ -5,10 +5,10 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.uade.tpo.marketplace.entity.Usuario;
+import com.uade.tpo.marketplace.entity.Envio;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+public interface IEnvioRepository extends JpaRepository<Envio, Integer> {
 
-    Optional<Usuario> findByEmail(String email);
+    Optional<Envio> findByPedido_PedidoId(int pedidoId);
 }

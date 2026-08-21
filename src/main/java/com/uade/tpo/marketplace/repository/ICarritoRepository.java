@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.uade.tpo.marketplace.entity.Carrito;
 
 @Repository
-public interface CarritoRepository extends JpaRepository<Carrito, Integer> {
+public interface ICarritoRepository extends JpaRepository<Carrito, Integer> {
 }

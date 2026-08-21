@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.Envio;
 import com.uade.tpo.marketplace.entity.dto.EnvioRequest;
 import com.uade.tpo.marketplace.exceptions.EnvioDuplicateException;
-import com.uade.tpo.marketplace.service.envio.EnvioService;
+import com.uade.tpo.marketplace.service.envio.IEnvioService;
 
 @RestController
 @RequestMapping("Envio")
 public class EnvioController {
 
     @Autowired
-    private EnvioService envioService;
+    private IEnvioService envioService;
 
     @GetMapping
     public ResponseEntity<List<Envio>> getEnvios() {

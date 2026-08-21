@@ -12,23 +12,23 @@ import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.DetalleCarritoRequest;
 import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
-import com.uade.tpo.marketplace.repository.CarritoRepository;
-import com.uade.tpo.marketplace.repository.DetalleCarritoRepository;
-import com.uade.tpo.marketplace.repository.ProductoRepository;
+import com.uade.tpo.marketplace.repository.ICarritoRepository;
+import com.uade.tpo.marketplace.repository.IDetalleCarritoRepository;
+import com.uade.tpo.marketplace.repository.IProductoRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class DetalleCarritoServiceImpl implements DetalleCarritoService {
+public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
 
     @Autowired
-    private DetalleCarritoRepository detalleCarritoRepository;
+    private IDetalleCarritoRepository detalleCarritoRepository;
 
     @Autowired
-    private CarritoRepository carritoRepository;
+    private ICarritoRepository carritoRepository;
 
     @Autowired
-    private ProductoRepository productoRepository;
+    private IProductoRepository productoRepository;
 
     public List<DetalleCarrito> getDetallesCarrito() {
         return detalleCarritoRepository.findAll();

@@ -1,9 +1,10 @@
 package com.uade.tpo.marketplace.service.resenia;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Producto;
@@ -11,29 +12,29 @@ import com.uade.tpo.marketplace.entity.Resenia;
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.ReseniaRequest;
 import com.uade.tpo.marketplace.exceptions.ReseniaDuplicateException;
-import com.uade.tpo.marketplace.repository.ProductoRepository;
-import com.uade.tpo.marketplace.repository.ReseniaRepository;
-import com.uade.tpo.marketplace.repository.UsuarioRepository;
+import com.uade.tpo.marketplace.repository.IProductoRepository;
+import com.uade.tpo.marketplace.repository.IReseniaRepository;
+import com.uade.tpo.marketplace.repository.IUsuarioRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class ReseniaServiceImpl implements ReseniaService {
+public class ReseniaServiceImpl implements IReseniaService {
 
     @Autowired
-    private ReseniaRepository reseniaRepository;
+    private IReseniaRepository reseniaRepository;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private IUsuarioRepository usuarioRepository;
 
     @Autowired
-    private ProductoRepository productoRepository;
+    private IProductoRepository productoRepository;
 
-    public List<Resenia> getResenias(Integer productoId) {
+    public Page<Resenia> getResenias(Integer productoId, PageRequest pageRequest) {
         if (productoId != null)
-            return reseniaRepository.findByProducto_ProductoId(productoId);
+            return reseniaRepository.findByProducto_ProductoId(productoId, pageRequest);
 
-        return reseniaRepository.findAll();
+        return reseniaRepository.findAll(pageRequest);
     }
 
     public Optional<Resenia> getReseniaById(int reseniaId) {

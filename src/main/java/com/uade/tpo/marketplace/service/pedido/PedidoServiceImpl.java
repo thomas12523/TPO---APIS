@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.DetallePedido;
@@ -11,37 +13,37 @@ import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.PedidoRequest;
-import com.uade.tpo.marketplace.repository.DetallePedidoRepository;
-import com.uade.tpo.marketplace.repository.EnvioRepository;
-import com.uade.tpo.marketplace.repository.PedidoRepository;
-import com.uade.tpo.marketplace.repository.ProductoRepository;
-import com.uade.tpo.marketplace.repository.UsuarioRepository;
+import com.uade.tpo.marketplace.repository.IDetallePedidoRepository;
+import com.uade.tpo.marketplace.repository.IEnvioRepository;
+import com.uade.tpo.marketplace.repository.IPedidoRepository;
+import com.uade.tpo.marketplace.repository.IProductoRepository;
+import com.uade.tpo.marketplace.repository.IUsuarioRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class PedidoServiceImpl implements PedidoService {
+public class PedidoServiceImpl implements IPedidoService {
 
     @Autowired
-    private PedidoRepository pedidoRepository;
+    private IPedidoRepository pedidoRepository;
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private IUsuarioRepository usuarioRepository;
 
     @Autowired
-    private DetallePedidoRepository detallePedidoRepository;
+    private IDetallePedidoRepository detallePedidoRepository;
 
     @Autowired
-    private ProductoRepository productoRepository;
+    private IProductoRepository productoRepository;
 
     @Autowired
-    private EnvioRepository envioRepository;
+    private IEnvioRepository envioRepository;
 
-    public List<Pedido> getPedidos(Integer usuarioId) {
+    public Page<Pedido> getPedidos(Integer usuarioId, PageRequest pageRequest) {
         if (usuarioId != null)
-            return pedidoRepository.findByUsuario_UsuarioId(usuarioId);
+            return pedidoRepository.findByUsuario_UsuarioId(usuarioId, pageRequest);
 
-        return pedidoRepository.findAll();
+        return pedidoRepository.findAll(pageRequest);
     }
 
     public Optional<Pedido> getPedidoById(int pedidoId) {

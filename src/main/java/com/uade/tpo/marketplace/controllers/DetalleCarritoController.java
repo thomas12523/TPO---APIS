@@ -19,14 +19,14 @@ import com.uade.tpo.marketplace.entity.DetalleCarrito;
 import com.uade.tpo.marketplace.entity.dto.DetalleCarritoRequest;
 import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
-import com.uade.tpo.marketplace.service.detallecarrito.DetalleCarritoService;
+import com.uade.tpo.marketplace.service.detallecarrito.IDetalleCarritoService;
 
 @RestController
 @RequestMapping("DetalleCarrito")
 public class DetalleCarritoController {
 
     @Autowired
-    private DetalleCarritoService detalleCarritoService;
+    private IDetalleCarritoService detalleCarritoService;
 
     @GetMapping
     public ResponseEntity<List<DetalleCarrito>> getDetallesCarrito() {

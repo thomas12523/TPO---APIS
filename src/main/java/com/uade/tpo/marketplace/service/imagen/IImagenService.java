@@ -7,7 +7,7 @@ import com.uade.tpo.marketplace.entity.Imagen;
 import com.uade.tpo.marketplace.entity.dto.ImagenRequest;
 import com.uade.tpo.marketplace.exceptions.ImagenDuplicateException;
 
-public interface ImagenService {
+public interface IImagenService {
 
     public List<Imagen> getImagenes(Integer productoId);
 

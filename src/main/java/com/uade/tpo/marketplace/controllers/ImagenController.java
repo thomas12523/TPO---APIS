@@ -19,14 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.Imagen;
 import com.uade.tpo.marketplace.entity.dto.ImagenRequest;
 import com.uade.tpo.marketplace.exceptions.ImagenDuplicateException;
-import com.uade.tpo.marketplace.service.imagen.ImagenService;
+import com.uade.tpo.marketplace.service.imagen.IImagenService;
 
 @RestController
 @RequestMapping("Imagen")
 public class ImagenController {
 
     @Autowired
-    private ImagenService imagenService;
+    private IImagenService imagenService;
 
     @GetMapping
     public ResponseEntity<List<Imagen>> getImagenes(@RequestParam(required = false) Integer productoId) {

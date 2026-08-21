@@ -1,15 +1,17 @@
 package com.uade.tpo.marketplace.service.producto;
 
-import java.util.List;
 import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.ProductoRequest;
 import com.uade.tpo.marketplace.exceptions.ProductoDuplicateException;
 
-public interface ProductoService {
+public interface IProductoService {
 
-    public List<Producto> getProductos(Integer categoriaId, String nombre);
+    public Page<Producto> getProductos(Integer categoriaId, String nombre, PageRequest pageRequest);
 
     public Optional<Producto> getProductoById(int productoId);
 

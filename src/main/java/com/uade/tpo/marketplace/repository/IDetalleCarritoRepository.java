@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.uade.tpo.marketplace.entity.DetalleCarrito;
 
 @Repository
-public interface DetalleCarritoRepository extends JpaRepository<DetalleCarrito, Integer> {
+public interface IDetalleCarritoRepository extends JpaRepository<DetalleCarrito, Integer> {
 
     Optional<DetalleCarrito> findByCarrito_CarritoIdAndProducto_ProductoId(int carritoId, int productoId);
 

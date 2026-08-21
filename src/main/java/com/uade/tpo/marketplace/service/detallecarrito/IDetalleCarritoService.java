@@ -8,7 +8,7 @@ import com.uade.tpo.marketplace.entity.dto.DetalleCarritoRequest;
 import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 
-public interface DetalleCarritoService {
+public interface IDetalleCarritoService {
 
     public List<DetalleCarrito> getDetallesCarrito();
 

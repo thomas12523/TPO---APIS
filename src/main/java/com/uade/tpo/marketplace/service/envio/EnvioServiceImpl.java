@@ -10,19 +10,19 @@ import com.uade.tpo.marketplace.entity.Envio;
 import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.dto.EnvioRequest;
 import com.uade.tpo.marketplace.exceptions.EnvioDuplicateException;
-import com.uade.tpo.marketplace.repository.EnvioRepository;
-import com.uade.tpo.marketplace.repository.PedidoRepository;
+import com.uade.tpo.marketplace.repository.IEnvioRepository;
+import com.uade.tpo.marketplace.repository.IPedidoRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class EnvioServiceImpl implements EnvioService {
+public class EnvioServiceImpl implements IEnvioService {
 
     @Autowired
-    private EnvioRepository envioRepository;
+    private IEnvioRepository envioRepository;
 
     @Autowired
-    private PedidoRepository pedidoRepository;
+    private IPedidoRepository pedidoRepository;
 
     public List<Envio> getEnvios() {
         return envioRepository.findAll();

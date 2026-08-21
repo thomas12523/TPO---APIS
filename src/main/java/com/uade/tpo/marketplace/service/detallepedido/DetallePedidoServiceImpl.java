@@ -11,23 +11,23 @@ import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.DetallePedidoRequest;
 import com.uade.tpo.marketplace.exceptions.DetallePedidoDuplicateException;
-import com.uade.tpo.marketplace.repository.DetallePedidoRepository;
-import com.uade.tpo.marketplace.repository.PedidoRepository;
-import com.uade.tpo.marketplace.repository.ProductoRepository;
+import com.uade.tpo.marketplace.repository.IDetallePedidoRepository;
+import com.uade.tpo.marketplace.repository.IPedidoRepository;
+import com.uade.tpo.marketplace.repository.IProductoRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class DetallePedidoServiceImpl implements DetallePedidoService {
+public class DetallePedidoServiceImpl implements IDetallePedidoService {
 
     @Autowired
-    private DetallePedidoRepository detallePedidoRepository;
+    private IDetallePedidoRepository detallePedidoRepository;
 
     @Autowired
-    private PedidoRepository pedidoRepository;
+    private IPedidoRepository pedidoRepository;
 
     @Autowired
-    private ProductoRepository productoRepository;
+    private IProductoRepository productoRepository;
 
     public List<DetallePedido> getDetallesPedido() {
         return detallePedidoRepository.findAll();

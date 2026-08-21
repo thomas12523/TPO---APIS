@@ -10,19 +10,19 @@ import com.uade.tpo.marketplace.entity.Imagen;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.ImagenRequest;
 import com.uade.tpo.marketplace.exceptions.ImagenDuplicateException;
-import com.uade.tpo.marketplace.repository.ImagenRepository;
-import com.uade.tpo.marketplace.repository.ProductoRepository;
+import com.uade.tpo.marketplace.repository.IImagenRepository;
+import com.uade.tpo.marketplace.repository.IProductoRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class ImagenServiceImpl implements ImagenService {
+public class ImagenServiceImpl implements IImagenService {
 
     @Autowired
-    private ImagenRepository imagenRepository;
+    private IImagenRepository imagenRepository;
 
     @Autowired
-    private ProductoRepository productoRepository;
+    private IProductoRepository productoRepository;
 
     public List<Imagen> getImagenes(Integer productoId) {
         if (productoId != null)

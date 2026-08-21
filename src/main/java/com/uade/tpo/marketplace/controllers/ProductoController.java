@@ -1,10 +1,11 @@
 package com.uade.tpo.marketplace.controllers;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,20 +20,24 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.ProductoRequest;
 import com.uade.tpo.marketplace.exceptions.ProductoDuplicateException;
-import com.uade.tpo.marketplace.service.producto.ProductoService;
+import com.uade.tpo.marketplace.service.producto.IProductoService;
 
 @RestController
 @RequestMapping("Producto")
 public class ProductoController {
 
     @Autowired
-    private ProductoService productoService;
+    private IProductoService productoService;
 
     @GetMapping
-    public ResponseEntity<List<Producto>> getProductos(
+    public ResponseEntity<Page<Producto>> getProductos(
             @RequestParam(required = false) Integer categoriaId,
-            @RequestParam(required = false) String nombre) {
-        return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre));
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
+        if (page == null || size == null)
+            return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre, PageRequest.of(0, Integer.MAX_VALUE)));
+        return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre, PageRequest.of(page, size)));
     }
 
     @GetMapping("{productoId}")

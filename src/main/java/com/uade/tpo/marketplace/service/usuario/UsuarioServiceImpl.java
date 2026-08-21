@@ -1,24 +1,25 @@
 package com.uade.tpo.marketplace.service.usuario;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.UsuarioRequest;
 import com.uade.tpo.marketplace.exceptions.UsuarioDuplicateException;
-import com.uade.tpo.marketplace.repository.UsuarioRepository;
+import com.uade.tpo.marketplace.repository.IUsuarioRepository;
 
 @Service
-public class UsuarioServiceImpl implements UsuarioService {
+public class UsuarioServiceImpl implements IUsuarioService {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private IUsuarioRepository usuarioRepository;
 
-    public List<Usuario> getUsuarios() {
-        return usuarioRepository.findAll();
+    public Page<Usuario> getUsuarios(PageRequest pageRequest) {
+        return usuarioRepository.findAll(pageRequest);
     }
 
     public Optional<Usuario> getUsuarioById(int usuarioId) {

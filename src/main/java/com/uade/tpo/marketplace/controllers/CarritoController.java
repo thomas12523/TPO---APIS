@@ -21,18 +21,18 @@ import com.uade.tpo.marketplace.entity.dto.CarritoRequest;
 import com.uade.tpo.marketplace.entity.dto.CheckoutRequest;
 import com.uade.tpo.marketplace.exceptions.CarritoVacioException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
-import com.uade.tpo.marketplace.service.carrito.CarritoService;
-import com.uade.tpo.marketplace.service.checkout.CheckoutService;
+import com.uade.tpo.marketplace.service.carrito.ICarritoService;
+import com.uade.tpo.marketplace.service.checkout.ICheckoutService;
 
 @RestController
 @RequestMapping("Carrito")
 public class CarritoController {
 
     @Autowired
-    private CarritoService carritoService;
+    private ICarritoService carritoService;
 
     @Autowired
-    private CheckoutService checkoutService;
+    private ICheckoutService checkoutService;
 
     @GetMapping
     public ResponseEntity<List<Carrito>> getCarritos() {

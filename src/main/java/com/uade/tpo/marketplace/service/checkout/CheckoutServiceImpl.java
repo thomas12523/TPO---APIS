@@ -15,35 +15,35 @@ import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.CheckoutRequest;
 import com.uade.tpo.marketplace.exceptions.CarritoVacioException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
-import com.uade.tpo.marketplace.repository.CarritoRepository;
-import com.uade.tpo.marketplace.repository.DetalleCarritoRepository;
-import com.uade.tpo.marketplace.repository.DetallePedidoRepository;
-import com.uade.tpo.marketplace.repository.EnvioRepository;
-import com.uade.tpo.marketplace.repository.PedidoRepository;
-import com.uade.tpo.marketplace.repository.ProductoRepository;
+import com.uade.tpo.marketplace.repository.ICarritoRepository;
+import com.uade.tpo.marketplace.repository.IDetalleCarritoRepository;
+import com.uade.tpo.marketplace.repository.IDetallePedidoRepository;
+import com.uade.tpo.marketplace.repository.IEnvioRepository;
+import com.uade.tpo.marketplace.repository.IPedidoRepository;
+import com.uade.tpo.marketplace.repository.IProductoRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class CheckoutServiceImpl implements CheckoutService {
+public class CheckoutServiceImpl implements ICheckoutService {
 
     @Autowired
-    private CarritoRepository carritoRepository;
+    private ICarritoRepository carritoRepository;
 
     @Autowired
-    private DetalleCarritoRepository detalleCarritoRepository;
+    private IDetalleCarritoRepository detalleCarritoRepository;
 
     @Autowired
-    private PedidoRepository pedidoRepository;
+    private IPedidoRepository pedidoRepository;
 
     @Autowired
-    private DetallePedidoRepository detallePedidoRepository;
+    private IDetallePedidoRepository detallePedidoRepository;
 
     @Autowired
-    private ProductoRepository productoRepository;
+    private IProductoRepository productoRepository;
 
     @Autowired
-    private EnvioRepository envioRepository;
+    private IEnvioRepository envioRepository;
 
     public Pedido checkout(int carritoId, CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException {
         Carrito carrito = carritoRepository.findById(carritoId)

@@ -4,21 +4,23 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.exceptions.CategoryDuplicateException;
-import com.uade.tpo.marketplace.repository.CategoriesRepository;
+import com.uade.tpo.marketplace.repository.ICategoriesRepository;
 
 @Service
-public class CategoriesServiceImpl implements CategoriesService {
-    
+public class CategoriesServiceImpl implements ICategoriesService {
+
     @Autowired
-    private CategoriesRepository categoriesRepository;
+    private ICategoriesRepository categoriesRepository;
 
 
-    public List<Category> getCategories() {
-        return categoriesRepository.findAll();
+    public Page<Category> getCategories(PageRequest pageRequest) {
+        return categoriesRepository.findAll(pageRequest);
     }
 
     public Optional<Category> getCategoryById(int categoryId) {
