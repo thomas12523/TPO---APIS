@@ -52,23 +52,20 @@ public class ProductoServiceImpl implements IProductoService {
         return productoRepository.save(producto);
     }
 
-    public Producto actualizarProducto(int productoId, ProductoRequest productoRequest) {
-        Optional<Producto> existente = productoRepository.findById(productoId);
-        if (existente.isEmpty())
-            return null;
+    public Optional<Producto> actualizarProducto(int productoId, ProductoRequest productoRequest) {
+        return productoRepository.findById(productoId).map(producto -> {
+            Category categoria = categoriesRepository.findById(productoRequest.getCategoriaId())
+                    .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
 
-        Category categoria = categoriesRepository.findById(productoRequest.getCategoriaId())
-                .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
-
-        Producto producto = existente.get();
-        producto.setCategoria(categoria);
-        producto.setNombreProducto(productoRequest.getNombreProducto());
-        producto.setDescripcion(productoRequest.getDescripcion());
-        producto.setPrecioUnitario(productoRequest.getPrecioUnitario());
-        producto.setStock(productoRequest.getStock());
-        producto.setImagenUrl(productoRequest.getImagenUrl());
-        producto.setDescuentoPorcentaje(productoRequest.getDescuentoPorcentaje());
-        return productoRepository.save(producto);
+            producto.setCategoria(categoria);
+            producto.setNombreProducto(productoRequest.getNombreProducto());
+            producto.setDescripcion(productoRequest.getDescripcion());
+            producto.setPrecioUnitario(productoRequest.getPrecioUnitario());
+            producto.setStock(productoRequest.getStock());
+            producto.setImagenUrl(productoRequest.getImagenUrl());
+            producto.setDescuentoPorcentaje(productoRequest.getDescuentoPorcentaje());
+            return productoRepository.save(producto);
+        });
     }
 
     public boolean deleteProducto(int productoId) {

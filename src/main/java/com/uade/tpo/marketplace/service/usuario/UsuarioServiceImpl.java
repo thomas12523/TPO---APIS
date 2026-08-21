@@ -48,19 +48,16 @@ public class UsuarioServiceImpl implements IUsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario actualizarUsuario(int usuarioId, UsuarioRequest usuarioRequest) {
-        Optional<Usuario> existente = usuarioRepository.findById(usuarioId);
-        if (existente.isEmpty())
-            return null;
-
-        Usuario usuario = existente.get();
-        usuario.setDni(usuarioRequest.getDni());
-        usuario.setUsername(usuarioRequest.getUsername());
-        usuario.setEmail(usuarioRequest.getEmail());
-        usuario.setNombre(usuarioRequest.getNombre());
-        usuario.setApellido(usuarioRequest.getApellido());
-        usuario.setContrasenia(usuarioRequest.getContrasenia());
-        return usuarioRepository.save(usuario);
+    public Optional<Usuario> actualizarUsuario(int usuarioId, UsuarioRequest usuarioRequest) {
+        return usuarioRepository.findById(usuarioId).map(usuario -> {
+            usuario.setDni(usuarioRequest.getDni());
+            usuario.setUsername(usuarioRequest.getUsername());
+            usuario.setEmail(usuarioRequest.getEmail());
+            usuario.setNombre(usuarioRequest.getNombre());
+            usuario.setApellido(usuarioRequest.getApellido());
+            usuario.setContrasenia(usuarioRequest.getContrasenia());
+            return usuarioRepository.save(usuario);
+        });
     }
 
     public boolean deleteUsuario(int usuarioId) {

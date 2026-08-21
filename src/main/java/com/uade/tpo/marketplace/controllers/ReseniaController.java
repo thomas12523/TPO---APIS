@@ -56,11 +56,9 @@ public class ReseniaController {
 
     @PutMapping("{reseniaId}")
     public ResponseEntity<Resenia> actualizarResenia(@PathVariable int reseniaId, @RequestBody ReseniaRequest reseniaRequest) {
-        Resenia result = reseniaService.actualizarResenia(reseniaId, reseniaRequest);
-        if (result == null)
-            return ResponseEntity.notFound().build();
-
-        return ResponseEntity.ok(result);
+        return reseniaService.actualizarResenia(reseniaId, reseniaRequest)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("{reseniaId}")

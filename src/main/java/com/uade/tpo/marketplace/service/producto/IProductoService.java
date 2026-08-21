@@ -17,7 +17,7 @@ public interface IProductoService {
 
     public Producto crearProducto(ProductoRequest productoRequest) throws ProductoDuplicateException;
 
-    public Producto actualizarProducto(int productoId, ProductoRequest productoRequest);
+    public Optional<Producto> actualizarProducto(int productoId, ProductoRequest productoRequest);
 
     public boolean deleteProducto(int productoId);
 }

@@ -17,7 +17,7 @@ public interface IReseniaService {
 
     public Resenia crearResenia(ReseniaRequest reseniaRequest) throws ReseniaDuplicateException;
 
-    public Resenia actualizarResenia(int reseniaId, ReseniaRequest reseniaRequest);
+    public Optional<Resenia> actualizarResenia(int reseniaId, ReseniaRequest reseniaRequest);
 
     public boolean deleteResenia(int reseniaId);
 }

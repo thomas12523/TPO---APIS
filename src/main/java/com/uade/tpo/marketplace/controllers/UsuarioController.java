@@ -64,11 +64,9 @@ public class UsuarioController {
 
     @PutMapping("{usuarioId}")
     public ResponseEntity<Usuario> actualizarUsuario(@PathVariable int usuarioId, @RequestBody UsuarioRequest usuarioRequest) {
-        Usuario result = usuarioService.actualizarUsuario(usuarioId, usuarioRequest);
-        if (result == null)
-            return ResponseEntity.notFound().build();
-
-        return ResponseEntity.ok(result);
+        return usuarioService.actualizarUsuario(usuarioId, usuarioRequest)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("{usuarioId}")

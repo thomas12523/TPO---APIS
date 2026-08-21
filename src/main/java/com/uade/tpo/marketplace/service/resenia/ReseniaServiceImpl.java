@@ -60,16 +60,13 @@ public class ReseniaServiceImpl implements IReseniaService {
         return reseniaRepository.save(resenia);
     }
 
-    public Resenia actualizarResenia(int reseniaId, ReseniaRequest reseniaRequest) {
-        Optional<Resenia> existente = reseniaRepository.findById(reseniaId);
-        if (existente.isEmpty())
-            return null;
-
-        Resenia resenia = existente.get();
-        resenia.setCalificacion(reseniaRequest.getCalificacion());
-        resenia.setComentario(reseniaRequest.getComentario());
-        resenia.setFechaCreacion(reseniaRequest.getFechaCreacion());
-        return reseniaRepository.save(resenia);
+    public Optional<Resenia> actualizarResenia(int reseniaId, ReseniaRequest reseniaRequest) {
+        return reseniaRepository.findById(reseniaId).map(resenia -> {
+            resenia.setCalificacion(reseniaRequest.getCalificacion());
+            resenia.setComentario(reseniaRequest.getComentario());
+            resenia.setFechaCreacion(reseniaRequest.getFechaCreacion());
+            return reseniaRepository.save(resenia);
+        });
     }
 
     public boolean deleteResenia(int reseniaId) {

@@ -19,7 +19,7 @@ public interface IUsuarioService {
 
     public Usuario crearUsuario(UsuarioRequest usuarioRequest) throws UsuarioDuplicateException;
 
-    public Usuario actualizarUsuario(int usuarioId, UsuarioRequest usuarioRequest);
+    public Optional<Usuario> actualizarUsuario(int usuarioId, UsuarioRequest usuarioRequest);
 
     public boolean deleteUsuario(int usuarioId);
 }
