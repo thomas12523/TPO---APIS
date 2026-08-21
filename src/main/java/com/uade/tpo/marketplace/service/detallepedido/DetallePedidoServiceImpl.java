@@ -51,9 +51,9 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
         detallePedido.setPedido(pedido);
         detallePedido.setProducto(producto);
         detallePedido.setCantidad(detallePedidoRequest.getCantidad());
-        detallePedido.setPrecioUnitario(producto.getPrecioUnitario());
+        detallePedido.setPrecioUnitario(producto.getPrecioConDescuento());
         detallePedido.setObservaciones(detallePedidoRequest.getObservaciones());
-        detallePedido.setSubtotal(detallePedidoRequest.getCantidad() * producto.getPrecioUnitario());
+        detallePedido.setSubtotal(detallePedidoRequest.getCantidad() * producto.getPrecioConDescuento());
         return detallePedidoRepository.save(detallePedido);
     }
 
@@ -64,9 +64,9 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
 
         DetallePedido detallePedido = existente.get();
         detallePedido.setCantidad(detallePedidoRequest.getCantidad());
-        detallePedido.setPrecioUnitario(detallePedido.getProducto().getPrecioUnitario());
+        detallePedido.setPrecioUnitario(detallePedido.getProducto().getPrecioConDescuento());
         detallePedido.setObservaciones(detallePedidoRequest.getObservaciones());
-        detallePedido.setSubtotal(detallePedidoRequest.getCantidad() * detallePedido.getProducto().getPrecioUnitario());
+        detallePedido.setSubtotal(detallePedidoRequest.getCantidad() * detallePedido.getProducto().getPrecioConDescuento());
         return detallePedidoRepository.save(detallePedido);
     }
 

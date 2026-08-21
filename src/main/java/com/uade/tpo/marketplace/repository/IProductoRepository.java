@@ -16,9 +16,10 @@ public interface IProductoRepository extends JpaRepository<Producto, Integer> {
     @Query(value = "select p from Producto p where p.nombreProducto = ?1")
     List<Producto> findByNombreProducto(String nombreProducto);
 
-    Page<Producto> findByCategoria_Id(int categoriaId, Pageable pageable);
-
-    Page<Producto> findByNombreProductoContainingIgnoreCase(String nombreProducto, Pageable pageable);
-
-    Page<Producto> findByCategoria_IdAndNombreProductoContainingIgnoreCase(int categoriaId, String nombreProducto, Pageable pageable);
+    @Query("select p from Producto p where "
+            + "(:categoriaId is null or p.categoria.id = :categoriaId) and "
+            + "(:nombre is null or lower(p.nombreProducto) like lower(concat('%', :nombre, '%'))) and "
+            + "(:precioMin is null or p.precioUnitario >= :precioMin) and "
+            + "(:precioMax is null or p.precioUnitario <= :precioMax)")
+    Page<Producto> buscarProductos(Integer categoriaId, String nombre, Double precioMin, Double precioMax, Pageable pageable);
 }

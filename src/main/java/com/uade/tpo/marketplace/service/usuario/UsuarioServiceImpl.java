@@ -40,6 +40,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
         Usuario usuario = new Usuario();
         usuario.setDni(usuarioRequest.getDni());
+        usuario.setUsername(usuarioRequest.getUsername());
         usuario.setEmail(usuarioRequest.getEmail());
         usuario.setNombre(usuarioRequest.getNombre());
         usuario.setApellido(usuarioRequest.getApellido());
@@ -54,6 +55,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
         Usuario usuario = existente.get();
         usuario.setDni(usuarioRequest.getDni());
+        usuario.setUsername(usuarioRequest.getUsername());
         usuario.setEmail(usuarioRequest.getEmail());
         usuario.setNombre(usuarioRequest.getNombre());
         usuario.setApellido(usuarioRequest.getApellido());

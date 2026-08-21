@@ -11,7 +11,7 @@ import com.uade.tpo.marketplace.exceptions.ProductoDuplicateException;
 
 public interface IProductoService {
 
-    public Page<Producto> getProductos(Integer categoriaId, String nombre, PageRequest pageRequest);
+    public Page<Producto> getProductos(Integer categoriaId, String nombre, Double precioMin, Double precioMax, PageRequest pageRequest);
 
     public Optional<Producto> getProductoById(int productoId);
 

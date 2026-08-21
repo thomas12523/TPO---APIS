@@ -17,10 +17,11 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(int usuarioId, int dni, String email, String nombre, String apellido, String contrasenia,
+    public Usuario(int usuarioId, int dni, String username, String email, String nombre, String apellido, String contrasenia,
             List<Pedido> pedidos) {
         this.usuarioId = usuarioId;
         this.dni = dni;
+        this.username = username;
         this.email = email;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -34,6 +35,9 @@ public class Usuario {
 
     @Column
     private int dni;
+
+    @Column
+    private String username;
 
     @Column
     private String email;

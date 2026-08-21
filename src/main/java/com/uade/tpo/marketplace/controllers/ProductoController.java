@@ -33,11 +33,13 @@ public class ProductoController {
     public ResponseEntity<Page<Producto>> getProductos(
             @RequestParam(required = false) Integer categoriaId,
             @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) Double precioMin,
+            @RequestParam(required = false) Double precioMax,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
         if (page == null || size == null)
-            return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre, PageRequest.of(0, Integer.MAX_VALUE)));
-        return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre, PageRequest.of(page, size)));
+            return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre, precioMin, precioMax, PageRequest.of(0, Integer.MAX_VALUE)));
+        return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre, precioMin, precioMax, PageRequest.of(page, size)));
     }
 
     @GetMapping("{productoId}")

@@ -26,15 +26,8 @@ public class ProductoServiceImpl implements IProductoService {
     @Autowired
     private ICategoriesRepository categoriesRepository;
 
-    public Page<Producto> getProductos(Integer categoriaId, String nombre, PageRequest pageRequest) {
-        if (categoriaId != null && nombre != null)
-            return productoRepository.findByCategoria_IdAndNombreProductoContainingIgnoreCase(categoriaId, nombre, pageRequest);
-        if (categoriaId != null)
-            return productoRepository.findByCategoria_Id(categoriaId, pageRequest);
-        if (nombre != null)
-            return productoRepository.findByNombreProductoContainingIgnoreCase(nombre, pageRequest);
-
-        return productoRepository.findAll(pageRequest);
+    public Page<Producto> getProductos(Integer categoriaId, String nombre, Double precioMin, Double precioMax, PageRequest pageRequest) {
+        return productoRepository.buscarProductos(categoriaId, nombre, precioMin, precioMax, pageRequest);
     }
 
     public Optional<Producto> getProductoById(int productoId) {
@@ -55,6 +48,7 @@ public class ProductoServiceImpl implements IProductoService {
         producto.setPrecioUnitario(productoRequest.getPrecioUnitario());
         producto.setStock(productoRequest.getStock());
         producto.setImagenUrl(productoRequest.getImagenUrl());
+        producto.setDescuentoPorcentaje(productoRequest.getDescuentoPorcentaje());
         return productoRepository.save(producto);
     }
 
@@ -73,6 +67,7 @@ public class ProductoServiceImpl implements IProductoService {
         producto.setPrecioUnitario(productoRequest.getPrecioUnitario());
         producto.setStock(productoRequest.getStock());
         producto.setImagenUrl(productoRequest.getImagenUrl());
+        producto.setDescuentoPorcentaje(productoRequest.getDescuentoPorcentaje());
         return productoRepository.save(producto);
     }
 

@@ -10,4 +10,5 @@ public class ProductoRequest {
     private double precioUnitario;
     private int stock;
     private String imagenUrl;
+    private double descuentoPorcentaje;
 }

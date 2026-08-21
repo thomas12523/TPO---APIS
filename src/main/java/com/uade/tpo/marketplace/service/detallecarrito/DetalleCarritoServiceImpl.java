@@ -55,7 +55,7 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
         detalleCarrito.setCarrito(carrito);
         detalleCarrito.setProducto(producto);
         detalleCarrito.setCantidad(detalleCarritoRequest.getCantidad());
-        detalleCarrito.setPrecioUnitario(producto.getPrecioUnitario());
+        detalleCarrito.setPrecioUnitario(producto.getPrecioConDescuento());
         return detalleCarritoRepository.save(detalleCarrito);
     }
 
@@ -69,7 +69,7 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
             throw new StockInsuficienteException();
 
         detalleCarrito.setCantidad(detalleCarritoRequest.getCantidad());
-        detalleCarrito.setPrecioUnitario(detalleCarrito.getProducto().getPrecioUnitario());
+        detalleCarrito.setPrecioUnitario(detalleCarrito.getProducto().getPrecioConDescuento());
         return detalleCarritoRepository.save(detalleCarrito);
     }
 
