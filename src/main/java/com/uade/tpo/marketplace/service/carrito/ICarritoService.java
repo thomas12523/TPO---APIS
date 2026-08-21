@@ -8,7 +8,7 @@ import com.uade.tpo.marketplace.entity.dto.CarritoRequest;
 
 public interface ICarritoService {
 
-    public List<Carrito> getCarritos();
+    public List<Carrito> getCarritos(Integer usuarioId);
 
     public Optional<Carrito> getCarritoById(int carritoId);
 

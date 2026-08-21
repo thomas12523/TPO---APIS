@@ -9,7 +9,7 @@ import com.uade.tpo.marketplace.exceptions.DetallePedidoDuplicateException;
 
 public interface IDetallePedidoService {
 
-    public List<DetallePedido> getDetallesPedido();
+    public List<DetallePedido> getDetallesPedido(Integer pedidoId);
 
     public Optional<DetallePedido> getDetallePedidoById(int detallePedidoId);
 

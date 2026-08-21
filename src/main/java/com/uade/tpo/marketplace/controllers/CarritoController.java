@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Carrito;
@@ -35,8 +36,8 @@ public class CarritoController {
     private ICheckoutService checkoutService;
 
     @GetMapping
-    public ResponseEntity<List<Carrito>> getCarritos() {
-        return ResponseEntity.ok(carritoService.getCarritos());
+    public ResponseEntity<List<Carrito>> getCarritos(@RequestParam(required = false) Integer usuarioId) {
+        return ResponseEntity.ok(carritoService.getCarritos(usuarioId));
     }
 
     @GetMapping("{carritoId}")

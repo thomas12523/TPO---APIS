@@ -24,7 +24,10 @@ public class EnvioServiceImpl implements IEnvioService {
     @Autowired
     private IPedidoRepository pedidoRepository;
 
-    public List<Envio> getEnvios() {
+    public List<Envio> getEnvios(Integer pedidoId) {
+        if (pedidoId != null)
+            return envioRepository.findByPedido_PedidoId(pedidoId).map(List::of).orElse(List.of());
+
         return envioRepository.findAll();
     }
 

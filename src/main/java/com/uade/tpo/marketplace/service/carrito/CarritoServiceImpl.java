@@ -23,7 +23,10 @@ public class CarritoServiceImpl implements ICarritoService {
     @Autowired
     private IUsuarioRepository usuarioRepository;
 
-    public List<Carrito> getCarritos() {
+    public List<Carrito> getCarritos(Integer usuarioId) {
+        if (usuarioId != null)
+            return carritoRepository.findByUsuario_UsuarioId(usuarioId);
+
         return carritoRepository.findAll();
     }
 

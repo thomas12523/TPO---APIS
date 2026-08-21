@@ -10,7 +10,7 @@ import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 
 public interface IDetalleCarritoService {
 
-    public List<DetalleCarrito> getDetallesCarrito();
+    public List<DetalleCarrito> getDetallesCarrito(Integer carritoId);
 
     public Optional<DetalleCarrito> getDetalleCarritoById(int carritoId, int productoId);
 

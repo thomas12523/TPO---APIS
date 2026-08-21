@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.DetalleCarrito;
@@ -29,8 +30,8 @@ public class DetalleCarritoController {
     private IDetalleCarritoService detalleCarritoService;
 
     @GetMapping
-    public ResponseEntity<List<DetalleCarrito>> getDetallesCarrito() {
-        return ResponseEntity.ok(detalleCarritoService.getDetallesCarrito());
+    public ResponseEntity<List<DetalleCarrito>> getDetallesCarrito(@RequestParam(required = false) Integer carritoId) {
+        return ResponseEntity.ok(detalleCarritoService.getDetallesCarrito(carritoId));
     }
 
     @GetMapping("{carritoId}/{productoId}")

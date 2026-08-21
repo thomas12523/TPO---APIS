@@ -29,7 +29,10 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
     @Autowired
     private IProductoRepository productoRepository;
 
-    public List<DetallePedido> getDetallesPedido() {
+    public List<DetallePedido> getDetallesPedido(Integer pedidoId) {
+        if (pedidoId != null)
+            return detallePedidoRepository.findByPedido_PedidoId(pedidoId);
+
         return detallePedidoRepository.findAll();
     }
 

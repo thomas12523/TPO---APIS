@@ -9,7 +9,7 @@ import com.uade.tpo.marketplace.exceptions.EnvioDuplicateException;
 
 public interface IEnvioService {
 
-    public List<Envio> getEnvios();
+    public List<Envio> getEnvios(Integer pedidoId);
 
     public Optional<Envio> getEnvioById(int envioId);
 

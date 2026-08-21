@@ -30,7 +30,10 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
     @Autowired
     private IProductoRepository productoRepository;
 
-    public List<DetalleCarrito> getDetallesCarrito() {
+    public List<DetalleCarrito> getDetallesCarrito(Integer carritoId) {
+        if (carritoId != null)
+            return detalleCarritoRepository.findByCarrito_CarritoId(carritoId);
+
         return detalleCarritoRepository.findAll();
     }
 
