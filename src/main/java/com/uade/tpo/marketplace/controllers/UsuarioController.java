@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -48,8 +49,8 @@ public class UsuarioController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<Usuario> login(@RequestParam String email, @RequestParam String contrasenia) {
-        Optional<Usuario> result = usuarioService.login(email, contrasenia);
+    public ResponseEntity<Usuario> login(@RequestParam String username, @RequestParam String contrasenia) {
+        Optional<Usuario> result = usuarioService.login(username, contrasenia);
         if (result.isPresent())
             return ResponseEntity.ok(result.get());
 
@@ -64,9 +65,20 @@ public class UsuarioController {
 
     @PutMapping("{usuarioId}")
     public ResponseEntity<Usuario> actualizarUsuario(@PathVariable int usuarioId, @RequestBody UsuarioRequest usuarioRequest) {
-        return usuarioService.actualizarUsuario(usuarioId, usuarioRequest)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Usuario> result = usuarioService.actualizarUsuario(usuarioId, usuarioRequest);
+        if (result.isPresent())
+            return ResponseEntity.ok(result.get());
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("{usuarioId}/permisos") // actualizo los permisos de un usuario (admin o no admin) FALTA SEGURIDAD
+    public ResponseEntity<Usuario> actualizarPermisos(@PathVariable int usuarioId, @RequestParam boolean admin) {
+        Optional<Usuario> result = usuarioService.actualizarPermisos(usuarioId, admin);
+        if (result.isPresent())
+            return ResponseEntity.ok(result.get());
+
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("{usuarioId}")

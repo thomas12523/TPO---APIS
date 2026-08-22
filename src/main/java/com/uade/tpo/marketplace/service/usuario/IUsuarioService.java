@@ -15,11 +15,13 @@ public interface IUsuarioService {
 
     public Optional<Usuario> getUsuarioById(int usuarioId);
 
-    public Optional<Usuario> login(String email, String contrasenia);
+    public Optional<Usuario> login(String username, String contrasenia);
 
     public Usuario crearUsuario(UsuarioRequest usuarioRequest) throws UsuarioDuplicateException;
 
     public Optional<Usuario> actualizarUsuario(int usuarioId, UsuarioRequest usuarioRequest);
+
+    public Optional<Usuario> actualizarPermisos(int usuarioId, boolean admin);
 
     public boolean deleteUsuario(int usuarioId);
 }

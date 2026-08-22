@@ -26,8 +26,8 @@ public class UsuarioServiceImpl implements IUsuarioService {
         return usuarioRepository.findById(usuarioId);
     }
 
-    public Optional<Usuario> login(String email, String contrasenia) {
-        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
+    public Optional<Usuario> login(String username, String contrasenia) {
+        Optional<Usuario> usuario = usuarioRepository.findByUsername(username);
         if (usuario.isEmpty() || !usuario.get().getContrasenia().equals(contrasenia))
             return Optional.empty();
 
@@ -56,6 +56,13 @@ public class UsuarioServiceImpl implements IUsuarioService {
             usuario.setNombre(usuarioRequest.getNombre());
             usuario.setApellido(usuarioRequest.getApellido());
             usuario.setContrasenia(usuarioRequest.getContrasenia());
+            return usuarioRepository.save(usuario);
+        });
+    }
+
+    public Optional<Usuario> actualizarPermisos(int usuarioId, boolean admin) {
+        return usuarioRepository.findById(usuarioId).map(usuario -> {
+            usuario.setAdmin(admin);
             return usuarioRepository.save(usuario);
         });
     }

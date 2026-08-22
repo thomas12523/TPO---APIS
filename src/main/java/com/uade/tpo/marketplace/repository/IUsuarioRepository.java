@@ -11,4 +11,6 @@ import com.uade.tpo.marketplace.entity.Usuario;
 public interface IUsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     Optional<Usuario> findByEmail(String email);
+
+    Optional<Usuario> findByUsername(String username);
 }

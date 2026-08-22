@@ -59,9 +59,11 @@ public class ProductoController {
 
     @PutMapping("{productoId}")
     public ResponseEntity<Producto> actualizarProducto(@PathVariable int productoId, @RequestBody ProductoRequest productoRequest) {
-        return productoService.actualizarProducto(productoId, productoRequest)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Producto> result = productoService.actualizarProducto(productoId, productoRequest);
+        if (result.isPresent())
+            return ResponseEntity.ok(result.get());
+
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("{productoId}")
