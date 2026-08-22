@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.uade.tpo.marketplace.entity.DetallePedido;
@@ -11,7 +12,9 @@ import com.uade.tpo.marketplace.entity.DetallePedido;
 @Repository
 public interface IDetallePedidoRepository extends JpaRepository<DetallePedido, Integer> {
 
-    Optional<DetallePedido> findByPedido_PedidoIdAndProducto_ProductoId(int pedidoId, int productoId);
+    @Query(value = "select dp from DetallePedido dp where dp.pedido.pedidoId = ?1 and dp.producto.productoId = ?2")
+    Optional<DetallePedido> findByPedidoIdAndProductoId(int pedidoId, int productoId);
 
-    List<DetallePedido> findByPedido_PedidoId(int pedidoId);
+    @Query(value = "select dp from DetallePedido dp where dp.pedido.pedidoId = ?1")
+    List<DetallePedido> findByPedidoId(int pedidoId);
 }

@@ -12,9 +12,9 @@ import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.DetalleCarritoRequest;
 import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
-import com.uade.tpo.marketplace.repository.ICarritoRepository;
 import com.uade.tpo.marketplace.repository.IDetalleCarritoRepository;
-import com.uade.tpo.marketplace.repository.IProductoRepository;
+import com.uade.tpo.marketplace.service.carrito.ICarritoService;
+import com.uade.tpo.marketplace.service.producto.IProductoService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -25,34 +25,34 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
     private IDetalleCarritoRepository detalleCarritoRepository;
 
     @Autowired
-    private ICarritoRepository carritoRepository;
+    private ICarritoService carritoService;
 
     @Autowired
-    private IProductoRepository productoRepository;
+    private IProductoService productoService;
 
     public List<DetalleCarrito> getDetallesCarrito(Integer carritoId) {
         if (carritoId != null)
-            return detalleCarritoRepository.findByCarrito_CarritoId(carritoId);
+            return detalleCarritoRepository.findByCarritoId(carritoId);
 
         return detalleCarritoRepository.findAll();
     }
 
     public Optional<DetalleCarrito> getDetalleCarritoById(int carritoId, int productoId) {
-        return detalleCarritoRepository.findByCarrito_CarritoIdAndProducto_ProductoId(carritoId, productoId);
+        return detalleCarritoRepository.findByCarritoIdAndProductoId(carritoId, productoId);
     }
 
     public DetalleCarrito crearDetalleCarrito(DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException, StockInsuficienteException {
-        if (detalleCarritoRepository.findByCarrito_CarritoIdAndProducto_ProductoId(
+        if (detalleCarritoRepository.findByCarritoIdAndProductoId(
                 detalleCarritoRequest.getCarritoId(), detalleCarritoRequest.getProductoId()).isPresent())
             throw new DetalleCarritoDuplicateException();
 
-        Optional<Carrito> carritoOpt = carritoRepository.findById(detalleCarritoRequest.getCarritoId());
+        Optional<Carrito> carritoOpt = carritoService.getCarritoById(detalleCarritoRequest.getCarritoId());
         if (carritoOpt.isEmpty()) {
             throw new EntityNotFoundException("Carrito no encontrado");
         }
         Carrito carrito = carritoOpt.get();
 
-        Optional<Producto> productoOpt = productoRepository.findById(detalleCarritoRequest.getProductoId());
+        Optional<Producto> productoOpt = productoService.getProductoById(detalleCarritoRequest.getProductoId());
         if (productoOpt.isEmpty()) {
             throw new EntityNotFoundException("Producto no encontrado");
         }
@@ -70,7 +70,7 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
     }
 
     public DetalleCarrito actualizarDetalleCarrito(int carritoId, int productoId, DetalleCarritoRequest detalleCarritoRequest) throws StockInsuficienteException {
-        Optional<DetalleCarrito> existente = detalleCarritoRepository.findByCarrito_CarritoIdAndProducto_ProductoId(carritoId, productoId);
+        Optional<DetalleCarrito> existente = detalleCarritoRepository.findByCarritoIdAndProductoId(carritoId, productoId);
         if (existente.isEmpty())
             return null;
 
@@ -84,11 +84,15 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
     }
 
     public boolean deleteDetalleCarrito(int carritoId, int productoId) {
-        Optional<DetalleCarrito> existente = detalleCarritoRepository.findByCarrito_CarritoIdAndProducto_ProductoId(carritoId, productoId);
+        Optional<DetalleCarrito> existente = detalleCarritoRepository.findByCarritoIdAndProductoId(carritoId, productoId);
         if (existente.isEmpty())
             return false;
 
         detalleCarritoRepository.deleteById(existente.get().getDetalleCarritoId());
         return true;
+    }
+
+    public void deleteDetallesByCarritoId(int carritoId) {
+        detalleCarritoRepository.deleteAll(detalleCarritoRepository.findByCarritoId(carritoId));
     }
 }

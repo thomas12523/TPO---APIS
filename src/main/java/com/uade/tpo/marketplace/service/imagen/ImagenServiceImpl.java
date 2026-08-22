@@ -11,7 +11,7 @@ import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.ImagenRequest;
 import com.uade.tpo.marketplace.exceptions.ImagenDuplicateException;
 import com.uade.tpo.marketplace.repository.IImagenRepository;
-import com.uade.tpo.marketplace.repository.IProductoRepository;
+import com.uade.tpo.marketplace.service.producto.IProductoService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -22,11 +22,11 @@ public class ImagenServiceImpl implements IImagenService {
     private IImagenRepository imagenRepository;
 
     @Autowired
-    private IProductoRepository productoRepository;
+    private IProductoService productoService;
 
     public List<Imagen> getImagenes(Integer productoId) {
         if (productoId != null)
-            return imagenRepository.findByProducto_ProductoId(productoId);
+            return imagenRepository.findByProductoId(productoId);
 
         return imagenRepository.findAll();
     }
@@ -36,11 +36,11 @@ public class ImagenServiceImpl implements IImagenService {
     }
 
     public Imagen crearImagen(ImagenRequest imagenRequest) throws ImagenDuplicateException {
-        if (imagenRepository.findByProducto_ProductoIdAndImagenUrl(
+        if (imagenRepository.findByProductoIdAndImagenUrl(
                 imagenRequest.getProductoId(), imagenRequest.getImagenUrl()).isPresent())
             throw new ImagenDuplicateException();
 
-        Optional<Producto> productoOpt = productoRepository.findById(imagenRequest.getProductoId());
+        Optional<Producto> productoOpt = productoService.getProductoById(imagenRequest.getProductoId());
         if (productoOpt.isEmpty()) {
             throw new EntityNotFoundException("Producto no encontrado");
         }

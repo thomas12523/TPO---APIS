@@ -19,4 +19,6 @@ public interface IDetalleCarritoService {
     public DetalleCarrito actualizarDetalleCarrito(int carritoId, int productoId, DetalleCarritoRequest detalleCarritoRequest) throws StockInsuficienteException;
 
     public boolean deleteDetalleCarrito(int carritoId, int productoId);
+
+    public void deleteDetallesByCarritoId(int carritoId);
 }

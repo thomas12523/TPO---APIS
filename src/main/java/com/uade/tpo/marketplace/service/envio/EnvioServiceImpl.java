@@ -11,7 +11,7 @@ import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.dto.EnvioRequest;
 import com.uade.tpo.marketplace.exceptions.EnvioDuplicateException;
 import com.uade.tpo.marketplace.repository.IEnvioRepository;
-import com.uade.tpo.marketplace.repository.IPedidoRepository;
+import com.uade.tpo.marketplace.service.pedido.IPedidoService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -22,11 +22,11 @@ public class EnvioServiceImpl implements IEnvioService {
     private IEnvioRepository envioRepository;
 
     @Autowired
-    private IPedidoRepository pedidoRepository;
+    private IPedidoService pedidoService;
 
     public List<Envio> getEnvios(Integer pedidoId) {
         if (pedidoId != null)
-            return envioRepository.findByPedido_PedidoId(pedidoId).map(List::of).orElse(List.of());
+            return envioRepository.findByPedidoId(pedidoId).map(List::of).orElse(List.of());
 
         return envioRepository.findAll();
     }
@@ -36,10 +36,10 @@ public class EnvioServiceImpl implements IEnvioService {
     }
 
     public Envio crearEnvio(EnvioRequest envioRequest) throws EnvioDuplicateException {
-        if (envioRepository.findByPedido_PedidoId(envioRequest.getPedidoId()).isPresent())
+        if (envioRepository.findByPedidoId(envioRequest.getPedidoId()).isPresent())
             throw new EnvioDuplicateException();
 
-        Optional<Pedido> pedidoOpt = pedidoRepository.findById(envioRequest.getPedidoId());
+        Optional<Pedido> pedidoOpt = pedidoService.getPedidoById(envioRequest.getPedidoId());
         if (pedidoOpt.isEmpty()) {
             throw new EntityNotFoundException("Pedido no encontrado");
         }
@@ -71,5 +71,13 @@ public class EnvioServiceImpl implements IEnvioService {
 
         envioRepository.deleteById(envioId);
         return true;
+    }
+
+    public Envio guardarEnvio(Envio envio) {
+        return envioRepository.save(envio);
+    }
+
+    public void deleteByPedidoId(int pedidoId) {
+        envioRepository.findByPedidoId(pedidoId).ifPresent(envioRepository::delete);
     }
 }

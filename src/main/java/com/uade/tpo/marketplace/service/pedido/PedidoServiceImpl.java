@@ -10,14 +10,13 @@ import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.DetallePedido;
 import com.uade.tpo.marketplace.entity.Pedido;
-import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.PedidoRequest;
-import com.uade.tpo.marketplace.repository.IDetallePedidoRepository;
-import com.uade.tpo.marketplace.repository.IEnvioRepository;
 import com.uade.tpo.marketplace.repository.IPedidoRepository;
-import com.uade.tpo.marketplace.repository.IProductoRepository;
-import com.uade.tpo.marketplace.repository.IUsuarioRepository;
+import com.uade.tpo.marketplace.service.detallepedido.IDetallePedidoService;
+import com.uade.tpo.marketplace.service.envio.IEnvioService;
+import com.uade.tpo.marketplace.service.producto.IProductoService;
+import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -28,20 +27,20 @@ public class PedidoServiceImpl implements IPedidoService {
     private IPedidoRepository pedidoRepository;
 
     @Autowired
-    private IUsuarioRepository usuarioRepository;
+    private IUsuarioService usuarioService;
 
     @Autowired
-    private IDetallePedidoRepository detallePedidoRepository;
+    private IDetallePedidoService detallePedidoService;
 
     @Autowired
-    private IProductoRepository productoRepository;
+    private IProductoService productoService;
 
     @Autowired
-    private IEnvioRepository envioRepository;
+    private IEnvioService envioService;
 
     public Page<Pedido> getPedidos(Integer usuarioId, PageRequest pageRequest) {
         if (usuarioId != null)
-            return pedidoRepository.findByUsuario_UsuarioId(usuarioId, pageRequest);
+            return pedidoRepository.findByUsuarioId(usuarioId, pageRequest);
 
         return pedidoRepository.findAll(pageRequest);
     }
@@ -51,7 +50,7 @@ public class PedidoServiceImpl implements IPedidoService {
     }
 
     public Pedido crearPedido(PedidoRequest pedidoRequest) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(pedidoRequest.getUsuarioId());
+        Optional<Usuario> usuarioOpt = usuarioService.getUsuarioById(pedidoRequest.getUsuarioId());
         if (usuarioOpt.isEmpty()) {
             throw new EntityNotFoundException("Usuario no encontrado");
         }
@@ -72,7 +71,7 @@ public class PedidoServiceImpl implements IPedidoService {
         if (existente.isEmpty())
             return null;
 
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(pedidoRequest.getUsuarioId());
+        Optional<Usuario> usuarioOpt = usuarioService.getUsuarioById(pedidoRequest.getUsuarioId());
         if (usuarioOpt.isEmpty()) {
             throw new EntityNotFoundException("Usuario no encontrado");
         }
@@ -97,11 +96,9 @@ public class PedidoServiceImpl implements IPedidoService {
         if ("CANCELADO".equals(pedido.getEstado()))
             return pedido;
 
-        List<DetallePedido> items = detallePedidoRepository.findByPedido_PedidoId(pedidoId);
+        List<DetallePedido> items = detallePedidoService.getDetallesPedido(pedidoId);
         for (DetallePedido item : items) {
-            Producto producto = item.getProducto();
-            producto.setStock(producto.getStock() + item.getCantidad());
-            productoRepository.save(producto);
+            productoService.ajustarStock(item.getProducto().getProductoId(), item.getCantidad());
         }
 
         pedido.setEstado("CANCELADO");
@@ -112,15 +109,13 @@ public class PedidoServiceImpl implements IPedidoService {
         if (pedidoRepository.findById(pedidoId).isEmpty())
             return false;
 
-        List<DetallePedido> items = detallePedidoRepository.findByPedido_PedidoId(pedidoId);
+        List<DetallePedido> items = detallePedidoService.getDetallesPedido(pedidoId);
         for (DetallePedido item : items) {
-            Producto producto = item.getProducto();
-            producto.setStock(producto.getStock() + item.getCantidad());
-            productoRepository.save(producto);
+            productoService.ajustarStock(item.getProducto().getProductoId(), item.getCantidad());
         }
-        detallePedidoRepository.deleteAll(items);
+        detallePedidoService.deleteDetallesByPedidoId(pedidoId);
 
-        envioRepository.findByPedido_PedidoId(pedidoId).ifPresent(envioRepository::delete);
+        envioService.deleteByPedidoId(pedidoId);
 
         pedidoRepository.deleteById(pedidoId);
         return true;

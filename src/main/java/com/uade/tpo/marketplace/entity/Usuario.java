@@ -51,6 +51,9 @@ public class Usuario {
     @Column
     private String contrasenia;
 
+    @Column
+    private boolean admin;
+
     @OneToMany(mappedBy = "usuario")
     private List<Pedido> pedidos;
 }

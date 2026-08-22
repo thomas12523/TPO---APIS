@@ -12,16 +12,16 @@ import com.uade.tpo.marketplace.entity.DetalleCarrito;
 import com.uade.tpo.marketplace.entity.DetallePedido;
 import com.uade.tpo.marketplace.entity.Envio;
 import com.uade.tpo.marketplace.entity.Pedido;
-import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.CheckoutRequest;
+import com.uade.tpo.marketplace.entity.dto.PedidoRequest;
 import com.uade.tpo.marketplace.exceptions.CarritoVacioException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
-import com.uade.tpo.marketplace.repository.ICarritoRepository;
-import com.uade.tpo.marketplace.repository.IDetalleCarritoRepository;
-import com.uade.tpo.marketplace.repository.IDetallePedidoRepository;
-import com.uade.tpo.marketplace.repository.IEnvioRepository;
-import com.uade.tpo.marketplace.repository.IPedidoRepository;
-import com.uade.tpo.marketplace.repository.IProductoRepository;
+import com.uade.tpo.marketplace.service.carrito.ICarritoService;
+import com.uade.tpo.marketplace.service.detallecarrito.IDetalleCarritoService;
+import com.uade.tpo.marketplace.service.detallepedido.IDetallePedidoService;
+import com.uade.tpo.marketplace.service.envio.IEnvioService;
+import com.uade.tpo.marketplace.service.pedido.IPedidoService;
+import com.uade.tpo.marketplace.service.producto.IProductoService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -29,31 +29,31 @@ import jakarta.persistence.EntityNotFoundException;
 public class CheckoutServiceImpl implements ICheckoutService {
 
     @Autowired
-    private ICarritoRepository carritoRepository;
+    private ICarritoService carritoService;
 
     @Autowired
-    private IDetalleCarritoRepository detalleCarritoRepository;
+    private IDetalleCarritoService detalleCarritoService;
 
     @Autowired
-    private IPedidoRepository pedidoRepository;
+    private IPedidoService pedidoService;
 
     @Autowired
-    private IDetallePedidoRepository detallePedidoRepository;
+    private IDetallePedidoService detallePedidoService;
 
     @Autowired
-    private IProductoRepository productoRepository;
+    private IProductoService productoService;
 
     @Autowired
-    private IEnvioRepository envioRepository;
+    private IEnvioService envioService;
 
     public Pedido checkout(int carritoId, CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException {
-        Optional<Carrito> carritoOpt = carritoRepository.findById(carritoId);
+        Optional<Carrito> carritoOpt = carritoService.getCarritoById(carritoId);
         if (carritoOpt.isEmpty()) {
             throw new EntityNotFoundException("Carrito no encontrado");
         }
         Carrito carrito = carritoOpt.get();
 
-        List<DetalleCarrito> items = detalleCarritoRepository.findByCarrito_CarritoId(carritoId);
+        List<DetalleCarrito> items = detalleCarritoService.getDetallesCarrito(carritoId);
         if (items.isEmpty())
             throw new CarritoVacioException();
 
@@ -66,14 +66,14 @@ public class CheckoutServiceImpl implements ICheckoutService {
                 .mapToDouble(item -> item.getCantidad() * item.getPrecioUnitario())
                 .sum();
 
-        Pedido pedido = new Pedido();
-        pedido.setUsuario(carrito.getUsuario());
-        pedido.setFechaCreacion(LocalDate.now().toString());
-        pedido.setEstado("PENDIENTE");
-        pedido.setSubtotal(subtotal);
-        pedido.setTotal(subtotal + checkoutRequest.getCostoEnvio());
-        pedido.setMetodoPago(checkoutRequest.getMetodoPago());
-        pedido = pedidoRepository.save(pedido);
+        PedidoRequest pedidoRequest = new PedidoRequest();
+        pedidoRequest.setUsuarioId(carrito.getUsuario().getUsuarioId());
+        pedidoRequest.setFechaCreacion(LocalDate.now().toString());
+        pedidoRequest.setEstado("PENDIENTE");
+        pedidoRequest.setSubtotal(subtotal);
+        pedidoRequest.setTotal(subtotal + checkoutRequest.getCostoEnvio());
+        pedidoRequest.setMetodoPago(checkoutRequest.getMetodoPago());
+        Pedido pedido = pedidoService.crearPedido(pedidoRequest);
 
         for (DetalleCarrito item : items) {
             DetallePedido detallePedido = new DetallePedido();
@@ -82,11 +82,9 @@ public class CheckoutServiceImpl implements ICheckoutService {
             detallePedido.setCantidad(item.getCantidad());
             detallePedido.setPrecioUnitario(item.getPrecioUnitario());
             detallePedido.setSubtotal(item.getCantidad() * item.getPrecioUnitario());
-            detallePedidoRepository.save(detallePedido);
+            detallePedidoService.guardarDetallePedido(detallePedido);
 
-            Producto producto = item.getProducto();
-            producto.setStock(producto.getStock() - item.getCantidad());
-            productoRepository.save(producto);
+            productoService.ajustarStock(item.getProducto().getProductoId(), -item.getCantidad());
         }
 
         Envio envio = new Envio();
@@ -94,9 +92,9 @@ public class CheckoutServiceImpl implements ICheckoutService {
         envio.setDireccion(checkoutRequest.getDireccion());
         envio.setMetodoEnvio(checkoutRequest.getMetodoEnvio());
         envio.setCostoEnvio(checkoutRequest.getCostoEnvio());
-        envioRepository.save(envio);
+        envioService.guardarEnvio(envio);
 
-        detalleCarritoRepository.deleteAll(items);
+        detalleCarritoService.deleteDetallesByCarritoId(carritoId);
 
         return pedido;
     }

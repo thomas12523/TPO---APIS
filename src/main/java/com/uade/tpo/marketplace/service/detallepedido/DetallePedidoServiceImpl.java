@@ -12,8 +12,8 @@ import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.DetallePedidoRequest;
 import com.uade.tpo.marketplace.exceptions.DetallePedidoDuplicateException;
 import com.uade.tpo.marketplace.repository.IDetallePedidoRepository;
-import com.uade.tpo.marketplace.repository.IPedidoRepository;
-import com.uade.tpo.marketplace.repository.IProductoRepository;
+import com.uade.tpo.marketplace.service.pedido.IPedidoService;
+import com.uade.tpo.marketplace.service.producto.IProductoService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -24,14 +24,14 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
     private IDetallePedidoRepository detallePedidoRepository;
 
     @Autowired
-    private IPedidoRepository pedidoRepository;
+    private IPedidoService pedidoService;
 
     @Autowired
-    private IProductoRepository productoRepository;
+    private IProductoService productoService;
 
     public List<DetallePedido> getDetallesPedido(Integer pedidoId) {
         if (pedidoId != null)
-            return detallePedidoRepository.findByPedido_PedidoId(pedidoId);
+            return detallePedidoRepository.findByPedidoId(pedidoId);
 
         return detallePedidoRepository.findAll();
     }
@@ -41,17 +41,17 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
     }
 
     public DetallePedido crearDetallePedido(DetallePedidoRequest detallePedidoRequest) throws DetallePedidoDuplicateException {
-        if (detallePedidoRepository.findByPedido_PedidoIdAndProducto_ProductoId(
+        if (detallePedidoRepository.findByPedidoIdAndProductoId(
                 detallePedidoRequest.getPedidoId(), detallePedidoRequest.getProductoId()).isPresent())
             throw new DetallePedidoDuplicateException();
 
-        Optional<Pedido> pedidoOpt = pedidoRepository.findById(detallePedidoRequest.getPedidoId());
+        Optional<Pedido> pedidoOpt = pedidoService.getPedidoById(detallePedidoRequest.getPedidoId());
         if (pedidoOpt.isEmpty()) {
             throw new EntityNotFoundException("Pedido no encontrado");
         }
         Pedido pedido = pedidoOpt.get();
 
-        Optional<Producto> productoOpt = productoRepository.findById(detallePedidoRequest.getProductoId());
+        Optional<Producto> productoOpt = productoService.getProductoById(detallePedidoRequest.getProductoId());
         if (productoOpt.isEmpty()) {
             throw new EntityNotFoundException("Producto no encontrado");
         }
@@ -86,11 +86,17 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
             return false;
 
         DetallePedido detallePedido = existente.get();
-        Producto producto = detallePedido.getProducto();
-        producto.setStock(producto.getStock() + detallePedido.getCantidad());
-        productoRepository.save(producto);
+        productoService.ajustarStock(detallePedido.getProducto().getProductoId(), detallePedido.getCantidad());
 
         detallePedidoRepository.deleteById(detallePedidoId);
         return true;
+    }
+
+    public DetallePedido guardarDetallePedido(DetallePedido detallePedido) {
+        return detallePedidoRepository.save(detallePedido);
+    }
+
+    public void deleteDetallesByPedidoId(int pedidoId) {
+        detallePedidoRepository.deleteAll(detallePedidoRepository.findByPedidoId(pedidoId));
     }
 }

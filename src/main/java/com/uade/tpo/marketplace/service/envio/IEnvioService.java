@@ -18,4 +18,8 @@ public interface IEnvioService {
     public Envio actualizarEnvio(int envioId, EnvioRequest envioRequest);
 
     public boolean deleteEnvio(int envioId);
+
+    public Envio guardarEnvio(Envio envio);
+
+    public void deleteByPedidoId(int pedidoId);
 }

@@ -12,8 +12,8 @@ import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.ProductoRequest;
 import com.uade.tpo.marketplace.exceptions.ProductoDuplicateException;
-import com.uade.tpo.marketplace.repository.ICategoriesRepository;
 import com.uade.tpo.marketplace.repository.IProductoRepository;
+import com.uade.tpo.marketplace.service.categories.ICategoriesService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -24,7 +24,7 @@ public class ProductoServiceImpl implements IProductoService {
     private IProductoRepository productoRepository;
 
     @Autowired
-    private ICategoriesRepository categoriesRepository;
+    private ICategoriesService categoriesService;
 
     public Page<Producto> getProductos(Integer categoriaId, String nombre, Double precioMin, Double precioMax, PageRequest pageRequest) {
         return productoRepository.buscarProductos(categoriaId, nombre, precioMin, precioMax, pageRequest);
@@ -38,7 +38,7 @@ public class ProductoServiceImpl implements IProductoService {
         if (!productoRepository.findByNombreProducto(productoRequest.getNombreProducto()).isEmpty())
             throw new ProductoDuplicateException();
 
-        Optional<Category> categoriaOpt = categoriesRepository.findById(productoRequest.getCategoriaId());
+        Optional<Category> categoriaOpt = categoriesService.getCategoryById(productoRequest.getCategoriaId());
         if (categoriaOpt.isEmpty()) {
             throw new EntityNotFoundException("Categoria no encontrada");
         }
@@ -57,7 +57,7 @@ public class ProductoServiceImpl implements IProductoService {
 
     public Optional<Producto> actualizarProducto(int productoId, ProductoRequest productoRequest) {
         return productoRepository.findById(productoId).map(producto -> {
-            Optional<Category> categoriaOpt = categoriesRepository.findById(productoRequest.getCategoriaId());
+            Optional<Category> categoriaOpt = categoriesService.getCategoryById(productoRequest.getCategoriaId());
             if (categoriaOpt.isEmpty()) {
                 throw new EntityNotFoundException("Categoria no encontrada");
             }
@@ -80,5 +80,12 @@ public class ProductoServiceImpl implements IProductoService {
 
         productoRepository.deleteById(productoId);
         return true;
+    }
+
+    public Producto ajustarStock(int productoId, int delta) {
+        Producto producto = productoRepository.findById(productoId)
+                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+        producto.setStock(producto.getStock() + delta);
+        return productoRepository.save(producto);
     }
 }

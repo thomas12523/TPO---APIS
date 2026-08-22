@@ -18,4 +18,8 @@ public interface IDetallePedidoService {
     public DetallePedido actualizarDetallePedido(int detallePedidoId, DetallePedidoRequest detallePedidoRequest);
 
     public boolean deleteDetallePedido(int detallePedidoId);
+
+    public DetallePedido guardarDetallePedido(DetallePedido detallePedido);
+
+    public void deleteDetallesByPedidoId(int pedidoId);
 }

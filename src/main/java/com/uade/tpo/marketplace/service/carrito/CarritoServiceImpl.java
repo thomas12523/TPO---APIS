@@ -10,7 +10,7 @@ import com.uade.tpo.marketplace.entity.Carrito;
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.CarritoRequest;
 import com.uade.tpo.marketplace.repository.ICarritoRepository;
-import com.uade.tpo.marketplace.repository.IUsuarioRepository;
+import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -21,11 +21,11 @@ public class CarritoServiceImpl implements ICarritoService {
     private ICarritoRepository carritoRepository;
 
     @Autowired
-    private IUsuarioRepository usuarioRepository;
+    private IUsuarioService usuarioService;
 
     public List<Carrito> getCarritos(Integer usuarioId) {
         if (usuarioId != null)
-            return carritoRepository.findByUsuario_UsuarioId(usuarioId);
+            return carritoRepository.findByUsuarioId(usuarioId);
 
         return carritoRepository.findAll();
     }
@@ -35,7 +35,7 @@ public class CarritoServiceImpl implements ICarritoService {
     }
 
     public Carrito crearCarrito(CarritoRequest carritoRequest) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(carritoRequest.getUsuarioId());
+        Optional<Usuario> usuarioOpt = usuarioService.getUsuarioById(carritoRequest.getUsuarioId());
         if (usuarioOpt.isEmpty()) {
             throw new EntityNotFoundException("Usuario no encontrado");
         }
@@ -52,7 +52,7 @@ public class CarritoServiceImpl implements ICarritoService {
         if (existente.isEmpty())
             return null;
 
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(carritoRequest.getUsuarioId());
+        Optional<Usuario> usuarioOpt = usuarioService.getUsuarioById(carritoRequest.getUsuarioId());
         if (usuarioOpt.isEmpty()) {
             throw new EntityNotFoundException("Usuario no encontrado");
         }

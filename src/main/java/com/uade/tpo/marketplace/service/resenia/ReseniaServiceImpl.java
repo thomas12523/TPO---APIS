@@ -12,9 +12,9 @@ import com.uade.tpo.marketplace.entity.Resenia;
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.ReseniaRequest;
 import com.uade.tpo.marketplace.exceptions.ReseniaDuplicateException;
-import com.uade.tpo.marketplace.repository.IProductoRepository;
 import com.uade.tpo.marketplace.repository.IReseniaRepository;
-import com.uade.tpo.marketplace.repository.IUsuarioRepository;
+import com.uade.tpo.marketplace.service.producto.IProductoService;
+import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -25,14 +25,14 @@ public class ReseniaServiceImpl implements IReseniaService {
     private IReseniaRepository reseniaRepository;
 
     @Autowired
-    private IUsuarioRepository usuarioRepository;
+    private IUsuarioService usuarioService;
 
     @Autowired
-    private IProductoRepository productoRepository;
+    private IProductoService productoService;
 
     public Page<Resenia> getResenias(Integer productoId, PageRequest pageRequest) {
         if (productoId != null)
-            return reseniaRepository.findByProducto_ProductoId(productoId, pageRequest);
+            return reseniaRepository.findByProductoId(productoId, pageRequest);
 
         return reseniaRepository.findAll(pageRequest);
     }
@@ -42,17 +42,17 @@ public class ReseniaServiceImpl implements IReseniaService {
     }
 
     public Resenia crearResenia(ReseniaRequest reseniaRequest) throws ReseniaDuplicateException {
-        if (reseniaRepository.findByUsuario_UsuarioIdAndProducto_ProductoId(
+        if (reseniaRepository.findByUsuarioIdAndProductoId(
                 reseniaRequest.getUsuarioId(), reseniaRequest.getProductoId()).isPresent())
             throw new ReseniaDuplicateException();
 
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(reseniaRequest.getUsuarioId());
+        Optional<Usuario> usuarioOpt = usuarioService.getUsuarioById(reseniaRequest.getUsuarioId());
         if (usuarioOpt.isEmpty()) {
             throw new EntityNotFoundException("Usuario no encontrado");
         }
         Usuario usuario = usuarioOpt.get();
 
-        Optional<Producto> productoOpt = productoRepository.findById(reseniaRequest.getProductoId());
+        Optional<Producto> productoOpt = productoService.getProductoById(reseniaRequest.getProductoId());
         if (productoOpt.isEmpty()) {
             throw new EntityNotFoundException("Producto no encontrado");
         }
