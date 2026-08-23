@@ -1,6 +1,5 @@
 package com.uade.tpo.marketplace.controllers;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +51,7 @@ public class CarritoController {
     @PostMapping
     public ResponseEntity<Object> crearCarrito(@RequestBody CarritoRequest carritoRequest) {
         Carrito result = carritoService.crearCarrito(carritoRequest);
-        return ResponseEntity.created(URI.create("/Carrito/" + result.getCarritoId())).body(result);
+        return ResponseEntity.ok(result);
     }
 
     @PutMapping("{carritoId}")
@@ -76,6 +75,6 @@ public class CarritoController {
     @PostMapping("{carritoId}/checkout")
     public ResponseEntity<Object> checkout(@PathVariable int carritoId, @RequestBody CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException {
         Pedido result = checkoutService.checkout(carritoId, checkoutRequest);
-        return ResponseEntity.created(URI.create("/Pedido/" + result.getPedidoId())).body(result);
+        return ResponseEntity.ok(result);
     }
 }
