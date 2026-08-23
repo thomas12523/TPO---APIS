@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.uade.tpo.marketplace.entity.Carrito;
 import com.uade.tpo.marketplace.entity.DetalleCarrito;
 import com.uade.tpo.marketplace.entity.DetallePedido;
-import com.uade.tpo.marketplace.entity.Envio;
 import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.dto.CheckoutRequest;
 import com.uade.tpo.marketplace.entity.dto.PedidoRequest;
@@ -19,7 +18,6 @@ import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.service.carrito.ICarritoService;
 import com.uade.tpo.marketplace.service.detallecarrito.IDetalleCarritoService;
 import com.uade.tpo.marketplace.service.detallepedido.IDetallePedidoService;
-import com.uade.tpo.marketplace.service.envio.IEnvioService;
 import com.uade.tpo.marketplace.service.pedido.IPedidoService;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
 
@@ -42,9 +40,6 @@ public class CheckoutServiceImpl implements ICheckoutService {
 
     @Autowired
     private IProductoService productoService;
-
-    @Autowired
-    private IEnvioService envioService;
 
     public Pedido checkout(int carritoId, CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException {
         Optional<Carrito> carritoOpt = carritoService.getCarritoById(carritoId);
@@ -71,7 +66,7 @@ public class CheckoutServiceImpl implements ICheckoutService {
         pedidoRequest.setFechaCreacion(LocalDate.now().toString());
         pedidoRequest.setEstado("PENDIENTE");
         pedidoRequest.setSubtotal(subtotal);
-        pedidoRequest.setTotal(subtotal + checkoutRequest.getCostoEnvio());
+        pedidoRequest.setTotal(subtotal);
         pedidoRequest.setMetodoPago(checkoutRequest.getMetodoPago());
         Pedido pedido = pedidoService.crearPedido(pedidoRequest);
 
@@ -86,13 +81,6 @@ public class CheckoutServiceImpl implements ICheckoutService {
 
             productoService.ajustarStock(item.getProducto().getProductoId(), -item.getCantidad());
         }
-
-        Envio envio = new Envio();
-        envio.setPedido(pedido);
-        envio.setDireccion(checkoutRequest.getDireccion());
-        envio.setMetodoEnvio(checkoutRequest.getMetodoEnvio());
-        envio.setCostoEnvio(checkoutRequest.getCostoEnvio());
-        envioService.guardarEnvio(envio);
 
         detalleCarritoService.deleteDetallesByCarritoId(carritoId);
 

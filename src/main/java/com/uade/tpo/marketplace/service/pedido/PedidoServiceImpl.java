@@ -14,7 +14,6 @@ import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.PedidoRequest;
 import com.uade.tpo.marketplace.repository.IPedidoRepository;
 import com.uade.tpo.marketplace.service.detallepedido.IDetallePedidoService;
-import com.uade.tpo.marketplace.service.envio.IEnvioService;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
 import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 
@@ -34,9 +33,6 @@ public class PedidoServiceImpl implements IPedidoService {
 
     @Autowired
     private IProductoService productoService;
-
-    @Autowired
-    private IEnvioService envioService;
 
     public Page<Pedido> getPedidos(Integer usuarioId, PageRequest pageRequest) {
         if (usuarioId != null)
@@ -114,8 +110,6 @@ public class PedidoServiceImpl implements IPedidoService {
             productoService.ajustarStock(item.getProducto().getProductoId(), item.getCantidad());
         }
         detallePedidoService.deleteDetallesByPedidoId(pedidoId);
-
-        envioService.deleteByPedidoId(pedidoId);
 
         pedidoRepository.deleteById(pedidoId);
         return true;
