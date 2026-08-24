@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.Usuario;
-import com.uade.tpo.marketplace.entity.dto.PedidoRequest;
+import com.uade.tpo.marketplace.entity.dto.request.PedidoRequest;
 import com.uade.tpo.marketplace.repository.IPedidoRepository;
 import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 

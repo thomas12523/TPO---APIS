@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Producto;
-import com.uade.tpo.marketplace.entity.dto.ProductoRequest;
+import com.uade.tpo.marketplace.entity.dto.request.ProductoRequest;
+import com.uade.tpo.marketplace.entity.dto.response.ProductoResponse;
 import com.uade.tpo.marketplace.exceptions.ProductoDuplicateException;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
 
@@ -30,7 +31,7 @@ public class ProductoController {
     private IProductoService productoService;
 
     @GetMapping
-    public ResponseEntity<Page<Producto>> getProductos(
+    public ResponseEntity<Page<ProductoResponse>> getProductos(
             @RequestParam(required = false) Integer categoriaId,
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) Double precioMin,
@@ -38,15 +39,15 @@ public class ProductoController {
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
         if (page == null || size == null)
-            return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre, precioMin, precioMax, PageRequest.of(0, Integer.MAX_VALUE)));
-        return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre, precioMin, precioMax, PageRequest.of(page, size)));
+            return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre, precioMin, precioMax, PageRequest.of(0, Integer.MAX_VALUE)).map(ProductoResponse::from));
+        return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre, precioMin, precioMax, PageRequest.of(page, size)).map(ProductoResponse::from));
     }
 
     @GetMapping("{productoId}")
-    public ResponseEntity<Producto> getProductoById(@PathVariable int productoId) {
+    public ResponseEntity<ProductoResponse> getProductoById(@PathVariable int productoId) {
         Optional<Producto> result = productoService.getProductoById(productoId);
         if (result.isPresent())
-            return ResponseEntity.ok(result.get());
+            return ResponseEntity.ok(ProductoResponse.from(result.get()));
 
         return ResponseEntity.noContent().build();
     }
@@ -54,14 +55,14 @@ public class ProductoController {
     @PostMapping
     public ResponseEntity<Object> crearProducto(@RequestBody ProductoRequest productoRequest) throws ProductoDuplicateException {
         Producto result = productoService.crearProducto(productoRequest);
-        return ResponseEntity.created(URI.create("/Producto/" + result.getProductoId())).body(result);
+        return ResponseEntity.created(URI.create("/Producto/" + result.getProductoId())).body(ProductoResponse.from(result));
     }
 
     @PutMapping("{productoId}")
-    public ResponseEntity<Producto> actualizarProducto(@PathVariable int productoId, @RequestBody ProductoRequest productoRequest) {
+    public ResponseEntity<ProductoResponse> actualizarProducto(@PathVariable int productoId, @RequestBody ProductoRequest productoRequest) {
         Optional<Producto> result = productoService.actualizarProducto(productoId, productoRequest);
         if (result.isPresent())
-            return ResponseEntity.ok(result.get());
+            return ResponseEntity.ok(ProductoResponse.from(result.get()));
 
         return ResponseEntity.notFound().build();
     }

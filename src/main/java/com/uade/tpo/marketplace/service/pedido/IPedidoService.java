@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import com.uade.tpo.marketplace.entity.Pedido;
-import com.uade.tpo.marketplace.entity.dto.PedidoRequest;
+import com.uade.tpo.marketplace.entity.dto.request.PedidoRequest;
 
 public interface IPedidoService {
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.Resenia;
 import com.uade.tpo.marketplace.entity.Usuario;
-import com.uade.tpo.marketplace.entity.dto.ReseniaRequest;
+import com.uade.tpo.marketplace.entity.dto.request.ReseniaRequest;
 import com.uade.tpo.marketplace.exceptions.ReseniaDuplicateException;
 import com.uade.tpo.marketplace.repository.IReseniaRepository;
 import com.uade.tpo.marketplace.service.producto.IProductoService;

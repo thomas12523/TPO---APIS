@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.uade.tpo.marketplace.entity.DetallePedido;
-import com.uade.tpo.marketplace.entity.dto.DetallePedidoRequest;
+import com.uade.tpo.marketplace.entity.dto.request.DetallePedidoRequest;
 import com.uade.tpo.marketplace.exceptions.DetallePedidoDuplicateException;
 
 public interface IDetallePedidoService {

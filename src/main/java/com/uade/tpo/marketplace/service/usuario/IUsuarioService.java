@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import com.uade.tpo.marketplace.entity.Usuario;
-import com.uade.tpo.marketplace.entity.dto.UsuarioRequest;
+import com.uade.tpo.marketplace.entity.dto.request.UsuarioRequest;
 import com.uade.tpo.marketplace.exceptions.UsuarioDuplicateException;
 
 public interface IUsuarioService {

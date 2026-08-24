@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.uade.tpo.marketplace.entity.Imagen;
-import com.uade.tpo.marketplace.entity.dto.ImagenRequest;
+import com.uade.tpo.marketplace.entity.dto.request.ImagenRequest;
 import com.uade.tpo.marketplace.exceptions.ImagenDuplicateException;
 
 public interface IImagenService {

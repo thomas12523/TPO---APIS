@@ -2,19 +2,17 @@ package com.uade.tpo.marketplace.entity;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class Usuario {
 
@@ -59,8 +57,5 @@ public class Usuario {
     private boolean admin;
 
     @OneToMany(mappedBy = "usuario")
-    @JsonIgnore
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private List<Pedido> pedidos;
 }

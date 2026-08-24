@@ -3,6 +3,7 @@ package com.uade.tpo.marketplace.controllers;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.DetallePedido;
-import com.uade.tpo.marketplace.entity.dto.DetallePedidoRequest;
+import com.uade.tpo.marketplace.entity.dto.request.DetallePedidoRequest;
+import com.uade.tpo.marketplace.entity.dto.response.DetallePedidoResponse;
 import com.uade.tpo.marketplace.exceptions.DetallePedidoDuplicateException;
 import com.uade.tpo.marketplace.service.detallepedido.IDetallePedidoService;
 
@@ -29,15 +31,17 @@ public class DetallePedidoController {
     private IDetallePedidoService detallePedidoService;
 
     @GetMapping
-    public ResponseEntity<List<DetallePedido>> getDetallesPedido(@RequestParam(required = false) Integer pedidoId) {
-        return ResponseEntity.ok(detallePedidoService.getDetallesPedido(pedidoId));
+    public ResponseEntity<List<DetallePedidoResponse>> getDetallesPedido(@RequestParam(required = false) Integer pedidoId) {
+        return ResponseEntity.ok(detallePedidoService.getDetallesPedido(pedidoId).stream()
+                .map(DetallePedidoResponse::from)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("{detallePedidoId}")
-    public ResponseEntity<DetallePedido> getDetallePedidoById(@PathVariable int detallePedidoId) {
+    public ResponseEntity<DetallePedidoResponse> getDetallePedidoById(@PathVariable int detallePedidoId) {
         Optional<DetallePedido> result = detallePedidoService.getDetallePedidoById(detallePedidoId);
         if (result.isPresent())
-            return ResponseEntity.ok(result.get());
+            return ResponseEntity.ok(DetallePedidoResponse.from(result.get()));
 
         return ResponseEntity.noContent().build();
     }
@@ -45,16 +49,16 @@ public class DetallePedidoController {
     @PostMapping
     public ResponseEntity<Object> crearDetallePedido(@RequestBody DetallePedidoRequest detallePedidoRequest) throws DetallePedidoDuplicateException {
         DetallePedido result = detallePedidoService.crearDetallePedido(detallePedidoRequest);
-        return ResponseEntity.created(URI.create("/DetallePedido/" + result.getDetallePedidoId())).body(result);
+        return ResponseEntity.created(URI.create("/DetallePedido/" + result.getDetallePedidoId())).body(DetallePedidoResponse.from(result));
     }
 
     @PutMapping("{detallePedidoId}")
-    public ResponseEntity<DetallePedido> actualizarDetallePedido(@PathVariable int detallePedidoId, @RequestBody DetallePedidoRequest detallePedidoRequest) {
+    public ResponseEntity<DetallePedidoResponse> actualizarDetallePedido(@PathVariable int detallePedidoId, @RequestBody DetallePedidoRequest detallePedidoRequest) {
         DetallePedido result = detallePedidoService.actualizarDetallePedido(detallePedidoId, detallePedidoRequest);
         if (result == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(DetallePedidoResponse.from(result));
     }
 
     @DeleteMapping("{detallePedidoId}")

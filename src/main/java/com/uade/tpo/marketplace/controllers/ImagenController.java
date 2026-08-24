@@ -3,6 +3,7 @@ package com.uade.tpo.marketplace.controllers;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Imagen;
-import com.uade.tpo.marketplace.entity.dto.ImagenRequest;
+import com.uade.tpo.marketplace.entity.dto.request.ImagenRequest;
+import com.uade.tpo.marketplace.entity.dto.response.ImagenResponse;
 import com.uade.tpo.marketplace.exceptions.ImagenDuplicateException;
 import com.uade.tpo.marketplace.service.imagen.IImagenService;
 
@@ -29,15 +31,17 @@ public class ImagenController {
     private IImagenService imagenService;
 
     @GetMapping
-    public ResponseEntity<List<Imagen>> getImagenes(@RequestParam(required = false) Integer productoId) {
-        return ResponseEntity.ok(imagenService.getImagenes(productoId));
+    public ResponseEntity<List<ImagenResponse>> getImagenes(@RequestParam(required = false) Integer productoId) {
+        return ResponseEntity.ok(imagenService.getImagenes(productoId).stream()
+                .map(ImagenResponse::from)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("{imagenId}")
-    public ResponseEntity<Imagen> getImagenById(@PathVariable int imagenId) {
+    public ResponseEntity<ImagenResponse> getImagenById(@PathVariable int imagenId) {
         Optional<Imagen> result = imagenService.getImagenById(imagenId);
         if (result.isPresent())
-            return ResponseEntity.ok(result.get());
+            return ResponseEntity.ok(ImagenResponse.from(result.get()));
 
         return ResponseEntity.noContent().build();
     }
@@ -45,16 +49,16 @@ public class ImagenController {
     @PostMapping
     public ResponseEntity<Object> crearImagen(@RequestBody ImagenRequest imagenRequest) throws ImagenDuplicateException {
         Imagen result = imagenService.crearImagen(imagenRequest);
-        return ResponseEntity.created(URI.create("/Imagen/" + result.getImagenId())).body(result);
+        return ResponseEntity.created(URI.create("/Imagen/" + result.getImagenId())).body(ImagenResponse.from(result));
     }
 
     @PutMapping("{imagenId}")
-    public ResponseEntity<Imagen> actualizarImagen(@PathVariable int imagenId, @RequestBody ImagenRequest imagenRequest) {
+    public ResponseEntity<ImagenResponse> actualizarImagen(@PathVariable int imagenId, @RequestBody ImagenRequest imagenRequest) {
         Imagen result = imagenService.actualizarImagen(imagenId, imagenRequest);
         if (result == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(ImagenResponse.from(result));
     }
 
     @DeleteMapping("{imagenId}")

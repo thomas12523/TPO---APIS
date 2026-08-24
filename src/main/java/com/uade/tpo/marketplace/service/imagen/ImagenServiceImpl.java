@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Imagen;
 import com.uade.tpo.marketplace.entity.Producto;
-import com.uade.tpo.marketplace.entity.dto.ImagenRequest;
+import com.uade.tpo.marketplace.entity.dto.request.ImagenRequest;
 import com.uade.tpo.marketplace.exceptions.ImagenDuplicateException;
 import com.uade.tpo.marketplace.repository.IImagenRepository;
 import com.uade.tpo.marketplace.service.producto.IProductoService;

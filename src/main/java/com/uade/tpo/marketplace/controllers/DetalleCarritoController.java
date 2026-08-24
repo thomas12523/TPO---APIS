@@ -3,6 +3,7 @@ package com.uade.tpo.marketplace.controllers;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.DetalleCarrito;
-import com.uade.tpo.marketplace.entity.dto.DetalleCarritoRequest;
+import com.uade.tpo.marketplace.entity.dto.request.DetalleCarritoRequest;
+import com.uade.tpo.marketplace.entity.dto.response.DetalleCarritoResponse;
 import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.service.detallecarrito.IDetalleCarritoService;
@@ -30,15 +32,17 @@ public class DetalleCarritoController {
     private IDetalleCarritoService detalleCarritoService;
 
     @GetMapping
-    public ResponseEntity<List<DetalleCarrito>> getDetallesCarrito(@RequestParam(required = false) Integer carritoId) {
-        return ResponseEntity.ok(detalleCarritoService.getDetallesCarrito(carritoId));
+    public ResponseEntity<List<DetalleCarritoResponse>> getDetallesCarrito(@RequestParam(required = false) Integer carritoId) {
+        return ResponseEntity.ok(detalleCarritoService.getDetallesCarrito(carritoId).stream()
+                .map(DetalleCarritoResponse::from)
+                .collect(Collectors.toList()));
     }
 
     @GetMapping("{carritoId}/{productoId}")
-    public ResponseEntity<DetalleCarrito> getDetalleCarritoById(@PathVariable int carritoId, @PathVariable int productoId) {
+    public ResponseEntity<DetalleCarritoResponse> getDetalleCarritoById(@PathVariable int carritoId, @PathVariable int productoId) {
         Optional<DetalleCarrito> result = detalleCarritoService.getDetalleCarritoById(carritoId, productoId);
         if (result.isPresent())
-            return ResponseEntity.ok(result.get());
+            return ResponseEntity.ok(DetalleCarritoResponse.from(result.get()));
 
         return ResponseEntity.noContent().build();
     }
@@ -46,16 +50,16 @@ public class DetalleCarritoController {
     @PostMapping
     public ResponseEntity<Object> crearDetalleCarrito(@RequestBody DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException, StockInsuficienteException {
         DetalleCarrito result = detalleCarritoService.crearDetalleCarrito(detalleCarritoRequest);
-        return ResponseEntity.created(URI.create("/DetalleCarrito/" + result.getCarrito().getCarritoId() + "/" + result.getProducto().getProductoId())).body(result);
+        return ResponseEntity.created(URI.create("/DetalleCarrito/" + result.getCarrito().getCarritoId() + "/" + result.getProducto().getProductoId())).body(DetalleCarritoResponse.from(result));
     }
 
     @PutMapping("{carritoId}/{productoId}")
-    public ResponseEntity<DetalleCarrito> actualizarDetalleCarrito(@PathVariable int carritoId, @PathVariable int productoId, @RequestBody DetalleCarritoRequest detalleCarritoRequest) throws StockInsuficienteException {
+    public ResponseEntity<DetalleCarritoResponse> actualizarDetalleCarrito(@PathVariable int carritoId, @PathVariable int productoId, @RequestBody DetalleCarritoRequest detalleCarritoRequest) throws StockInsuficienteException {
         DetalleCarrito result = detalleCarritoService.actualizarDetalleCarrito(carritoId, productoId, detalleCarritoRequest);
         if (result == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(DetalleCarritoResponse.from(result));
     }
 
     @DeleteMapping("{carritoId}/{productoId}")

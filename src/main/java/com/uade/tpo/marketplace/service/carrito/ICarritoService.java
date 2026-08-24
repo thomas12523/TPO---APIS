@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.uade.tpo.marketplace.entity.Carrito;
-import com.uade.tpo.marketplace.entity.dto.CarritoRequest;
+import com.uade.tpo.marketplace.entity.dto.request.CarritoRequest;
 
 public interface ICarritoService {
 

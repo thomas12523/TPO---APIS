@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Pedido;
-import com.uade.tpo.marketplace.entity.dto.PedidoRequest;
+import com.uade.tpo.marketplace.entity.dto.request.PedidoRequest;
+import com.uade.tpo.marketplace.entity.dto.response.PedidoResponse;
 import com.uade.tpo.marketplace.service.pedido.IPedidoService;
 import com.uade.tpo.marketplace.service.soporte.IPedidoOrchestratorService;
 
@@ -33,20 +34,20 @@ public class PedidoController {
     private IPedidoOrchestratorService pedidoOrchestratorService;
 
     @GetMapping
-    public ResponseEntity<Page<Pedido>> getPedidos(
+    public ResponseEntity<Page<PedidoResponse>> getPedidos(
             @RequestParam(required = false) Integer usuarioId,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
         if (page == null || size == null)
-            return ResponseEntity.ok(pedidoService.getPedidos(usuarioId, PageRequest.of(0, Integer.MAX_VALUE)));
-        return ResponseEntity.ok(pedidoService.getPedidos(usuarioId, PageRequest.of(page, size)));
+            return ResponseEntity.ok(pedidoService.getPedidos(usuarioId, PageRequest.of(0, Integer.MAX_VALUE)).map(PedidoResponse::from));
+        return ResponseEntity.ok(pedidoService.getPedidos(usuarioId, PageRequest.of(page, size)).map(PedidoResponse::from));
     }
 
     @GetMapping("{pedidoId}")
-    public ResponseEntity<Pedido> getPedidoById(@PathVariable int pedidoId) {
+    public ResponseEntity<PedidoResponse> getPedidoById(@PathVariable int pedidoId) {
         Optional<Pedido> result = pedidoService.getPedidoById(pedidoId);
         if (result.isPresent())
-            return ResponseEntity.ok(result.get());
+            return ResponseEntity.ok(PedidoResponse.from(result.get()));
 
         return ResponseEntity.noContent().build();
     }
@@ -54,25 +55,25 @@ public class PedidoController {
     @PostMapping
     public ResponseEntity<Object> crearPedido(@RequestBody PedidoRequest pedidoRequest) {
         Pedido result = pedidoService.crearPedido(pedidoRequest);
-        return ResponseEntity.created(URI.create("/Pedido/" + result.getPedidoId())).body(result);
+        return ResponseEntity.created(URI.create("/Pedido/" + result.getPedidoId())).body(PedidoResponse.from(result));
     }
 
     @PutMapping("{pedidoId}")
-    public ResponseEntity<Pedido> actualizarPedido(@PathVariable int pedidoId, @RequestBody PedidoRequest pedidoRequest) {
+    public ResponseEntity<PedidoResponse> actualizarPedido(@PathVariable int pedidoId, @RequestBody PedidoRequest pedidoRequest) {
         Pedido result = pedidoService.actualizarPedido(pedidoId, pedidoRequest);
         if (result == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(PedidoResponse.from(result));
     }
 
     @PostMapping("{pedidoId}/cancelar")
-    public ResponseEntity<Pedido> cancelarPedido(@PathVariable int pedidoId) {
+    public ResponseEntity<PedidoResponse> cancelarPedido(@PathVariable int pedidoId) {
         Pedido result = pedidoOrchestratorService.cancelarPedido(pedidoId);
         if (result == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(PedidoResponse.from(result));
     }
 
     @DeleteMapping("{pedidoId}")

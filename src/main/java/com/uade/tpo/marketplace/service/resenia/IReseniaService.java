@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import com.uade.tpo.marketplace.entity.Resenia;
-import com.uade.tpo.marketplace.entity.dto.ReseniaRequest;
+import com.uade.tpo.marketplace.entity.dto.request.ReseniaRequest;
 import com.uade.tpo.marketplace.exceptions.ReseniaDuplicateException;
 
 public interface IReseniaService {

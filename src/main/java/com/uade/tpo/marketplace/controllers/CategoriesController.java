@@ -18,32 +18,33 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Category;
-import com.uade.tpo.marketplace.entity.dto.CategoryRequest;
+import com.uade.tpo.marketplace.entity.dto.request.CategoryRequest;
+import com.uade.tpo.marketplace.entity.dto.response.CategoryResponse;
 import com.uade.tpo.marketplace.exceptions.CategoryDuplicateException;
 import com.uade.tpo.marketplace.service.categories.ICategoriesService;
 
 @RestController // capa de trafico, con esto delimitamos para eso
 @RequestMapping("Categories") //ENDPOINT mappea request con lo siguiente del localhost/Categories
 public class CategoriesController {
-    
+
     @Autowired // para que spring sepa que tiene que inyectar la dependencia
     private ICategoriesService categoriesService;
 
-    
+
     @GetMapping //localhost/8080/Categories
-    public ResponseEntity<Page<Category>> getCategories(
+    public ResponseEntity<Page<CategoryResponse>> getCategories(
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
         if (page == null || size == null)
-            return ResponseEntity.ok(categoriesService.getCategories(PageRequest.of(0, Integer.MAX_VALUE)));
-        return ResponseEntity.ok(categoriesService.getCategories(PageRequest.of(page, size)));
+            return ResponseEntity.ok(categoriesService.getCategories(PageRequest.of(0, Integer.MAX_VALUE)).map(CategoryResponse::from));
+        return ResponseEntity.ok(categoriesService.getCategories(PageRequest.of(page, size)).map(CategoryResponse::from));
     }
 
     @GetMapping("{categoryId}") //localhost/8080/Categories/id
-    public ResponseEntity<Category> getCategoryById(@PathVariable int categoryId) { //PATH VARIABLE es porque va a cambiar y que lo vaya cambiando
+    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable int categoryId) { //PATH VARIABLE es porque va a cambiar y que lo vaya cambiando
         Optional<Category> result = categoriesService.getCategoryById(categoryId);
         if (result.isPresent())
-            return ResponseEntity.ok(result.get());
+            return ResponseEntity.ok(CategoryResponse.from(result.get()));
 
         return ResponseEntity.noContent().build();
     }
@@ -51,16 +52,16 @@ public class CategoriesController {
     @PostMapping
     public ResponseEntity<Object> createCategory(@RequestBody CategoryRequest categoryRequest) throws CategoryDuplicateException {
         Category result = categoriesService.createCategory(categoryRequest.getNombre());
-        return ResponseEntity.created(URI.create("/Categories/" + result.getId())).body(result);
+        return ResponseEntity.created(URI.create("/Categories/" + result.getId())).body(CategoryResponse.from(result));
     }
 
     @PutMapping("{categoryId}")
-    public ResponseEntity<Category> actualizarCategory(@PathVariable int categoryId, @RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<CategoryResponse> actualizarCategory(@PathVariable int categoryId, @RequestBody CategoryRequest categoryRequest) {
         Category result = categoriesService.actualizarCategory(categoryId, categoryRequest.getNombre());
         if (result == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(CategoryResponse.from(result));
     }
 
     @DeleteMapping("{categoryId}")

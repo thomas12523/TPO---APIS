@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import com.uade.tpo.marketplace.entity.Producto;
-import com.uade.tpo.marketplace.entity.dto.ProductoRequest;
+import com.uade.tpo.marketplace.entity.dto.request.ProductoRequest;
 import com.uade.tpo.marketplace.exceptions.ProductoDuplicateException;
 
 public interface IProductoService {

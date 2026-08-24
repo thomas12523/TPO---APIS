@@ -8,7 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Usuario;
-import com.uade.tpo.marketplace.entity.dto.UsuarioRequest;
+import com.uade.tpo.marketplace.entity.dto.request.UsuarioRequest;
 import com.uade.tpo.marketplace.exceptions.UsuarioDuplicateException;
 import com.uade.tpo.marketplace.repository.IUsuarioRepository;
 

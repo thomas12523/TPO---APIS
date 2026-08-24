@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.entity.Producto;
-import com.uade.tpo.marketplace.entity.dto.ProductoRequest;
+import com.uade.tpo.marketplace.entity.dto.request.ProductoRequest;
 import com.uade.tpo.marketplace.exceptions.ProductoDuplicateException;
 import com.uade.tpo.marketplace.repository.IProductoRepository;
 import com.uade.tpo.marketplace.service.categories.ICategoriesService;

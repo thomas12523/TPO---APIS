@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Usuario;
-import com.uade.tpo.marketplace.entity.dto.UsuarioRequest;
+import com.uade.tpo.marketplace.entity.dto.request.UsuarioRequest;
+import com.uade.tpo.marketplace.entity.dto.response.UsuarioResponse;
 import com.uade.tpo.marketplace.exceptions.UsuarioDuplicateException;
 import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 
@@ -31,28 +32,28 @@ public class UsuarioController {
     private IUsuarioService usuarioService;
 
     @GetMapping
-    public ResponseEntity<Page<Usuario>> getUsuarios(
+    public ResponseEntity<Page<UsuarioResponse>> getUsuarios(
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
         if (page == null || size == null)
-            return ResponseEntity.ok(usuarioService.getUsuarios(PageRequest.of(0, Integer.MAX_VALUE)));
-        return ResponseEntity.ok(usuarioService.getUsuarios(PageRequest.of(page, size)));
+            return ResponseEntity.ok(usuarioService.getUsuarios(PageRequest.of(0, Integer.MAX_VALUE)).map(UsuarioResponse::from));
+        return ResponseEntity.ok(usuarioService.getUsuarios(PageRequest.of(page, size)).map(UsuarioResponse::from));
     }
 
     @GetMapping("{usuarioId}")
-    public ResponseEntity<Usuario> getUsuarioById(@PathVariable int usuarioId) {
+    public ResponseEntity<UsuarioResponse> getUsuarioById(@PathVariable int usuarioId) {
         Optional<Usuario> result = usuarioService.getUsuarioById(usuarioId);
         if (result.isPresent())
-            return ResponseEntity.ok(result.get());
+            return ResponseEntity.ok(UsuarioResponse.from(result.get()));
 
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("login")
-    public ResponseEntity<Usuario> login(@RequestParam String username, @RequestParam String contrasenia) {
+    public ResponseEntity<UsuarioResponse> login(@RequestParam String username, @RequestParam String contrasenia) {
         Optional<Usuario> result = usuarioService.login(username, contrasenia);
         if (result.isPresent())
-            return ResponseEntity.ok(result.get());
+            return ResponseEntity.ok(UsuarioResponse.from(result.get()));
 
         return ResponseEntity.status(401).build();
     }
@@ -60,23 +61,23 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<Object> crearUsuario(@RequestBody UsuarioRequest usuarioRequest) throws UsuarioDuplicateException {
         Usuario result = usuarioService.crearUsuario(usuarioRequest);
-        return ResponseEntity.created(URI.create("/Usuario/" + result.getUsuarioId())).body(result);
+        return ResponseEntity.created(URI.create("/Usuario/" + result.getUsuarioId())).body(UsuarioResponse.from(result));
     }
 
     @PutMapping("{usuarioId}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable int usuarioId, @RequestBody UsuarioRequest usuarioRequest) {
+    public ResponseEntity<UsuarioResponse> actualizarUsuario(@PathVariable int usuarioId, @RequestBody UsuarioRequest usuarioRequest) {
         Optional<Usuario> result = usuarioService.actualizarUsuario(usuarioId, usuarioRequest);
         if (result.isPresent())
-            return ResponseEntity.ok(result.get());
+            return ResponseEntity.ok(UsuarioResponse.from(result.get()));
 
         return ResponseEntity.notFound().build();
     }
 
     @PatchMapping("{usuarioId}/permisos") // actualizo los permisos de un usuario (admin o no admin) FALTA SEGURIDAD
-    public ResponseEntity<Usuario> actualizarPermisos(@PathVariable int usuarioId, @RequestParam boolean admin) {
+    public ResponseEntity<UsuarioResponse> actualizarPermisos(@PathVariable int usuarioId, @RequestParam boolean admin) {
         Optional<Usuario> result = usuarioService.actualizarPermisos(usuarioId, admin);
         if (result.isPresent())
-            return ResponseEntity.ok(result.get());
+            return ResponseEntity.ok(UsuarioResponse.from(result.get()));
 
         return ResponseEntity.notFound().build();
     }

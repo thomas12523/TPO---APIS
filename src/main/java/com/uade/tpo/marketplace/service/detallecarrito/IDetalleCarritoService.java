@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.uade.tpo.marketplace.entity.DetalleCarrito;
-import com.uade.tpo.marketplace.entity.dto.DetalleCarritoRequest;
+import com.uade.tpo.marketplace.entity.dto.request.DetalleCarritoRequest;
 import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 

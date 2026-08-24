@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.uade.tpo.marketplace.entity.Carrito;
 import com.uade.tpo.marketplace.entity.Usuario;
-import com.uade.tpo.marketplace.entity.dto.CarritoRequest;
+import com.uade.tpo.marketplace.entity.dto.request.CarritoRequest;
 import com.uade.tpo.marketplace.repository.ICarritoRepository;
 import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 

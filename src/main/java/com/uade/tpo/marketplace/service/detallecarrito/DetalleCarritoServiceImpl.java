@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.uade.tpo.marketplace.entity.Carrito;
 import com.uade.tpo.marketplace.entity.DetalleCarrito;
 import com.uade.tpo.marketplace.entity.Producto;
-import com.uade.tpo.marketplace.entity.dto.DetalleCarritoRequest;
+import com.uade.tpo.marketplace.entity.dto.request.DetalleCarritoRequest;
 import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.repository.IDetalleCarritoRepository;
