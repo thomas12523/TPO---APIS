@@ -1,6 +1,5 @@
 package com.uade.tpo.marketplace.controllers;
 
-import java.net.URI;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +51,7 @@ public class ReseniaController {
     @PostMapping
     public ResponseEntity<Object> crearResenia(@RequestBody ReseniaRequest reseniaRequest) throws ReseniaDuplicateException {
         Resenia result = reseniaService.crearResenia(reseniaRequest);
-        return ResponseEntity.created(URI.create("/Resenia/" + result.getReseniaId())).body(ReseniaResponse.from(result));
+        return ResponseEntity.ok(ReseniaResponse.from(result));
     }
 
     @PutMapping("{reseniaId}")

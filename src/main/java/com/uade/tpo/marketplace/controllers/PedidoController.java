@@ -1,6 +1,5 @@
 package com.uade.tpo.marketplace.controllers;
 
-import java.net.URI;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +54,7 @@ public class PedidoController {
     @PostMapping
     public ResponseEntity<Object> crearPedido(@RequestBody PedidoRequest pedidoRequest) {
         Pedido result = pedidoService.crearPedido(pedidoRequest);
-        return ResponseEntity.created(URI.create("/Pedido/" + result.getPedidoId())).body(PedidoResponse.from(result));
+        return ResponseEntity.ok(PedidoResponse.from(result));
     }
 
     @PutMapping("{pedidoId}")

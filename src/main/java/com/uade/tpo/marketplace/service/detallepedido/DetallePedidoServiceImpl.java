@@ -12,6 +12,7 @@ import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.request.DetallePedidoRequest;
 import com.uade.tpo.marketplace.exceptions.DetallePedidoDuplicateException;
 import com.uade.tpo.marketplace.repository.IDetallePedidoRepository;
+import com.uade.tpo.marketplace.service.descuento.IDescuentoService;
 import com.uade.tpo.marketplace.service.pedido.IPedidoService;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
 
@@ -28,6 +29,9 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
 
     @Autowired
     private IProductoService productoService;
+
+    @Autowired
+    private IDescuentoService descuentoService;
 
     public List<DetallePedido> getDetallesPedido(Integer pedidoId) {
         if (pedidoId != null)
@@ -60,10 +64,11 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
         DetallePedido detallePedido = new DetallePedido();
         detallePedido.setPedido(pedido);
         detallePedido.setProducto(producto);
+        double precioConDescuento = descuentoService.getPrecioConDescuento(producto);
         detallePedido.setCantidad(detallePedidoRequest.getCantidad());
-        detallePedido.setPrecioUnitario(producto.getPrecioConDescuento());
+        detallePedido.setPrecioUnitario(precioConDescuento);
         detallePedido.setObservaciones(detallePedidoRequest.getObservaciones());
-        detallePedido.setSubtotal(detallePedidoRequest.getCantidad() * producto.getPrecioConDescuento());
+        detallePedido.setSubtotal(detallePedidoRequest.getCantidad() * precioConDescuento);
         return detallePedidoRepository.save(detallePedido);
     }
 
@@ -73,10 +78,11 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
             return null;
 
         DetallePedido detallePedido = existente.get();
+        double precioConDescuento = descuentoService.getPrecioConDescuento(detallePedido.getProducto());
         detallePedido.setCantidad(detallePedidoRequest.getCantidad());
-        detallePedido.setPrecioUnitario(detallePedido.getProducto().getPrecioConDescuento());
+        detallePedido.setPrecioUnitario(precioConDescuento);
         detallePedido.setObservaciones(detallePedidoRequest.getObservaciones());
-        detallePedido.setSubtotal(detallePedidoRequest.getCantidad() * detallePedido.getProducto().getPrecioConDescuento());
+        detallePedido.setSubtotal(detallePedidoRequest.getCantidad() * precioConDescuento);
         return detallePedidoRepository.save(detallePedido);
     }
 

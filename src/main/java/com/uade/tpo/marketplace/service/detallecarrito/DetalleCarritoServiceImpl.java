@@ -14,6 +14,7 @@ import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.repository.IDetalleCarritoRepository;
 import com.uade.tpo.marketplace.service.carrito.ICarritoService;
+import com.uade.tpo.marketplace.service.descuento.IDescuentoService;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -29,6 +30,9 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
 
     @Autowired
     private IProductoService productoService;
+
+    @Autowired
+    private IDescuentoService descuentoService;
 
     public List<DetalleCarrito> getDetallesCarrito(Integer carritoId) {
         if (carritoId != null)
@@ -65,7 +69,7 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
         detalleCarrito.setCarrito(carrito);
         detalleCarrito.setProducto(producto);
         detalleCarrito.setCantidad(detalleCarritoRequest.getCantidad());
-        detalleCarrito.setPrecioUnitario(producto.getPrecioConDescuento());
+        detalleCarrito.setPrecioUnitario(descuentoService.getPrecioConDescuento(producto));
         return detalleCarritoRepository.save(detalleCarrito);
     }
 
@@ -79,7 +83,7 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
             throw new StockInsuficienteException();
 
         detalleCarrito.setCantidad(detalleCarritoRequest.getCantidad());
-        detalleCarrito.setPrecioUnitario(detalleCarrito.getProducto().getPrecioConDescuento());
+        detalleCarrito.setPrecioUnitario(descuentoService.getPrecioConDescuento(detalleCarrito.getProducto()));
         return detalleCarritoRepository.save(detalleCarrito);
     }
 

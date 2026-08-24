@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Data
@@ -18,7 +17,7 @@ public class Producto {
     }
 
     public Producto(int productoId, Category categoria, String nombreProducto, String descripcion,
-            double precioUnitario, int stock, String imagenUrl, double descuentoPorcentaje) {
+            double precioUnitario, int stock, String imagenUrl) {
         this.productoId = productoId;
         this.categoria = categoria;
         this.nombreProducto = nombreProducto;
@@ -26,7 +25,6 @@ public class Producto {
         this.precioUnitario = precioUnitario;
         this.stock = stock;
         this.imagenUrl = imagenUrl;
-        this.descuentoPorcentaje = descuentoPorcentaje;
     }
 
     @Id
@@ -51,12 +49,4 @@ public class Producto {
 
     @Column
     private String imagenUrl;
-
-    @Column
-    private double descuentoPorcentaje;
-
-    @Transient
-    public double getPrecioConDescuento() {
-        return precioUnitario - (precioUnitario * descuentoPorcentaje / 100);
-    }
 }

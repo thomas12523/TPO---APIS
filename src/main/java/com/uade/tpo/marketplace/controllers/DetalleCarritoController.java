@@ -1,6 +1,5 @@
 package com.uade.tpo.marketplace.controllers;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,7 +49,7 @@ public class DetalleCarritoController {
     @PostMapping
     public ResponseEntity<Object> crearDetalleCarrito(@RequestBody DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException, StockInsuficienteException {
         DetalleCarrito result = detalleCarritoService.crearDetalleCarrito(detalleCarritoRequest);
-        return ResponseEntity.created(URI.create("/DetalleCarrito/" + result.getCarrito().getCarritoId() + "/" + result.getProducto().getProductoId())).body(DetalleCarritoResponse.from(result));
+        return ResponseEntity.ok(DetalleCarritoResponse.from(result));
     }
 
     @PutMapping("{carritoId}/{productoId}")

@@ -1,6 +1,5 @@
 package com.uade.tpo.marketplace.controllers;
 
-import java.net.URI;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +54,7 @@ public class ProductoController {
     @PostMapping
     public ResponseEntity<Object> crearProducto(@RequestBody ProductoRequest productoRequest) throws ProductoDuplicateException {
         Producto result = productoService.crearProducto(productoRequest);
-        return ResponseEntity.created(URI.create("/Producto/" + result.getProductoId())).body(ProductoResponse.from(result));
+        return ResponseEntity.ok(ProductoResponse.from(result));
     }
 
     @PutMapping("{productoId}")

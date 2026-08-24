@@ -1,6 +1,5 @@
 package com.uade.tpo.marketplace.controllers;
 
-import java.net.URI;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +51,7 @@ public class CategoriesController {
     @PostMapping
     public ResponseEntity<Object> createCategory(@RequestBody CategoryRequest categoryRequest) throws CategoryDuplicateException {
         Category result = categoriesService.createCategory(categoryRequest.getNombre());
-        return ResponseEntity.created(URI.create("/Categories/" + result.getId())).body(CategoryResponse.from(result));
+        return ResponseEntity.ok(CategoryResponse.from(result));
     }
 
     @PutMapping("{categoryId}")

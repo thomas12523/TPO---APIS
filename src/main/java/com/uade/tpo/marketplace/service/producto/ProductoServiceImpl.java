@@ -51,7 +51,6 @@ public class ProductoServiceImpl implements IProductoService {
         producto.setPrecioUnitario(productoRequest.getPrecioUnitario());
         producto.setStock(productoRequest.getStock());
         producto.setImagenUrl(productoRequest.getImagenUrl());
-        producto.setDescuentoPorcentaje(productoRequest.getDescuentoPorcentaje());
         return productoRepository.save(producto);
     }
 
@@ -69,7 +68,6 @@ public class ProductoServiceImpl implements IProductoService {
             producto.setPrecioUnitario(productoRequest.getPrecioUnitario());
             producto.setStock(productoRequest.getStock());
             producto.setImagenUrl(productoRequest.getImagenUrl());
-            producto.setDescuentoPorcentaje(productoRequest.getDescuentoPorcentaje());
             return productoRepository.save(producto);
         });
     }

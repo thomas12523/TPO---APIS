@@ -1,6 +1,5 @@
 package com.uade.tpo.marketplace.controllers;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,7 +48,7 @@ public class DetallePedidoController {
     @PostMapping
     public ResponseEntity<Object> crearDetallePedido(@RequestBody DetallePedidoRequest detallePedidoRequest) throws DetallePedidoDuplicateException {
         DetallePedido result = detallePedidoService.crearDetallePedido(detallePedidoRequest);
-        return ResponseEntity.created(URI.create("/DetallePedido/" + result.getDetallePedidoId())).body(DetallePedidoResponse.from(result));
+        return ResponseEntity.ok(DetallePedidoResponse.from(result));
     }
 
     @PutMapping("{detallePedidoId}")

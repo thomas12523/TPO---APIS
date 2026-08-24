@@ -1,6 +1,5 @@
 package com.uade.tpo.marketplace.controllers;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,7 +48,7 @@ public class ImagenController {
     @PostMapping
     public ResponseEntity<Object> crearImagen(@RequestBody ImagenRequest imagenRequest) throws ImagenDuplicateException {
         Imagen result = imagenService.crearImagen(imagenRequest);
-        return ResponseEntity.created(URI.create("/Imagen/" + result.getImagenId())).body(ImagenResponse.from(result));
+        return ResponseEntity.ok(ImagenResponse.from(result));
     }
 
     @PutMapping("{imagenId}")
