@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.dto.PedidoRequest;
 import com.uade.tpo.marketplace.service.pedido.IPedidoService;
+import com.uade.tpo.marketplace.service.soporte.IPedidoOrchestratorService;
 
 @RestController
 @RequestMapping("Pedido")
@@ -27,6 +28,9 @@ public class PedidoController {
 
     @Autowired
     private IPedidoService pedidoService;
+
+    @Autowired
+    private IPedidoOrchestratorService pedidoOrchestratorService;
 
     @GetMapping
     public ResponseEntity<Page<Pedido>> getPedidos(
@@ -64,7 +68,7 @@ public class PedidoController {
 
     @PostMapping("{pedidoId}/cancelar")
     public ResponseEntity<Pedido> cancelarPedido(@PathVariable int pedidoId) {
-        Pedido result = pedidoService.cancelarPedido(pedidoId);
+        Pedido result = pedidoOrchestratorService.cancelarPedido(pedidoId);
         if (result == null)
             return ResponseEntity.notFound().build();
 
@@ -73,7 +77,7 @@ public class PedidoController {
 
     @DeleteMapping("{pedidoId}")
     public ResponseEntity<Void> deletePedido(@PathVariable int pedidoId) {
-        boolean deleted = pedidoService.deletePedido(pedidoId);
+        boolean deleted = pedidoOrchestratorService.eliminarPedido(pedidoId);
         if (!deleted)
             return ResponseEntity.notFound().build();
 

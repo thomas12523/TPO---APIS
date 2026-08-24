@@ -1,6 +1,5 @@
 package com.uade.tpo.marketplace.service.pedido;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,13 +7,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import com.uade.tpo.marketplace.entity.DetallePedido;
 import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.PedidoRequest;
 import com.uade.tpo.marketplace.repository.IPedidoRepository;
-import com.uade.tpo.marketplace.service.detallepedido.IDetallePedidoService;
-import com.uade.tpo.marketplace.service.producto.IProductoService;
 import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -27,12 +23,6 @@ public class PedidoServiceImpl implements IPedidoService {
 
     @Autowired
     private IUsuarioService usuarioService;
-
-    @Autowired
-    private IDetallePedidoService detallePedidoService;
-
-    @Autowired
-    private IProductoService productoService;
 
     public Page<Pedido> getPedidos(Integer usuarioId, PageRequest pageRequest) {
         if (usuarioId != null)
@@ -92,11 +82,6 @@ public class PedidoServiceImpl implements IPedidoService {
         if ("CANCELADO".equals(pedido.getEstado()))
             return pedido;
 
-        List<DetallePedido> items = detallePedidoService.getDetallesPedido(pedidoId);
-        for (DetallePedido item : items) {
-            productoService.ajustarStock(item.getProducto().getProductoId(), item.getCantidad());
-        }
-
         pedido.setEstado("CANCELADO");
         return pedidoRepository.save(pedido);
     }
@@ -104,12 +89,6 @@ public class PedidoServiceImpl implements IPedidoService {
     public boolean deletePedido(int pedidoId) {
         if (pedidoRepository.findById(pedidoId).isEmpty())
             return false;
-
-        List<DetallePedido> items = detallePedidoService.getDetallesPedido(pedidoId);
-        for (DetallePedido item : items) {
-            productoService.ajustarStock(item.getProducto().getProductoId(), item.getCantidad());
-        }
-        detallePedidoService.deleteDetallesByPedidoId(pedidoId);
 
         pedidoRepository.deleteById(pedidoId);
         return true;

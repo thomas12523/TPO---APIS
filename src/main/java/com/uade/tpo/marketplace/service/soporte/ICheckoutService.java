@@ -1,4 +1,4 @@
-package com.uade.tpo.marketplace.service.checkout;
+package com.uade.tpo.marketplace.service.soporte;
 
 import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.dto.CheckoutRequest;

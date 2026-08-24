@@ -22,7 +22,7 @@ import com.uade.tpo.marketplace.entity.dto.CheckoutRequest;
 import com.uade.tpo.marketplace.exceptions.CarritoVacioException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.service.carrito.ICarritoService;
-import com.uade.tpo.marketplace.service.checkout.ICheckoutService;
+import com.uade.tpo.marketplace.service.soporte.ICheckoutService;
 
 @RestController
 @RequestMapping("Carrito")
