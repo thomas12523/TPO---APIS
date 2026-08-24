@@ -16,9 +16,10 @@ public class Pedido {
     public Pedido() {
     }
 
-    public Pedido(int pedidoId, Usuario usuario, String fechaCreacion, String estado, double subtotal, double total,
+    public Pedido(int pedidoId, String numeroPedido, Usuario usuario, String fechaCreacion, String estado, double subtotal, double total,
             String metodoPago) {
         this.pedidoId = pedidoId;
+        this.numeroPedido = numeroPedido;
         this.usuario = usuario;
         this.fechaCreacion = fechaCreacion;
         this.estado = estado;
@@ -30,6 +31,9 @@ public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pedidoId;
+
+    @Column(unique = true)
+    private String numeroPedido;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)

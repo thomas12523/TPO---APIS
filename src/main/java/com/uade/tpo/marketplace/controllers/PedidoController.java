@@ -51,6 +51,15 @@ public class PedidoController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("numero/{numeroPedido}")
+    public ResponseEntity<PedidoResponse> getPedidoByNumero(@PathVariable String numeroPedido) {
+        Optional<Pedido> result = pedidoService.getPedidoByNumero(numeroPedido);
+        if (result.isPresent())
+            return ResponseEntity.ok(PedidoResponse.from(result.get()));
+
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping
     public ResponseEntity<Object> crearPedido(@RequestBody PedidoRequest pedidoRequest) {
         Pedido result = pedidoService.crearPedido(pedidoRequest);

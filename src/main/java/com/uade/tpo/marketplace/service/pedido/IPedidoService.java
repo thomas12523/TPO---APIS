@@ -14,6 +14,8 @@ public interface IPedidoService {
 
     public Optional<Pedido> getPedidoById(int pedidoId);
 
+    public Optional<Pedido> getPedidoByNumero(String numeroPedido);
+
     public Pedido crearPedido(PedidoRequest pedidoRequest);
 
     public Pedido actualizarPedido(int pedidoId, PedidoRequest pedidoRequest);

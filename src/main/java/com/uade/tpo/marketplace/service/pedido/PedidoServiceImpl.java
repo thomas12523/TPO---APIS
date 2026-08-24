@@ -35,6 +35,10 @@ public class PedidoServiceImpl implements IPedidoService {
         return pedidoRepository.findById(pedidoId);
     }
 
+    public Optional<Pedido> getPedidoByNumero(String numeroPedido) {
+        return pedidoRepository.findByNumeroPedido(numeroPedido);
+    }
+
     public Pedido crearPedido(PedidoRequest pedidoRequest) {
         Optional<Usuario> usuarioOpt = usuarioService.getUsuarioById(pedidoRequest.getUsuarioId());
         if (usuarioOpt.isEmpty()) {
@@ -49,6 +53,8 @@ public class PedidoServiceImpl implements IPedidoService {
         pedido.setSubtotal(pedidoRequest.getSubtotal());
         pedido.setTotal(pedidoRequest.getTotal());
         pedido.setMetodoPago(pedidoRequest.getMetodoPago());
+        pedido = pedidoRepository.save(pedido);
+        pedido.setNumeroPedido("PED-" + pedido.getPedidoId());
         return pedidoRepository.save(pedido);
     }
 

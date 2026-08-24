@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class PedidoResponse {
     private int pedidoId;
+    private String numeroPedido;
     private int usuarioId;
     private String fechaCreacion;
     private String estado;
@@ -17,6 +18,7 @@ public class PedidoResponse {
     public static PedidoResponse from(Pedido pedido) {
         PedidoResponse response = new PedidoResponse();
         response.setPedidoId(pedido.getPedidoId());
+        response.setNumeroPedido(pedido.getNumeroPedido());
         response.setUsuarioId(pedido.getUsuario().getUsuarioId());
         response.setFechaCreacion(pedido.getFechaCreacion());
         response.setEstado(pedido.getEstado());
