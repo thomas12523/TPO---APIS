@@ -29,8 +29,11 @@ public class CategoriesServiceImpl implements ICategoriesService {
 
     public Category createCategory(String nombre) throws CategoryDuplicateException {
         List<Category> categories = categoriesRepository.findByNombre(nombre);
-        if (categories.isEmpty())
-            return categoriesRepository.save(new Category(nombre));
+        if (categories.isEmpty()) {
+            Category category = new Category();
+            category.setNombre(nombre);
+            return categoriesRepository.save(category);
+        }
 
         throw new CategoryDuplicateException();
     }

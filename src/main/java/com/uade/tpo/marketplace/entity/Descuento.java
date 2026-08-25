@@ -7,24 +7,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Descuento {
-
-    public Descuento() {
-    }
-
-    public Descuento(int descuentoId, Producto producto, double porcentaje, boolean activo, String fechaInicio,
-            String fechaFin) {
-        this.descuentoId = descuentoId;
-        this.producto = producto;
-        this.porcentaje = porcentaje;
-        this.activo = activo;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

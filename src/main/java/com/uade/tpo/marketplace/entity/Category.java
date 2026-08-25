@@ -5,16 +5,16 @@ import jakarta.persistence.Entity; // libreria de persistencia de springboot
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Category {
-    
-    public Category(String nombre) {
-        this.nombre = nombre;
-    }
-    public Category(){}
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

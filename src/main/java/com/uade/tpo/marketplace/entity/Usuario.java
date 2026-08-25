@@ -8,28 +8,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Usuario {
-
-    public Usuario() {
-    }
-
-    public Usuario(int usuarioId, int dni, String username, String email, String nombre, String apellido, String contrasenia,
-            List<Pedido> pedidos) {
-        this.usuarioId = usuarioId;
-        this.dni = dni;
-        this.username = username;
-        this.email = email;
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.contrasenia = contrasenia;
-        this.pedidos = pedidos;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
