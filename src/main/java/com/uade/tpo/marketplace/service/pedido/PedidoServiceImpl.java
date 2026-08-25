@@ -40,11 +40,8 @@ public class PedidoServiceImpl implements IPedidoService {
     }
 
     public Pedido crearPedido(PedidoRequest pedidoRequest) {
-        Optional<Usuario> usuarioOpt = usuarioService.getUsuarioById(pedidoRequest.getUsuarioId());
-        if (usuarioOpt.isEmpty()) {
-            throw new EntityNotFoundException("Usuario no encontrado");
-        }
-        Usuario usuario = usuarioOpt.get();
+        Usuario usuario = usuarioService.getUsuarioById(pedidoRequest.getUsuarioId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
         Pedido pedido = new Pedido();
         pedido.setUsuario(usuario);
@@ -63,11 +60,8 @@ public class PedidoServiceImpl implements IPedidoService {
         if (existente.isEmpty())
             return null;
 
-        Optional<Usuario> usuarioOpt = usuarioService.getUsuarioById(pedidoRequest.getUsuarioId());
-        if (usuarioOpt.isEmpty()) {
-            throw new EntityNotFoundException("Usuario no encontrado");
-        }
-        Usuario usuario = usuarioOpt.get();
+        Usuario usuario = usuarioService.getUsuarioById(pedidoRequest.getUsuarioId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
         Pedido pedido = existente.get();
         pedido.setUsuario(usuario);

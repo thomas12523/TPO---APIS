@@ -50,17 +50,11 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
                 detalleCarritoRequest.getCarritoId(), detalleCarritoRequest.getProductoId()).isPresent())
             throw new DetalleCarritoDuplicateException();
 
-        Optional<Carrito> carritoOpt = carritoService.getCarritoById(detalleCarritoRequest.getCarritoId());
-        if (carritoOpt.isEmpty()) {
-            throw new EntityNotFoundException("Carrito no encontrado");
-        }
-        Carrito carrito = carritoOpt.get();
+        Carrito carrito = carritoService.getCarritoById(detalleCarritoRequest.getCarritoId())
+                .orElseThrow(() -> new EntityNotFoundException("Carrito no encontrado"));
 
-        Optional<Producto> productoOpt = productoService.getProductoById(detalleCarritoRequest.getProductoId());
-        if (productoOpt.isEmpty()) {
-            throw new EntityNotFoundException("Producto no encontrado");
-        }
-        Producto producto = productoOpt.get();
+        Producto producto = productoService.getProductoById(detalleCarritoRequest.getProductoId())
+                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
 
         if (detalleCarritoRequest.getCantidad() > producto.getStock())
             throw new StockInsuficienteException();

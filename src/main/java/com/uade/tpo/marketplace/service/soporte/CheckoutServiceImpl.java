@@ -2,7 +2,6 @@ package com.uade.tpo.marketplace.service.soporte;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,11 +41,8 @@ public class CheckoutServiceImpl implements ICheckoutService {
     private IProductoService productoService;
 
     public Pedido checkout(int carritoId, CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException {
-        Optional<Carrito> carritoOpt = carritoService.getCarritoById(carritoId);
-        if (carritoOpt.isEmpty()) {
-            throw new EntityNotFoundException("Carrito no encontrado");
-        }
-        Carrito carrito = carritoOpt.get();
+        Carrito carrito = carritoService.getCarritoById(carritoId)
+                .orElseThrow(() -> new EntityNotFoundException("Carrito no encontrado"));
 
         List<DetalleCarrito> items = detalleCarritoService.getDetallesCarrito(carritoId);
         if (items.isEmpty())

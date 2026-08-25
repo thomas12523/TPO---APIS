@@ -38,11 +38,8 @@ public class ProductoServiceImpl implements IProductoService {
         if (!productoRepository.findByNombreProducto(productoRequest.getNombreProducto()).isEmpty())
             throw new ProductoDuplicateException();
 
-        Optional<Category> categoriaOpt = categoriesService.getCategoryById(productoRequest.getCategoriaId());
-        if (categoriaOpt.isEmpty()) {
-            throw new EntityNotFoundException("Categoria no encontrada");
-        }
-        Category categoria = categoriaOpt.get();
+        Category categoria = categoriesService.getCategoryById(productoRequest.getCategoriaId())
+                .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
 
         Producto producto = new Producto();
         producto.setCategoria(categoria);
@@ -56,11 +53,8 @@ public class ProductoServiceImpl implements IProductoService {
 
     public Optional<Producto> actualizarProducto(int productoId, ProductoRequest productoRequest) {
         return productoRepository.findById(productoId).map(producto -> {
-            Optional<Category> categoriaOpt = categoriesService.getCategoryById(productoRequest.getCategoriaId());
-            if (categoriaOpt.isEmpty()) {
-                throw new EntityNotFoundException("Categoria no encontrada");
-            }
-            Category categoria = categoriaOpt.get();
+            Category categoria = categoriesService.getCategoryById(productoRequest.getCategoriaId())
+                    .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
 
             producto.setCategoria(categoria);
             producto.setNombreProducto(productoRequest.getNombreProducto());

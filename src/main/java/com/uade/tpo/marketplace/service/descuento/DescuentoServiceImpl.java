@@ -39,13 +39,11 @@ public class DescuentoServiceImpl implements IDescuentoService {
     public Descuento crearDescuento(DescuentoRequest descuentoRequest) throws DescuentoInvalidoException {
         validarPorcentaje(descuentoRequest.getPorcentaje());
 
-        Optional<Producto> productoOpt = productoService.getProductoById(descuentoRequest.getProductoId());
-        if (productoOpt.isEmpty()) {
-            throw new EntityNotFoundException("Producto no encontrado");
-        }
+        Producto producto = productoService.getProductoById(descuentoRequest.getProductoId())
+                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
 
         Descuento descuento = new Descuento();
-        descuento.setProducto(productoOpt.get());
+        descuento.setProducto(producto);
         descuento.setPorcentaje(descuentoRequest.getPorcentaje());
         descuento.setActivo(descuentoRequest.isActivo());
         descuento.setFechaInicio(descuentoRequest.getFechaInicio());

@@ -46,17 +46,11 @@ public class ReseniaServiceImpl implements IReseniaService {
                 reseniaRequest.getUsuarioId(), reseniaRequest.getProductoId()).isPresent())
             throw new ReseniaDuplicateException();
 
-        Optional<Usuario> usuarioOpt = usuarioService.getUsuarioById(reseniaRequest.getUsuarioId());
-        if (usuarioOpt.isEmpty()) {
-            throw new EntityNotFoundException("Usuario no encontrado");
-        }
-        Usuario usuario = usuarioOpt.get();
+        Usuario usuario = usuarioService.getUsuarioById(reseniaRequest.getUsuarioId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
-        Optional<Producto> productoOpt = productoService.getProductoById(reseniaRequest.getProductoId());
-        if (productoOpt.isEmpty()) {
-            throw new EntityNotFoundException("Producto no encontrado");
-        }
-        Producto producto = productoOpt.get();
+        Producto producto = productoService.getProductoById(reseniaRequest.getProductoId())
+                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
 
         Resenia resenia = new Resenia();
         resenia.setUsuario(usuario);

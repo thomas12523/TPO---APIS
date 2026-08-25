@@ -35,11 +35,8 @@ public class CarritoServiceImpl implements ICarritoService {
     }
 
     public Carrito crearCarrito(CarritoRequest carritoRequest) {
-        Optional<Usuario> usuarioOpt = usuarioService.getUsuarioById(carritoRequest.getUsuarioId());
-        if (usuarioOpt.isEmpty()) {
-            throw new EntityNotFoundException("Usuario no encontrado");
-        }
-        Usuario usuario = usuarioOpt.get();
+        Usuario usuario = usuarioService.getUsuarioById(carritoRequest.getUsuarioId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
         Carrito carrito = new Carrito();
         carrito.setUsuario(usuario);
@@ -52,11 +49,8 @@ public class CarritoServiceImpl implements ICarritoService {
         if (existente.isEmpty())
             return null;
 
-        Optional<Usuario> usuarioOpt = usuarioService.getUsuarioById(carritoRequest.getUsuarioId());
-        if (usuarioOpt.isEmpty()) {
-            throw new EntityNotFoundException("Usuario no encontrado");
-        }
-        Usuario usuario = usuarioOpt.get();
+        Usuario usuario = usuarioService.getUsuarioById(carritoRequest.getUsuarioId())
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
 
         Carrito carrito = existente.get();
         carrito.setUsuario(usuario);
