@@ -51,7 +51,15 @@
       "Bash(grep -ao \"afterResponseScript\\\\|preRequestScript\\\\|runtime[.]scripts\\\\|hasAuthorId\" \"/c/Users/THOMAS/AppData/Local/Insomnia/app-13.2.0/resources.pak\" 2>/dev/null | sort -u *)",
       "Read(//c/Users/THOMAS/AppData/Local/Insomnia/app-13.2.0/resources/**)",
       "Bash(grep -ao \"afterResponseScript\" \"/c/Users/THOMAS/AppData/Local/Insomnia/app-13.2.0/resources/app.asar\" | head -3 *)",
-      "Bash(grep -ao \"insomnia\\\\.environment\\\\.[a-zA-Z]*\" \"/c/Users/THOMAS/AppData/Local/Insomnia/app-13.2.0/resources/app.asar\" | sort -u | head -20 *)"
+      "Bash(grep -ao \"insomnia\\\\.environment\\\\.[a-zA-Z]*\" \"/c/Users/THOMAS/AppData/Local/Insomnia/app-13.2.0/resources/app.asar\" | sort -u | head -20 *)",
+      "Bash(find \"/c/Users/THOMAS/Desktop\" -maxdepth 1 -iname \"*seguridad*\")",
+      "Bash(disown)",
+      "Bash(exit 1)",
+      "Bash(curl -s -w '\\\\nHTTP %{http_code}\\\\n' -X POST http://localhost:4002/Producto -H 'Content-Type: application/json' -d '{\"categoriaId\":1,\"nombreProducto\":\"x\",\"descripcion\":\"x\",\"precioUnitario\":1.0,\"stock\":1,\"imagenUrl\":\"x\"}' --max-time 5)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:4002/Producto --max-time 5)",
+      "Bash(curl -s -X POST http://localhost:4002/Auth/authenticate -H 'Content-Type: application/json' -d '{\"username\":\"seguridad_test\",\"contrasenia\":\"clave123\"}' --max-time 5)",
+      "Bash(curl -s -w '\\\\nHTTP %{http_code}\\\\n' -X POST http://localhost:4002/Producto -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVja19oYW5kbGVycyIsImlhdCI6MTc4Nzg4NDk1NSwiZXhwIjoxNzg3OTcxMzU1fQ.xI9db3XcTDHKZM37bP71PfHWuaGghvt2qgzeo47swcOGRFSUMs4lco1G8C-2sDU18Il3ycUfL3Ixh_wgGmdHeg' -d '{\"categoriaId\":1,\"nombreProducto\":\"x\",\"descripcion\":\"x\",\"precioUnitario\":1.0,\"stock\":1,\"imagenUrl\":\"x\"}' --max-time 5)",
+      "Bash(powershell -NoProfile -Command \"Stop-Process -Id 27664 -Force\")"
     ],
     "additionalDirectories": [
       "C:\\Users\\THOMAS\\AppData\\Local\\Temp\\claude\\c--Users-THOMAS-Desktop-TPO---APIS\\9c510ecf-a951-4b65-b6e4-1c18c64df4aa\\scratchpad",
