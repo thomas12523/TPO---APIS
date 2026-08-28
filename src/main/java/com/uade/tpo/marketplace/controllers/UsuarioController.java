@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.uade.tpo.marketplace.entity.Role;
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.request.UsuarioRequest;
 import com.uade.tpo.marketplace.entity.dto.response.UsuarioResponse;
@@ -48,15 +49,6 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("login")
-    public ResponseEntity<UsuarioResponse> login(@RequestParam String username, @RequestParam String contrasenia) {
-        Optional<Usuario> result = usuarioService.login(username, contrasenia);
-        if (result.isPresent())
-            return ResponseEntity.ok(UsuarioResponse.from(result.get()));
-
-        return ResponseEntity.status(401).build();
-    }
-
     @PostMapping
     public ResponseEntity<Object> crearUsuario(@RequestBody UsuarioRequest usuarioRequest) throws UsuarioDuplicateException {
         Usuario result = usuarioService.crearUsuario(usuarioRequest);
@@ -72,9 +64,9 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-    @PatchMapping("{usuarioId}/permisos") // actualizo los permisos de un usuario (admin o no admin) FALTA SEGURIDAD
-    public ResponseEntity<UsuarioResponse> actualizarPermisos(@PathVariable int usuarioId, @RequestParam boolean admin) {
-        Optional<Usuario> result = usuarioService.actualizarPermisos(usuarioId, admin);
+    @PatchMapping("{usuarioId}/permisos") // actualizo los permisos de un usuario (USER o ADMIN)
+    public ResponseEntity<UsuarioResponse> actualizarPermisos(@PathVariable int usuarioId, @RequestParam Role role) {
+        Optional<Usuario> result = usuarioService.actualizarPermisos(usuarioId, role);
         if (result.isPresent())
             return ResponseEntity.ok(UsuarioResponse.from(result.get()));
 

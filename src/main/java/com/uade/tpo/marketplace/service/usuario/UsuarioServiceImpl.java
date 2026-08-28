@@ -5,8 +5,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.uade.tpo.marketplace.entity.Role;
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.request.UsuarioRequest;
 import com.uade.tpo.marketplace.exceptions.UsuarioDuplicateException;
@@ -18,20 +20,15 @@ public class UsuarioServiceImpl implements IUsuarioService {
     @Autowired
     private IUsuarioRepository usuarioRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public Page<Usuario> getUsuarios(PageRequest pageRequest) {
         return usuarioRepository.findAll(pageRequest);
     }
 
     public Optional<Usuario> getUsuarioById(int usuarioId) {
         return usuarioRepository.findById(usuarioId);
-    }
-
-    public Optional<Usuario> login(String username, String contrasenia) {
-        Optional<Usuario> usuario = usuarioRepository.findByUsername(username);
-        if (usuario.isEmpty() || !usuario.get().getContrasenia().equals(contrasenia))
-            return Optional.empty();
-
-        return usuario;
     }
 
     public Usuario crearUsuario(UsuarioRequest usuarioRequest) throws UsuarioDuplicateException {
@@ -44,7 +41,8 @@ public class UsuarioServiceImpl implements IUsuarioService {
         usuario.setEmail(usuarioRequest.getEmail());
         usuario.setNombre(usuarioRequest.getNombre());
         usuario.setApellido(usuarioRequest.getApellido());
-        usuario.setContrasenia(usuarioRequest.getContrasenia());
+        usuario.setContrasenia(passwordEncoder.encode(usuarioRequest.getContrasenia()));
+        usuario.setRole(Role.USER);
         return usuarioRepository.save(usuario);
     }
 
@@ -55,14 +53,14 @@ public class UsuarioServiceImpl implements IUsuarioService {
             usuario.setEmail(usuarioRequest.getEmail());
             usuario.setNombre(usuarioRequest.getNombre());
             usuario.setApellido(usuarioRequest.getApellido());
-            usuario.setContrasenia(usuarioRequest.getContrasenia());
+            usuario.setContrasenia(passwordEncoder.encode(usuarioRequest.getContrasenia()));
             return usuarioRepository.save(usuario);
         });
     }
 
-    public Optional<Usuario> actualizarPermisos(int usuarioId, boolean admin) {
+    public Optional<Usuario> actualizarPermisos(int usuarioId, Role role) {
         return usuarioRepository.findById(usuarioId).map(usuario -> {
-            usuario.setAdmin(admin);
+            usuario.setRole(role);
             return usuarioRepository.save(usuario);
         });
     }
