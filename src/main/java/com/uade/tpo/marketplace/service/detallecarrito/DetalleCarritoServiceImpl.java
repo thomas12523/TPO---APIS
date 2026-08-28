@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.uade.tpo.marketplace.entity.Carrito;
 import com.uade.tpo.marketplace.entity.DetalleCarrito;
@@ -20,6 +21,7 @@ import com.uade.tpo.marketplace.service.producto.IProductoService;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@Transactional
 public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
 
     @Autowired
@@ -34,6 +36,7 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
     @Autowired
     private IDescuentoService descuentoService;
 
+    @Transactional(readOnly = true)
     public List<DetalleCarrito> getDetallesCarrito(Integer carritoId) {
         if (carritoId != null)
             return detalleCarritoRepository.findByCarritoId(carritoId);
@@ -41,6 +44,7 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
         return detalleCarritoRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Optional<DetalleCarrito> getDetalleCarritoById(int carritoId, int productoId) {
         return detalleCarritoRepository.findByCarritoIdAndProductoId(carritoId, productoId);
     }

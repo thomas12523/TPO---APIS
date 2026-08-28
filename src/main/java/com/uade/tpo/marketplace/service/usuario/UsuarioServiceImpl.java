@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.uade.tpo.marketplace.entity.Role;
 import com.uade.tpo.marketplace.entity.Usuario;
@@ -15,6 +16,7 @@ import com.uade.tpo.marketplace.exceptions.UsuarioDuplicateException;
 import com.uade.tpo.marketplace.repository.IUsuarioRepository;
 
 @Service
+@Transactional
 public class UsuarioServiceImpl implements IUsuarioService {
 
     @Autowired
@@ -23,10 +25,12 @@ public class UsuarioServiceImpl implements IUsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Transactional(readOnly = true)
     public Page<Usuario> getUsuarios(PageRequest pageRequest) {
         return usuarioRepository.findAll(pageRequest);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Usuario> getUsuarioById(int usuarioId) {
         return usuarioRepository.findById(usuarioId);
     }

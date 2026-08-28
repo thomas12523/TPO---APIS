@@ -59,7 +59,16 @@
       "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:4002/Producto --max-time 5)",
       "Bash(curl -s -X POST http://localhost:4002/Auth/authenticate -H 'Content-Type: application/json' -d '{\"username\":\"seguridad_test\",\"contrasenia\":\"clave123\"}' --max-time 5)",
       "Bash(curl -s -w '\\\\nHTTP %{http_code}\\\\n' -X POST http://localhost:4002/Producto -H 'Content-Type: application/json' -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVja19oYW5kbGVycyIsImlhdCI6MTc4Nzg4NDk1NSwiZXhwIjoxNzg3OTcxMzU1fQ.xI9db3XcTDHKZM37bP71PfHWuaGghvt2qgzeo47swcOGRFSUMs4lco1G8C-2sDU18Il3ycUfL3Ixh_wgGmdHeg' -d '{\"categoriaId\":1,\"nombreProducto\":\"x\",\"descripcion\":\"x\",\"precioUnitario\":1.0,\"stock\":1,\"imagenUrl\":\"x\"}' --max-time 5)",
-      "Bash(powershell -NoProfile -Command \"Stop-Process -Id 27664 -Force\")"
+      "Bash(powershell -NoProfile -Command \"Stop-Process -Id 27664 -Force\")",
+      "Read(//c/Users/THOMAS/Desktop/ecommereceproject-main/src/main/java/**)",
+      "Bash(grep -n \"@Transactional\" -B 2 \"/c/Users/THOMAS/Desktop/ecommereceproject-main/src/main/java/com/uade/tpo/demo/services/CategoryService.java\" \"/c/Users/THOMAS/Desktop/ecommereceproject-main/src/main/java/com/uade/tpo/demo/services/OrderService.java\" \"/c/Users/THOMAS/Desktop/ecommereceproject-main/src/main/java/com/uade/tpo/demo/services/ProductService.java\")",
+      "Read(//c/Users/THOMAS/Desktop/ecommereceproject-main/src/main/java/com/uade/tpo/demo/services/**)",
+      "Bash(curl -s -w '\\\\nHTTP %{http_code}\\\\n' -X POST http://localhost:4002/Auth/register -H 'Content-Type: application/json' -d '{\"dni\":11122233,\"username\":\"final_test\",\"email\":\"final_test@mail.com\",\"nombre\":\"Final\",\"apellido\":\"Test\",\"contrasenia\":\"clave123\"}' --max-time 5)",
+      "Bash(curl -s -w '\\\\nHTTP %{http_code}\\\\n' -X POST http://localhost:4002/Auth/register -H 'Content-Type: application/json' -d '{\"dni\":44455566,\"username\":\"final_vendor\",\"email\":\"final_vendor@mail.com\",\"nombre\":\"Final\",\"apellido\":\"Vendor\",\"contrasenia\":\"clave123\"}' --max-time 5)",
+      "Bash(curl -s -X POST http://localhost:4002/DetalleCarrito -H 'Content-Type: application/json' -H 'Authorization: Bearer __CMDSUB_OUTPUT__' -d '{\"carritoId\":3,\"productoId\":2,\"cantidad\":1,\"precioUnitario\":100.0}' --max-time 5)",
+      "Bash(curl -s -w '\\\\nHTTP %{http_code}\\\\n' -X POST http://localhost:4002/Carrito/3/checkout -H 'Content-Type: application/json' -H 'Authorization: Bearer __CMDSUB_OUTPUT__' -d '{\"metodoPago\":\"tarjeta_credito\"}' --max-time 5)",
+      "Bash(curl -s http://localhost:4002/Producto/2 --max-time 5)",
+      "Bash(powershell -NoProfile -Command \"Stop-Process -Id 27072 -Force\")"
     ],
     "additionalDirectories": [
       "C:\\Users\\THOMAS\\AppData\\Local\\Temp\\claude\\c--Users-THOMAS-Desktop-TPO---APIS\\9c510ecf-a951-4b65-b6e4-1c18c64df4aa\\scratchpad",

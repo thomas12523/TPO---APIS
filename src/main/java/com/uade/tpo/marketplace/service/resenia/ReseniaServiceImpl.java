@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.Resenia;
@@ -19,6 +20,7 @@ import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@Transactional
 public class ReseniaServiceImpl implements IReseniaService {
 
     @Autowired
@@ -30,6 +32,7 @@ public class ReseniaServiceImpl implements IReseniaService {
     @Autowired
     private IProductoService productoService;
 
+    @Transactional(readOnly = true)
     public Page<Resenia> getResenias(Integer productoId, PageRequest pageRequest) {
         if (productoId != null)
             return reseniaRepository.findByProductoId(productoId, pageRequest);
@@ -37,6 +40,7 @@ public class ReseniaServiceImpl implements IReseniaService {
         return reseniaRepository.findAll(pageRequest);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Resenia> getReseniaById(int reseniaId) {
         return reseniaRepository.findById(reseniaId);
     }

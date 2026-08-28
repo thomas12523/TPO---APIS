@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.uade.tpo.marketplace.entity.DetallePedido;
 import com.uade.tpo.marketplace.entity.Pedido;
@@ -19,6 +20,7 @@ import com.uade.tpo.marketplace.service.producto.IProductoService;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@Transactional
 public class DetallePedidoServiceImpl implements IDetallePedidoService {
 
     @Autowired
@@ -33,6 +35,7 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
     @Autowired
     private IDescuentoService descuentoService;
 
+    @Transactional(readOnly = true)
     public List<DetallePedido> getDetallesPedido(Integer pedidoId) {
         if (pedidoId != null)
             return detallePedidoRepository.findByPedidoId(pedidoId);
@@ -40,6 +43,7 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
         return detallePedidoRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Optional<DetallePedido> getDetallePedidoById(int detallePedidoId) {
         return detallePedidoRepository.findById(detallePedidoId);
     }

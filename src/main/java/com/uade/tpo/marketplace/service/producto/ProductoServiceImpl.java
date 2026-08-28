@@ -1,12 +1,12 @@
 package com.uade.tpo.marketplace.service.producto;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.entity.Producto;
@@ -18,6 +18,7 @@ import com.uade.tpo.marketplace.service.categories.ICategoriesService;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@Transactional
 public class ProductoServiceImpl implements IProductoService {
 
     @Autowired
@@ -26,10 +27,12 @@ public class ProductoServiceImpl implements IProductoService {
     @Autowired
     private ICategoriesService categoriesService;
 
+    @Transactional(readOnly = true)
     public Page<Producto> getProductos(Integer categoriaId, String nombre, Double precioMin, Double precioMax, PageRequest pageRequest) {
         return productoRepository.buscarProductos(categoriaId, nombre, precioMin, precioMax, pageRequest);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Producto> getProductoById(int productoId) {
         return productoRepository.findById(productoId);
     }

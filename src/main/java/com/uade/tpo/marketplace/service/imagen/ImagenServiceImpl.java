@@ -1,10 +1,13 @@
 package com.uade.tpo.marketplace.service.imagen;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.uade.tpo.marketplace.entity.Imagen;
 import com.uade.tpo.marketplace.entity.Producto;
@@ -16,6 +19,7 @@ import com.uade.tpo.marketplace.service.producto.IProductoService;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@Transactional
 public class ImagenServiceImpl implements IImagenService {
 
     @Autowired
@@ -24,6 +28,7 @@ public class ImagenServiceImpl implements IImagenService {
     @Autowired
     private IProductoService productoService;
 
+    @Transactional(readOnly = true)
     public List<Imagen> getImagenes(Integer productoId) {
         if (productoId != null)
             return imagenRepository.findByProductoId(productoId);
@@ -31,6 +36,7 @@ public class ImagenServiceImpl implements IImagenService {
         return imagenRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Optional<Imagen> getImagenById(int imagenId) {
         return imagenRepository.findById(imagenId);
     }
@@ -46,6 +52,17 @@ public class ImagenServiceImpl implements IImagenService {
         Imagen imagen = new Imagen();
         imagen.setProducto(producto);
         imagen.setImagenUrl(imagenRequest.getImagenUrl());
+        return imagenRepository.save(imagen);
+    }
+
+    public Imagen subirImagen(int productoId, MultipartFile archivo) throws IOException {
+        Producto producto = productoService.getProductoById(productoId)
+                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+
+        Imagen imagen = new Imagen();
+        imagen.setProducto(producto);
+        imagen.setDatos(archivo.getBytes());
+        imagen.setTipoContenido(archivo.getContentType());
         return imagenRepository.save(imagen);
     }
 

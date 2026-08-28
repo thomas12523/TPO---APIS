@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.uade.tpo.marketplace.entity.Descuento;
 import com.uade.tpo.marketplace.entity.Producto;
@@ -17,6 +18,7 @@ import com.uade.tpo.marketplace.service.producto.IProductoService;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@Transactional
 public class DescuentoServiceImpl implements IDescuentoService {
 
     @Autowired
@@ -25,6 +27,7 @@ public class DescuentoServiceImpl implements IDescuentoService {
     @Autowired
     private IProductoService productoService;
 
+    @Transactional(readOnly = true)
     public List<Descuento> getDescuentos(Integer productoId) {
         if (productoId != null)
             return descuentoRepository.findByProductoId(productoId);
@@ -32,6 +35,7 @@ public class DescuentoServiceImpl implements IDescuentoService {
         return descuentoRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     public Optional<Descuento> getDescuentoById(int descuentoId) {
         return descuentoRepository.findById(descuentoId);
     }
@@ -74,6 +78,7 @@ public class DescuentoServiceImpl implements IDescuentoService {
         return true;
     }
 
+    @Transactional(readOnly = true)
     public double getPrecioConDescuento(Producto producto) {
         Optional<Descuento> vigente = descuentoRepository.findByProductoId(producto.getProductoId()).stream()
                 .filter(this::esVigente)

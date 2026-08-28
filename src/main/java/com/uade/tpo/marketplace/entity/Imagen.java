@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,4 +28,11 @@ public class Imagen {
 
     @Column
     private String imagenUrl;
+
+    @Lob
+    @Column(length = 16777215)
+    private byte[] datos;
+
+    @Column
+    private String tipoContenido;
 }

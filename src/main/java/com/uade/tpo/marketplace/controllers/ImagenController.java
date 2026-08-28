@@ -1,10 +1,12 @@
 package com.uade.tpo.marketplace.controllers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.uade.tpo.marketplace.entity.Imagen;
 import com.uade.tpo.marketplace.entity.dto.request.ImagenRequest;
@@ -48,6 +51,13 @@ public class ImagenController {
     @PostMapping
     public ResponseEntity<Object> crearImagen(@RequestBody ImagenRequest imagenRequest) throws ImagenDuplicateException {
         Imagen result = imagenService.crearImagen(imagenRequest);
+        return ResponseEntity.ok(ImagenResponse.from(result));
+    }
+
+    @PostMapping(value = "upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Object> subirImagen(@RequestParam("productoId") int productoId,
+            @RequestParam("image") MultipartFile image) throws IOException {
+        Imagen result = imagenService.subirImagen(productoId, image);
         return ResponseEntity.ok(ImagenResponse.from(result));
     }
 

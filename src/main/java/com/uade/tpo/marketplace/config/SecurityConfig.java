@@ -57,6 +57,7 @@ public class SecurityConfig {
 
                         // Imagen: gestion solo vendedor (ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, "/Imagen").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/Imagen/upload").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/Imagen/{imagenId}").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/Imagen/{imagenId}").hasAuthority("ROLE_ADMIN")
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.Usuario;
@@ -16,6 +17,7 @@ import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@Transactional
 public class PedidoServiceImpl implements IPedidoService {
 
     @Autowired
@@ -24,6 +26,7 @@ public class PedidoServiceImpl implements IPedidoService {
     @Autowired
     private IUsuarioService usuarioService;
 
+    @Transactional(readOnly = true)
     public Page<Pedido> getPedidos(Integer usuarioId, PageRequest pageRequest) {
         if (usuarioId != null)
             return pedidoRepository.findByUsuarioId(usuarioId, pageRequest);
@@ -31,10 +34,12 @@ public class PedidoServiceImpl implements IPedidoService {
         return pedidoRepository.findAll(pageRequest);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Pedido> getPedidoById(int pedidoId) {
         return pedidoRepository.findById(pedidoId);
     }
 
+    @Transactional(readOnly = true)
     public Optional<Pedido> getPedidoByNumero(String numeroPedido) {
         return pedidoRepository.findByNumeroPedido(numeroPedido);
     }

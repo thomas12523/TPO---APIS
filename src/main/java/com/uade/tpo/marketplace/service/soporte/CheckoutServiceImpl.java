@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.uade.tpo.marketplace.entity.Carrito;
 import com.uade.tpo.marketplace.entity.DetalleCarrito;
@@ -40,6 +41,7 @@ public class CheckoutServiceImpl implements ICheckoutService {
     @Autowired
     private IProductoService productoService;
 
+    @Transactional
     public Pedido checkout(int carritoId, CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException {
         Carrito carrito = carritoService.getCarritoById(carritoId)
                 .orElseThrow(() -> new EntityNotFoundException("Carrito no encontrado"));

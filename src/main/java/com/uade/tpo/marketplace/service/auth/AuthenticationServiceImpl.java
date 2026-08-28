@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.uade.tpo.marketplace.config.JwtService;
 import com.uade.tpo.marketplace.controllers.auth.AuthenticationRequest;
@@ -15,6 +16,7 @@ import com.uade.tpo.marketplace.repository.IUsuarioRepository;
 import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 
 @Service
+@Transactional
 public class AuthenticationServiceImpl implements IAuthenticationService {
 
     @Autowired
@@ -35,6 +37,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         return AuthenticationResponse.builder().accessToken(jwtToken).build();
     }
 
+    @Transactional(readOnly = true)
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
