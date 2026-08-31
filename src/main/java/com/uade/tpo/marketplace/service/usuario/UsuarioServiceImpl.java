@@ -16,7 +16,7 @@ import com.uade.tpo.marketplace.exceptions.UsuarioDuplicateException;
 import com.uade.tpo.marketplace.repository.IUsuarioRepository;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Throwable.class)
 public class UsuarioServiceImpl implements IUsuarioService {
 
     @Autowired

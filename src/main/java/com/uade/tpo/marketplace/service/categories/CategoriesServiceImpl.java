@@ -14,7 +14,7 @@ import com.uade.tpo.marketplace.exceptions.CategoryDuplicateException;
 import com.uade.tpo.marketplace.repository.ICategoriesRepository;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Throwable.class)
 public class CategoriesServiceImpl implements ICategoriesService {
 
     @Autowired

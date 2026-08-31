@@ -12,13 +12,14 @@ import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.request.ProductoRequest;
 import com.uade.tpo.marketplace.exceptions.ProductoDuplicateException;
+import com.uade.tpo.marketplace.exceptions.StockInvalidoException;
 import com.uade.tpo.marketplace.repository.IProductoRepository;
 import com.uade.tpo.marketplace.service.categories.ICategoriesService;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Throwable.class)
 public class ProductoServiceImpl implements IProductoService {
 
     @Autowired
@@ -82,5 +83,15 @@ public class ProductoServiceImpl implements IProductoService {
                 .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
         producto.setStock(producto.getStock() + delta);
         return productoRepository.save(producto);
+    }
+
+    public Optional<Producto> actualizarStock(int productoId, int nuevoStock) throws StockInvalidoException {
+        if (nuevoStock < 0)
+            throw new StockInvalidoException();
+
+        return productoRepository.findById(productoId).map(producto -> {
+            producto.setStock(nuevoStock);
+            return productoRepository.save(producto);
+        });
     }
 }

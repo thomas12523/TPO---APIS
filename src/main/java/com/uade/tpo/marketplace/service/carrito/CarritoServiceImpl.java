@@ -16,7 +16,7 @@ import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Throwable.class)
 public class CarritoServiceImpl implements ICarritoService {
 
     @Autowired

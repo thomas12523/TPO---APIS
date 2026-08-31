@@ -46,6 +46,7 @@ public class SecurityConfig {
                         // Producto: alta/gestion solo vendedor (ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, "/Producto").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/Producto/{productoId}").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/Producto/{productoId}/stock").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/Producto/{productoId}").hasAuthority("ROLE_ADMIN")
 
                         // Categories: gestion solo vendedor (ROLE_ADMIN)

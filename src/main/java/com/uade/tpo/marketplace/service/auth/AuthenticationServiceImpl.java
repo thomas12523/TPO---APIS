@@ -16,7 +16,7 @@ import com.uade.tpo.marketplace.repository.IUsuarioRepository;
 import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Throwable.class)
 public class AuthenticationServiceImpl implements IAuthenticationService {
 
     @Autowired

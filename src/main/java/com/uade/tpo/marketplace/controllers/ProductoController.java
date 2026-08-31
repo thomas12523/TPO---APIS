@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.request.ProductoRequest;
+import com.uade.tpo.marketplace.entity.dto.request.StockRequest;
 import com.uade.tpo.marketplace.entity.dto.response.ProductoResponse;
 import com.uade.tpo.marketplace.exceptions.ProductoDuplicateException;
+import com.uade.tpo.marketplace.exceptions.StockInvalidoException;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
 
 @RestController
@@ -73,5 +76,14 @@ public class ProductoController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("{productoId}/stock")
+    public ResponseEntity<ProductoResponse> actualizarStock(@PathVariable int productoId, @RequestBody StockRequest stockRequest) throws StockInvalidoException {
+        Optional<Producto> result = productoService.actualizarStock(productoId, stockRequest.getStock());
+        if (result.isPresent())
+            return ResponseEntity.ok(ProductoResponse.from(result.get()));
+
+        return ResponseEntity.notFound().build();
     }
 }

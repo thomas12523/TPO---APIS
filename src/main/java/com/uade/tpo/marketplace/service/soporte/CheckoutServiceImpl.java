@@ -41,7 +41,7 @@ public class CheckoutServiceImpl implements ICheckoutService {
     @Autowired
     private IProductoService productoService;
 
-    @Transactional
+    @Transactional(rollbackFor = Throwable.class)
     public Pedido checkout(int carritoId, CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException {
         Carrito carrito = carritoService.getCarritoById(carritoId)
                 .orElseThrow(() -> new EntityNotFoundException("Carrito no encontrado"));

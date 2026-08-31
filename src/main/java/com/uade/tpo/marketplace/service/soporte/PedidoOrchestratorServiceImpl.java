@@ -14,7 +14,7 @@ import com.uade.tpo.marketplace.service.pedido.IPedidoService;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
 
 @Service
-@Transactional
+@Transactional(rollbackFor = Throwable.class)
 public class PedidoOrchestratorServiceImpl implements IPedidoOrchestratorService {
 
     @Autowired

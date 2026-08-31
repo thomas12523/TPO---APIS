@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.request.ProductoRequest;
 import com.uade.tpo.marketplace.exceptions.ProductoDuplicateException;
+import com.uade.tpo.marketplace.exceptions.StockInvalidoException;
 
 public interface IProductoService {
 
@@ -22,4 +23,6 @@ public interface IProductoService {
     public boolean deleteProducto(int productoId);
 
     public Producto ajustarStock(int productoId, int delta);
+
+    public Optional<Producto> actualizarStock(int productoId, int nuevoStock) throws StockInvalidoException;
 }
