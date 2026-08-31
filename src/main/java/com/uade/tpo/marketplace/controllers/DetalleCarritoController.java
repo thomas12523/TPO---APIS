@@ -43,7 +43,7 @@ public class DetalleCarritoController {
         if (result.isPresent())
             return ResponseEntity.ok(DetalleCarritoResponse.from(result.get()));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping

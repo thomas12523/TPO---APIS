@@ -42,7 +42,7 @@ public class DetallePedidoController {
         if (result.isPresent())
             return ResponseEntity.ok(DetallePedidoResponse.from(result.get()));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping

@@ -46,7 +46,7 @@ public class UsuarioController {
         if (result.isPresent())
             return ResponseEntity.ok(UsuarioResponse.from(result.get()));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping

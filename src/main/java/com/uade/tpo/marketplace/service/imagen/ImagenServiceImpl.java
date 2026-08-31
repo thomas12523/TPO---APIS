@@ -13,10 +13,9 @@ import com.uade.tpo.marketplace.entity.Imagen;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.request.ImagenRequest;
 import com.uade.tpo.marketplace.exceptions.ImagenDuplicateException;
+import com.uade.tpo.marketplace.exceptions.ProductoNotFoundException;
 import com.uade.tpo.marketplace.repository.IImagenRepository;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 @Transactional(rollbackFor = Throwable.class)
@@ -47,7 +46,7 @@ public class ImagenServiceImpl implements IImagenService {
             throw new ImagenDuplicateException();
 
         Producto producto = productoService.getProductoById(imagenRequest.getProductoId())
-                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+                .orElseThrow(ProductoNotFoundException::new);
 
         Imagen imagen = new Imagen();
         imagen.setProducto(producto);
@@ -57,7 +56,7 @@ public class ImagenServiceImpl implements IImagenService {
 
     public Imagen subirImagen(int productoId, MultipartFile archivo) throws IOException {
         Producto producto = productoService.getProductoById(productoId)
-                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+                .orElseThrow(ProductoNotFoundException::new);
 
         Imagen imagen = new Imagen();
         imagen.setProducto(producto);

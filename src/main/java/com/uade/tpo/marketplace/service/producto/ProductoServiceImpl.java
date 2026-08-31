@@ -11,12 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.request.ProductoRequest;
+import com.uade.tpo.marketplace.exceptions.CategoriaNotFoundException;
 import com.uade.tpo.marketplace.exceptions.ProductoDuplicateException;
+import com.uade.tpo.marketplace.exceptions.ProductoNotFoundException;
 import com.uade.tpo.marketplace.exceptions.StockInvalidoException;
 import com.uade.tpo.marketplace.repository.IProductoRepository;
 import com.uade.tpo.marketplace.service.categories.ICategoriesService;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 @Transactional(rollbackFor = Throwable.class)
@@ -43,7 +43,7 @@ public class ProductoServiceImpl implements IProductoService {
             throw new ProductoDuplicateException();
 
         Category categoria = categoriesService.getCategoryById(productoRequest.getCategoriaId())
-                .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
+                .orElseThrow(CategoriaNotFoundException::new);
 
         Producto producto = new Producto();
         producto.setCategoria(categoria);
@@ -58,7 +58,7 @@ public class ProductoServiceImpl implements IProductoService {
     public Optional<Producto> actualizarProducto(int productoId, ProductoRequest productoRequest) {
         return productoRepository.findById(productoId).map(producto -> {
             Category categoria = categoriesService.getCategoryById(productoRequest.getCategoriaId())
-                    .orElseThrow(() -> new EntityNotFoundException("Categoria no encontrada"));
+                    .orElseThrow(CategoriaNotFoundException::new);
 
             producto.setCategoria(categoria);
             producto.setNombreProducto(productoRequest.getNombreProducto());
@@ -80,7 +80,7 @@ public class ProductoServiceImpl implements IProductoService {
 
     public Producto ajustarStock(int productoId, int delta) {
         Producto producto = productoRepository.findById(productoId)
-                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+                .orElseThrow(ProductoNotFoundException::new);
         producto.setStock(producto.getStock() + delta);
         return productoRepository.save(producto);
     }

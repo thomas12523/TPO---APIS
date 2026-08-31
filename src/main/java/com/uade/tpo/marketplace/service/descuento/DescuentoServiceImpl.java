@@ -12,10 +12,9 @@ import com.uade.tpo.marketplace.entity.Descuento;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.request.DescuentoRequest;
 import com.uade.tpo.marketplace.exceptions.DescuentoInvalidoException;
+import com.uade.tpo.marketplace.exceptions.ProductoNotFoundException;
 import com.uade.tpo.marketplace.repository.IDescuentoRepository;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 @Transactional(rollbackFor = Throwable.class)
@@ -44,7 +43,7 @@ public class DescuentoServiceImpl implements IDescuentoService {
         validarPorcentaje(descuentoRequest.getPorcentaje());
 
         Producto producto = productoService.getProductoById(descuentoRequest.getProductoId())
-                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+                .orElseThrow(ProductoNotFoundException::new);
 
         Descuento descuento = new Descuento();
         descuento.setProducto(producto);

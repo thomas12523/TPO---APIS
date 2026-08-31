@@ -10,10 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.uade.tpo.marketplace.entity.Carrito;
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.request.CarritoRequest;
+import com.uade.tpo.marketplace.exceptions.UsuarioNotFoundException;
 import com.uade.tpo.marketplace.repository.ICarritoRepository;
 import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 @Transactional(rollbackFor = Throwable.class)
@@ -40,7 +39,7 @@ public class CarritoServiceImpl implements ICarritoService {
 
     public Carrito crearCarrito(CarritoRequest carritoRequest) {
         Usuario usuario = usuarioService.getUsuarioById(carritoRequest.getUsuarioId())
-                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+                .orElseThrow(UsuarioNotFoundException::new);
 
         Carrito carrito = new Carrito();
         carrito.setUsuario(usuario);
@@ -54,7 +53,7 @@ public class CarritoServiceImpl implements ICarritoService {
             return null;
 
         Usuario usuario = usuarioService.getUsuarioById(carritoRequest.getUsuarioId())
-                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+                .orElseThrow(UsuarioNotFoundException::new);
 
         Carrito carrito = existente.get();
         carrito.setUsuario(usuario);

@@ -42,7 +42,7 @@ public class DescuentoController {
         if (result.isPresent())
             return ResponseEntity.ok(DescuentoResponse.from(result.get()));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping

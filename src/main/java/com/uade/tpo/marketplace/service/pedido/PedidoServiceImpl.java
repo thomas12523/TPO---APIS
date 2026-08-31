@@ -11,10 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.request.PedidoRequest;
+import com.uade.tpo.marketplace.exceptions.UsuarioNotFoundException;
 import com.uade.tpo.marketplace.repository.IPedidoRepository;
 import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 @Transactional(rollbackFor = Throwable.class)
@@ -46,7 +45,7 @@ public class PedidoServiceImpl implements IPedidoService {
 
     public Pedido crearPedido(PedidoRequest pedidoRequest) {
         Usuario usuario = usuarioService.getUsuarioById(pedidoRequest.getUsuarioId())
-                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+                .orElseThrow(UsuarioNotFoundException::new);
 
         Pedido pedido = new Pedido();
         pedido.setUsuario(usuario);
@@ -66,7 +65,7 @@ public class PedidoServiceImpl implements IPedidoService {
             return null;
 
         Usuario usuario = usuarioService.getUsuarioById(pedidoRequest.getUsuarioId())
-                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado"));
+                .orElseThrow(UsuarioNotFoundException::new);
 
         Pedido pedido = existente.get();
         pedido.setUsuario(usuario);

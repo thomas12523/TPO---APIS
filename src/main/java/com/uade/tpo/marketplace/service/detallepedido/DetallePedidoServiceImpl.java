@@ -12,12 +12,12 @@ import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.request.DetallePedidoRequest;
 import com.uade.tpo.marketplace.exceptions.DetallePedidoDuplicateException;
+import com.uade.tpo.marketplace.exceptions.PedidoNotFoundException;
+import com.uade.tpo.marketplace.exceptions.ProductoNotFoundException;
 import com.uade.tpo.marketplace.repository.IDetallePedidoRepository;
 import com.uade.tpo.marketplace.service.descuento.IDescuentoService;
 import com.uade.tpo.marketplace.service.pedido.IPedidoService;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 @Transactional(rollbackFor = Throwable.class)
@@ -54,10 +54,10 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
             throw new DetallePedidoDuplicateException();
 
         Pedido pedido = pedidoService.getPedidoById(detallePedidoRequest.getPedidoId())
-                .orElseThrow(() -> new EntityNotFoundException("Pedido no encontrado"));
+                .orElseThrow(PedidoNotFoundException::new);
 
         Producto producto = productoService.getProductoById(detallePedidoRequest.getProductoId())
-                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+                .orElseThrow(ProductoNotFoundException::new);
 
         DetallePedido detallePedido = new DetallePedido();
         detallePedido.setPedido(pedido);

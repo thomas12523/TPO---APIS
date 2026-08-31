@@ -11,14 +11,14 @@ import com.uade.tpo.marketplace.entity.Carrito;
 import com.uade.tpo.marketplace.entity.DetalleCarrito;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.request.DetalleCarritoRequest;
+import com.uade.tpo.marketplace.exceptions.CarritoNotFoundException;
 import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
+import com.uade.tpo.marketplace.exceptions.ProductoNotFoundException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.repository.IDetalleCarritoRepository;
 import com.uade.tpo.marketplace.service.carrito.ICarritoService;
 import com.uade.tpo.marketplace.service.descuento.IDescuentoService;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 @Transactional(rollbackFor = Throwable.class)
@@ -55,10 +55,10 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
             throw new DetalleCarritoDuplicateException();
 
         Carrito carrito = carritoService.getCarritoById(detalleCarritoRequest.getCarritoId())
-                .orElseThrow(() -> new EntityNotFoundException("Carrito no encontrado"));
+                .orElseThrow(CarritoNotFoundException::new);
 
         Producto producto = productoService.getProductoById(detalleCarritoRequest.getProductoId())
-                .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado"));
+                .orElseThrow(ProductoNotFoundException::new);
 
         if (detalleCarritoRequest.getCantidad() > producto.getStock())
             throw new StockInsuficienteException();

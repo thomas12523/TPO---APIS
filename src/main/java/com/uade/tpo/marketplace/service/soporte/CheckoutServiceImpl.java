@@ -13,6 +13,7 @@ import com.uade.tpo.marketplace.entity.DetallePedido;
 import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.dto.request.CheckoutRequest;
 import com.uade.tpo.marketplace.entity.dto.request.PedidoRequest;
+import com.uade.tpo.marketplace.exceptions.CarritoNotFoundException;
 import com.uade.tpo.marketplace.exceptions.CarritoVacioException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.service.carrito.ICarritoService;
@@ -20,8 +21,6 @@ import com.uade.tpo.marketplace.service.detallecarrito.IDetalleCarritoService;
 import com.uade.tpo.marketplace.service.detallepedido.IDetallePedidoService;
 import com.uade.tpo.marketplace.service.pedido.IPedidoService;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class CheckoutServiceImpl implements ICheckoutService {
@@ -44,7 +43,7 @@ public class CheckoutServiceImpl implements ICheckoutService {
     @Transactional(rollbackFor = Throwable.class)
     public Pedido checkout(int carritoId, CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException {
         Carrito carrito = carritoService.getCarritoById(carritoId)
-                .orElseThrow(() -> new EntityNotFoundException("Carrito no encontrado"));
+                .orElseThrow(CarritoNotFoundException::new);
 
         List<DetalleCarrito> items = detalleCarritoService.getDetallesCarrito(carritoId);
         if (items.isEmpty())

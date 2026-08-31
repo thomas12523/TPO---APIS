@@ -48,7 +48,7 @@ public class PedidoController {
         if (result.isPresent())
             return ResponseEntity.ok(PedidoResponse.from(result.get()));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("numero/{numeroPedido}")
@@ -57,7 +57,7 @@ public class PedidoController {
         if (result.isPresent())
             return ResponseEntity.ok(PedidoResponse.from(result.get()));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping

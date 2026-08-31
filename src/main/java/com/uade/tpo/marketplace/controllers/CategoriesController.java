@@ -45,7 +45,7 @@ public class CategoriesController {
         if (result.isPresent())
             return ResponseEntity.ok(CategoryResponse.from(result.get()));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping

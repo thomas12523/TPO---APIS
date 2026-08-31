@@ -45,7 +45,7 @@ public class ImagenController {
         if (result.isPresent())
             return ResponseEntity.ok(ImagenResponse.from(result.get()));
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
