@@ -42,8 +42,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/Imagen/{imagenId}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/Descuento").permitAll()
                         .requestMatchers(HttpMethod.GET, "/Descuento/{descuentoId}").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/Resenia").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/Resenia/{reseniaId}").permitAll()
 
                         // Producto: alta/gestion solo vendedor (ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, "/Producto").hasAuthority("ROLE_ADMIN")
@@ -73,7 +71,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/Usuario/{usuarioId}").hasAuthority("ROLE_ADMIN")
 
                         // Todo lo demas: cualquier usuario autenticado (Carrito, DetalleCarrito,
-                        // Pedido, DetallePedido, Resenia, perfil propio de Usuario)
+                        // Pedido, DetallePedido, perfil propio de Usuario)
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
