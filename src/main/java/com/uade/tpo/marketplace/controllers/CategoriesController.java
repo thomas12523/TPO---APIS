@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.entity.dto.request.CategoryRequest;
 import com.uade.tpo.marketplace.entity.dto.response.CategoryResponse;
+import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.exceptions.CategoryDuplicateException;
 import com.uade.tpo.marketplace.service.categories.ICategoriesService;
 
@@ -64,12 +65,12 @@ public class CategoriesController {
     }
 
     @DeleteMapping("{categoryId}")
-    public ResponseEntity<CategoryResponse> deleteCategory(@PathVariable int categoryId) {
+    public ResponseEntity<Object> deleteCategory(@PathVariable int categoryId) {
         Optional<Category> result = categoriesService.deleteCategory(categoryId);
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(CategoryResponse.from(result.get()));
+        return ResponseEntity.ok(new DeleteResponse<>("Categoria eliminada correctamente", CategoryResponse.from(result.get())));
     }
 
 }

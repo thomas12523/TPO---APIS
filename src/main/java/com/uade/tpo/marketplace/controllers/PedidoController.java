@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.dto.request.PedidoRequest;
+import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.entity.dto.response.PedidoResponse;
 import com.uade.tpo.marketplace.service.pedido.IPedidoService;
 import com.uade.tpo.marketplace.service.soporte.IPedidoOrchestratorService;
@@ -85,11 +86,11 @@ public class PedidoController {
     }
 
     @DeleteMapping("{pedidoId}")
-    public ResponseEntity<PedidoResponse> deletePedido(@PathVariable int pedidoId) {
+    public ResponseEntity<Object> deletePedido(@PathVariable int pedidoId) {
         Optional<Pedido> result = pedidoOrchestratorService.eliminarPedido(pedidoId);
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(PedidoResponse.from(result.get()));
+        return ResponseEntity.ok(new DeleteResponse<>("Pedido eliminado correctamente", PedidoResponse.from(result.get())));
     }
 }

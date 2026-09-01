@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.DetalleCarrito;
 import com.uade.tpo.marketplace.entity.dto.request.DetalleCarritoRequest;
+import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.entity.dto.response.DetalleCarritoResponse;
 import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
@@ -62,11 +63,11 @@ public class DetalleCarritoController {
     }
 
     @DeleteMapping("{carritoId}/{productoId}")
-    public ResponseEntity<DetalleCarritoResponse> deleteDetalleCarrito(@PathVariable int carritoId, @PathVariable int productoId) {
+    public ResponseEntity<Object> deleteDetalleCarrito(@PathVariable int carritoId, @PathVariable int productoId) {
         Optional<DetalleCarrito> result = detalleCarritoService.deleteDetalleCarrito(carritoId, productoId);
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(DetalleCarritoResponse.from(result.get()));
+        return ResponseEntity.ok(new DeleteResponse<>("Detalle de carrito eliminado correctamente", DetalleCarritoResponse.from(result.get())));
     }
 }

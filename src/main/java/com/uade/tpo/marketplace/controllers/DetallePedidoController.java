@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.DetallePedido;
 import com.uade.tpo.marketplace.entity.dto.request.DetallePedidoRequest;
+import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.entity.dto.response.DetallePedidoResponse;
 import com.uade.tpo.marketplace.exceptions.DetallePedidoDuplicateException;
 import com.uade.tpo.marketplace.service.detallepedido.IDetallePedidoService;
@@ -61,11 +62,11 @@ public class DetallePedidoController {
     }
 
     @DeleteMapping("{detallePedidoId}")
-    public ResponseEntity<DetallePedidoResponse> deleteDetallePedido(@PathVariable int detallePedidoId) {
+    public ResponseEntity<Object> deleteDetallePedido(@PathVariable int detallePedidoId) {
         Optional<DetallePedido> result = detallePedidoService.deleteDetallePedido(detallePedidoId);
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(DetallePedidoResponse.from(result.get()));
+        return ResponseEntity.ok(new DeleteResponse<>("Detalle de pedido eliminado correctamente", DetallePedidoResponse.from(result.get())));
     }
 }

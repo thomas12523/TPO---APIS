@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Descuento;
 import com.uade.tpo.marketplace.entity.dto.request.DescuentoRequest;
+import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.entity.dto.response.DescuentoResponse;
 import com.uade.tpo.marketplace.exceptions.DescuentoInvalidoException;
 import com.uade.tpo.marketplace.service.descuento.IDescuentoService;
@@ -61,11 +62,11 @@ public class DescuentoController {
     }
 
     @DeleteMapping("{descuentoId}")
-    public ResponseEntity<DescuentoResponse> deleteDescuento(@PathVariable int descuentoId) {
+    public ResponseEntity<Object> deleteDescuento(@PathVariable int descuentoId) {
         Optional<Descuento> result = descuentoService.deleteDescuento(descuentoId);
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(DescuentoResponse.from(result.get()));
+        return ResponseEntity.ok(new DeleteResponse<>("Descuento eliminado correctamente", DescuentoResponse.from(result.get())));
     }
 }

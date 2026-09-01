@@ -20,6 +20,7 @@ import com.uade.tpo.marketplace.entity.Carrito;
 import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.dto.request.CarritoRequest;
 import com.uade.tpo.marketplace.entity.dto.response.CarritoResponse;
+import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.entity.dto.request.CheckoutRequest;
 import com.uade.tpo.marketplace.entity.dto.response.PedidoResponse;
 import com.uade.tpo.marketplace.exceptions.CarritoVacioException;
@@ -69,12 +70,12 @@ public class CarritoController {
     }
 
     @DeleteMapping("{carritoId}")
-    public ResponseEntity<CarritoResponse> deleteCarrito(@PathVariable int carritoId) {
+    public ResponseEntity<Object> deleteCarrito(@PathVariable int carritoId) {
         Optional<Carrito> result = carritoService.deleteCarrito(carritoId);
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(CarritoResponse.from(result.get()));
+        return ResponseEntity.ok(new DeleteResponse<>("Carrito eliminado correctamente", CarritoResponse.from(result.get())));
     }
 
     @PostMapping("{carritoId}/checkout")

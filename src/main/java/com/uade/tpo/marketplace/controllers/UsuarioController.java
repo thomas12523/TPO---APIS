@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.Role;
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.request.UsuarioRequest;
+import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.entity.dto.response.UsuarioResponse;
 import com.uade.tpo.marketplace.exceptions.UsuarioDuplicateException;
 import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
@@ -83,11 +84,11 @@ public class UsuarioController {
     }
 
     @DeleteMapping("{usuarioId}") // baja logica: desactiva la cuenta en vez de borrar la fila
-    public ResponseEntity<UsuarioResponse> deleteUsuario(@PathVariable int usuarioId) {
+    public ResponseEntity<Object> deleteUsuario(@PathVariable int usuarioId) {
         Optional<Usuario> result = usuarioService.deleteUsuario(usuarioId);
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(UsuarioResponse.from(result.get()));
+        return ResponseEntity.ok(new DeleteResponse<>("Usuario desactivado correctamente", UsuarioResponse.from(result.get())));
     }
 }

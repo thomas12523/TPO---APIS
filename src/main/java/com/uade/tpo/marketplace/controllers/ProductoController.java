@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.Producto;
 import com.uade.tpo.marketplace.entity.dto.request.ProductoRequest;
 import com.uade.tpo.marketplace.entity.dto.request.StockRequest;
+import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.entity.dto.response.ProductoResponse;
 import com.uade.tpo.marketplace.exceptions.ProductoDuplicateException;
 import com.uade.tpo.marketplace.exceptions.StockInvalidoException;
@@ -70,12 +71,12 @@ public class ProductoController {
     }
 
     @DeleteMapping("{productoId}")
-    public ResponseEntity<ProductoResponse> deleteProducto(@PathVariable int productoId) {
+    public ResponseEntity<Object> deleteProducto(@PathVariable int productoId) {
         Optional<Producto> result = productoService.deleteProducto(productoId);
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(ProductoResponse.from(result.get()));
+        return ResponseEntity.ok(new DeleteResponse<>("Producto eliminado correctamente", ProductoResponse.from(result.get())));
     }
 
     @PatchMapping("{productoId}/stock")

@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.uade.tpo.marketplace.entity.Imagen;
 import com.uade.tpo.marketplace.entity.dto.request.ImagenRequest;
+import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.entity.dto.response.ImagenResponse;
 import com.uade.tpo.marketplace.exceptions.ImagenDuplicateException;
 import com.uade.tpo.marketplace.service.imagen.IImagenService;
@@ -71,11 +72,11 @@ public class ImagenController {
     }
 
     @DeleteMapping("{imagenId}")
-    public ResponseEntity<ImagenResponse> deleteImagen(@PathVariable int imagenId) {
+    public ResponseEntity<Object> deleteImagen(@PathVariable int imagenId) {
         Optional<Imagen> result = imagenService.deleteImagen(imagenId);
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(ImagenResponse.from(result.get()));
+        return ResponseEntity.ok(new DeleteResponse<>("Imagen eliminada correctamente", ImagenResponse.from(result.get())));
     }
 }
