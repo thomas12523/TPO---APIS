@@ -40,6 +40,6 @@ public class Producto {
     @Column
     private String imagenUrl;
 
-    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 1")
+    @Column(nullable = false)
     private boolean activo = true;
 }
