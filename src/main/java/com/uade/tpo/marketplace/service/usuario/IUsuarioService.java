@@ -22,5 +22,7 @@ public interface IUsuarioService {
 
     public Optional<Usuario> actualizarPermisos(int usuarioId, Role role);
 
+    public Optional<Usuario> actualizarEstado(int usuarioId, boolean activo);
+
     public boolean deleteUsuario(int usuarioId);
 }

@@ -14,6 +14,7 @@ public class UsuarioResponse {
     private String nombre;
     private String apellido;
     private Role role;
+    private boolean activo;
 
     public static UsuarioResponse from(Usuario usuario) {
         UsuarioResponse response = new UsuarioResponse();
@@ -24,6 +25,7 @@ public class UsuarioResponse {
         response.setNombre(usuario.getNombre());
         response.setApellido(usuario.getApellido());
         response.setRole(usuario.getRole());
+        response.setActivo(usuario.isActivo());
         return response;
     }
 }

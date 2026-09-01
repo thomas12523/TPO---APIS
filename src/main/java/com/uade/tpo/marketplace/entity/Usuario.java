@@ -51,6 +51,9 @@ public class Usuario implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 1")
+    private boolean activo = true;
+
     @OneToMany(mappedBy = "usuario")
     private List<Pedido> pedidos;
 
@@ -86,6 +89,6 @@ public class Usuario implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return activo;
     }
 }

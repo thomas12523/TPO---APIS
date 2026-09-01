@@ -73,7 +73,16 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("{usuarioId}")
+    @PatchMapping("{usuarioId}/estado") // activo/desactivo la cuenta (bloquea el login si activo=false)
+    public ResponseEntity<UsuarioResponse> actualizarEstado(@PathVariable int usuarioId, @RequestParam boolean activo) {
+        Optional<Usuario> result = usuarioService.actualizarEstado(usuarioId, activo);
+        if (result.isPresent())
+            return ResponseEntity.ok(UsuarioResponse.from(result.get()));
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("{usuarioId}") // baja logica: desactiva la cuenta en vez de borrar la fila
     public ResponseEntity<Void> deleteUsuario(@PathVariable int usuarioId) {
         boolean deleted = usuarioService.deleteUsuario(usuarioId);
         if (!deleted)

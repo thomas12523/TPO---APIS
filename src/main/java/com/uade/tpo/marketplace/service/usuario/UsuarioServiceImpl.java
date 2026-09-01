@@ -69,11 +69,21 @@ public class UsuarioServiceImpl implements IUsuarioService {
         });
     }
 
+    public Optional<Usuario> actualizarEstado(int usuarioId, boolean activo) {
+        return usuarioRepository.findById(usuarioId).map(usuario -> {
+            usuario.setActivo(activo);
+            return usuarioRepository.save(usuario);
+        });
+    }
+
     public boolean deleteUsuario(int usuarioId) {
-        if (usuarioRepository.findById(usuarioId).isEmpty())
+        Optional<Usuario> existente = usuarioRepository.findById(usuarioId);
+        if (existente.isEmpty())
             return false;
 
-        usuarioRepository.deleteById(usuarioId);
+        Usuario usuario = existente.get();
+        usuario.setActivo(false);
+        usuarioRepository.save(usuario);
         return true;
     }
 }

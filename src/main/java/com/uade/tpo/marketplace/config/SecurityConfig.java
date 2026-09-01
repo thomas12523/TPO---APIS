@@ -69,6 +69,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/Usuario").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/Usuario").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/Usuario/{usuarioId}/permisos").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/Usuario/{usuarioId}/estado").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/Usuario/{usuarioId}").hasAuthority("ROLE_ADMIN")
 
                         // Todo lo demas: cualquier usuario autenticado (Carrito, DetalleCarrito,
