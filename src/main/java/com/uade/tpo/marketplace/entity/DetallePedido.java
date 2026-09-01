@@ -41,6 +41,6 @@ public class DetallePedido {
     @Column
     private double subtotal;
 
-    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 1")
+    @Column(nullable = false)
     private boolean activo = true;
 }

@@ -43,6 +43,6 @@ public class Pedido {
     @Column
     private String metodoPago;
 
-    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 1")
+    @Column(nullable = false)
     private boolean activo = true;
 }
