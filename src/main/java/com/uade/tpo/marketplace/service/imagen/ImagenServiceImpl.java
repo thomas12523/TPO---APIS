@@ -75,11 +75,12 @@ public class ImagenServiceImpl implements IImagenService {
         return imagenRepository.save(imagen);
     }
 
-    public boolean deleteImagen(int imagenId) {
-        if (imagenRepository.findById(imagenId).isEmpty())
-            return false;
+    public Optional<Imagen> deleteImagen(int imagenId) {
+        Optional<Imagen> existente = imagenRepository.findById(imagenId);
+        if (existente.isEmpty())
+            return Optional.empty();
 
         imagenRepository.deleteById(imagenId);
-        return true;
+        return existente;
     }
 }

@@ -69,12 +69,13 @@ public class DescuentoServiceImpl implements IDescuentoService {
         return descuentoRepository.save(descuento);
     }
 
-    public boolean deleteDescuento(int descuentoId) {
-        if (descuentoRepository.findById(descuentoId).isEmpty())
-            return false;
+    public Optional<Descuento> deleteDescuento(int descuentoId) {
+        Optional<Descuento> existente = descuentoRepository.findById(descuentoId);
+        if (existente.isEmpty())
+            return Optional.empty();
 
         descuentoRepository.deleteById(descuentoId);
-        return true;
+        return existente;
     }
 
     @Transactional(readOnly = true)

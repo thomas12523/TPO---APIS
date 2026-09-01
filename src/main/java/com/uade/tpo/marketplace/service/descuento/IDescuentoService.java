@@ -18,7 +18,7 @@ public interface IDescuentoService {
 
     public Descuento actualizarDescuento(int descuentoId, DescuentoRequest descuentoRequest) throws DescuentoInvalidoException;
 
-    public boolean deleteDescuento(int descuentoId);
+    public Optional<Descuento> deleteDescuento(int descuentoId);
 
     public double getPrecioConDescuento(Producto producto);
 }

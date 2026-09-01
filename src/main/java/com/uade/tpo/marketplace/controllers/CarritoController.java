@@ -69,12 +69,12 @@ public class CarritoController {
     }
 
     @DeleteMapping("{carritoId}")
-    public ResponseEntity<Void> deleteCarrito(@PathVariable int carritoId) {
-        boolean deleted = carritoService.deleteCarrito(carritoId);
-        if (!deleted)
+    public ResponseEntity<CarritoResponse> deleteCarrito(@PathVariable int carritoId) {
+        Optional<Carrito> result = carritoService.deleteCarrito(carritoId);
+        if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(CarritoResponse.from(result.get()));
     }
 
     @PostMapping("{carritoId}/checkout")

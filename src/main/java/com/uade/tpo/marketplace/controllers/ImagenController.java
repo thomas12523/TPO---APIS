@@ -71,11 +71,11 @@ public class ImagenController {
     }
 
     @DeleteMapping("{imagenId}")
-    public ResponseEntity<Void> deleteImagen(@PathVariable int imagenId) {
-        boolean deleted = imagenService.deleteImagen(imagenId);
-        if (!deleted)
+    public ResponseEntity<ImagenResponse> deleteImagen(@PathVariable int imagenId) {
+        Optional<Imagen> result = imagenService.deleteImagen(imagenId);
+        if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ImagenResponse.from(result.get()));
     }
 }

@@ -20,7 +20,7 @@ public interface IProductoService {
 
     public Optional<Producto> actualizarProducto(int productoId, ProductoRequest productoRequest);
 
-    public boolean deleteProducto(int productoId);
+    public Optional<Producto> deleteProducto(int productoId);
 
     public Producto ajustarStock(int productoId, int delta);
 

@@ -51,11 +51,12 @@ public class CategoriesServiceImpl implements ICategoriesService {
         return categoriesRepository.save(category);
     }
 
-    public boolean deleteCategory(int categoryId) {
-        if (categoriesRepository.findById(categoryId).isEmpty())
-            return false;
+    public Optional<Category> deleteCategory(int categoryId) {
+        Optional<Category> existente = categoriesRepository.findById(categoryId);
+        if (existente.isEmpty())
+            return Optional.empty();
 
         categoriesRepository.deleteById(categoryId);
-        return true;
+        return existente;
     }
 }

@@ -61,11 +61,11 @@ public class DetallePedidoController {
     }
 
     @DeleteMapping("{detallePedidoId}")
-    public ResponseEntity<Void> deleteDetallePedido(@PathVariable int detallePedidoId) {
-        boolean deleted = detallePedidoService.deleteDetallePedido(detallePedidoId);
-        if (!deleted)
+    public ResponseEntity<DetallePedidoResponse> deleteDetallePedido(@PathVariable int detallePedidoId) {
+        Optional<DetallePedido> result = detallePedidoService.deleteDetallePedido(detallePedidoId);
+        if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(DetallePedidoResponse.from(result.get()));
     }
 }

@@ -61,11 +61,12 @@ public class CarritoServiceImpl implements ICarritoService {
         return carritoRepository.save(carrito);
     }
 
-    public boolean deleteCarrito(int carritoId) {
-        if (carritoRepository.findById(carritoId).isEmpty())
-            return false;
+    public Optional<Carrito> deleteCarrito(int carritoId) {
+        Optional<Carrito> existente = carritoRepository.findById(carritoId);
+        if (existente.isEmpty())
+            return Optional.empty();
 
         carritoRepository.deleteById(carritoId);
-        return true;
+        return existente;
     }
 }

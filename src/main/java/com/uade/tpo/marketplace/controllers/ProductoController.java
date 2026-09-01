@@ -70,12 +70,12 @@ public class ProductoController {
     }
 
     @DeleteMapping("{productoId}")
-    public ResponseEntity<Void> deleteProducto(@PathVariable int productoId) {
-        boolean deleted = productoService.deleteProducto(productoId);
-        if (!deleted)
+    public ResponseEntity<ProductoResponse> deleteProducto(@PathVariable int productoId) {
+        Optional<Producto> result = productoService.deleteProducto(productoId);
+        if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ProductoResponse.from(result.get()));
     }
 
     @PatchMapping("{productoId}/stock")

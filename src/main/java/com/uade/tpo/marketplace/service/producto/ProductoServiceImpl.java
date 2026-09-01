@@ -70,12 +70,13 @@ public class ProductoServiceImpl implements IProductoService {
         });
     }
 
-    public boolean deleteProducto(int productoId) {
-        if (productoRepository.findById(productoId).isEmpty())
-            return false;
+    public Optional<Producto> deleteProducto(int productoId) {
+        Optional<Producto> existente = productoRepository.findById(productoId);
+        if (existente.isEmpty())
+            return Optional.empty();
 
         productoRepository.deleteById(productoId);
-        return true;
+        return existente;
     }
 
     public Producto ajustarStock(int productoId, int delta) {

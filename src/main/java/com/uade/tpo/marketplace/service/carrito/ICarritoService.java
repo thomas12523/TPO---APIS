@@ -16,5 +16,5 @@ public interface ICarritoService {
 
     public Carrito actualizarCarrito(int carritoId, CarritoRequest carritoRequest);
 
-    public boolean deleteCarrito(int carritoId);
+    public Optional<Carrito> deleteCarrito(int carritoId);
 }

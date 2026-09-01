@@ -85,13 +85,13 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
         return detalleCarritoRepository.save(detalleCarrito);
     }
 
-    public boolean deleteDetalleCarrito(int carritoId, int productoId) {
+    public Optional<DetalleCarrito> deleteDetalleCarrito(int carritoId, int productoId) {
         Optional<DetalleCarrito> existente = detalleCarritoRepository.findByCarritoIdAndProductoId(carritoId, productoId);
         if (existente.isEmpty())
-            return false;
+            return Optional.empty();
 
         detalleCarritoRepository.deleteById(existente.get().getDetalleCarritoId());
-        return true;
+        return existente;
     }
 
     public void deleteDetallesByCarritoId(int carritoId) {

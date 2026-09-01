@@ -22,5 +22,5 @@ public interface IImagenService {
 
     public Imagen actualizarImagen(int imagenId, ImagenRequest imagenRequest);
 
-    public boolean deleteImagen(int imagenId);
+    public Optional<Imagen> deleteImagen(int imagenId);
 }

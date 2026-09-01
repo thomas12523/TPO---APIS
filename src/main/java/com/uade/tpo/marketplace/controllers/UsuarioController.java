@@ -83,11 +83,11 @@ public class UsuarioController {
     }
 
     @DeleteMapping("{usuarioId}") // baja logica: desactiva la cuenta en vez de borrar la fila
-    public ResponseEntity<Void> deleteUsuario(@PathVariable int usuarioId) {
-        boolean deleted = usuarioService.deleteUsuario(usuarioId);
-        if (!deleted)
+    public ResponseEntity<UsuarioResponse> deleteUsuario(@PathVariable int usuarioId) {
+        Optional<Usuario> result = usuarioService.deleteUsuario(usuarioId);
+        if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(UsuarioResponse.from(result.get()));
     }
 }

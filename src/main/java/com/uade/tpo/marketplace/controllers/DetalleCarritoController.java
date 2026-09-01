@@ -62,11 +62,11 @@ public class DetalleCarritoController {
     }
 
     @DeleteMapping("{carritoId}/{productoId}")
-    public ResponseEntity<Void> deleteDetalleCarrito(@PathVariable int carritoId, @PathVariable int productoId) {
-        boolean deleted = detalleCarritoService.deleteDetalleCarrito(carritoId, productoId);
-        if (!deleted)
+    public ResponseEntity<DetalleCarritoResponse> deleteDetalleCarrito(@PathVariable int carritoId, @PathVariable int productoId) {
+        Optional<DetalleCarrito> result = detalleCarritoService.deleteDetalleCarrito(carritoId, productoId);
+        if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(DetalleCarritoResponse.from(result.get()));
     }
 }

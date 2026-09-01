@@ -84,16 +84,16 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
         return detallePedidoRepository.save(detallePedido);
     }
 
-    public boolean deleteDetallePedido(int detallePedidoId) {
+    public Optional<DetallePedido> deleteDetallePedido(int detallePedidoId) {
         Optional<DetallePedido> existente = detallePedidoRepository.findById(detallePedidoId);
         if (existente.isEmpty())
-            return false;
+            return Optional.empty();
 
         DetallePedido detallePedido = existente.get();
         productoService.ajustarStock(detallePedido.getProducto().getProductoId(), detallePedido.getCantidad());
 
         detallePedidoRepository.deleteById(detallePedidoId);
-        return true;
+        return existente;
     }
 
     public DetallePedido guardarDetallePedido(DetallePedido detallePedido) {

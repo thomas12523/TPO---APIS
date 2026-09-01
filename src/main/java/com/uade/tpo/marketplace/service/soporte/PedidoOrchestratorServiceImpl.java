@@ -43,9 +43,9 @@ public class PedidoOrchestratorServiceImpl implements IPedidoOrchestratorService
         return pedidoService.cancelarPedido(pedidoId);
     }
 
-    public boolean eliminarPedido(int pedidoId) {
+    public Optional<Pedido> eliminarPedido(int pedidoId) {
         if (pedidoService.getPedidoById(pedidoId).isEmpty())
-            return false;
+            return Optional.empty();
 
         List<DetallePedido> items = detallePedidoService.getDetallesPedido(pedidoId);
         for (DetallePedido item : items) {

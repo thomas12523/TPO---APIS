@@ -22,5 +22,5 @@ public interface IPedidoService {
 
     public Pedido cancelarPedido(int pedidoId);
 
-    public boolean deletePedido(int pedidoId);
+    public Optional<Pedido> deletePedido(int pedidoId);
 }

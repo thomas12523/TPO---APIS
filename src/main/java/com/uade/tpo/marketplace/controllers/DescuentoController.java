@@ -61,11 +61,11 @@ public class DescuentoController {
     }
 
     @DeleteMapping("{descuentoId}")
-    public ResponseEntity<Void> deleteDescuento(@PathVariable int descuentoId) {
-        boolean deleted = descuentoService.deleteDescuento(descuentoId);
-        if (!deleted)
+    public ResponseEntity<DescuentoResponse> deleteDescuento(@PathVariable int descuentoId) {
+        Optional<Descuento> result = descuentoService.deleteDescuento(descuentoId);
+        if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(DescuentoResponse.from(result.get()));
     }
 }

@@ -24,5 +24,5 @@ public interface IUsuarioService {
 
     public Optional<Usuario> actualizarEstado(int usuarioId, boolean activo);
 
-    public boolean deleteUsuario(int usuarioId);
+    public Optional<Usuario> deleteUsuario(int usuarioId);
 }

@@ -85,11 +85,11 @@ public class PedidoController {
     }
 
     @DeleteMapping("{pedidoId}")
-    public ResponseEntity<Void> deletePedido(@PathVariable int pedidoId) {
-        boolean deleted = pedidoOrchestratorService.eliminarPedido(pedidoId);
-        if (!deleted)
+    public ResponseEntity<PedidoResponse> deletePedido(@PathVariable int pedidoId) {
+        Optional<Pedido> result = pedidoOrchestratorService.eliminarPedido(pedidoId);
+        if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(PedidoResponse.from(result.get()));
     }
 }

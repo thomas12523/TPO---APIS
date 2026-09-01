@@ -15,6 +15,6 @@ public interface ICategoriesService {
     public Optional<Category> getCategoryById(int categoryId);
     public Category createCategory(String nombre) throws CategoryDuplicateException;
     public Category actualizarCategory(int categoryId, String nombre);
-    public boolean deleteCategory(int categoryId);
+    public Optional<Category> deleteCategory(int categoryId);
 
 }

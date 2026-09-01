@@ -64,12 +64,12 @@ public class CategoriesController {
     }
 
     @DeleteMapping("{categoryId}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable int categoryId) {
-        boolean deleted = categoriesService.deleteCategory(categoryId);
-        if (!deleted)
+    public ResponseEntity<CategoryResponse> deleteCategory(@PathVariable int categoryId) {
+        Optional<Category> result = categoriesService.deleteCategory(categoryId);
+        if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(CategoryResponse.from(result.get()));
     }
 
 }

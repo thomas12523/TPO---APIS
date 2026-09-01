@@ -90,11 +90,12 @@ public class PedidoServiceImpl implements IPedidoService {
         return pedidoRepository.save(pedido);
     }
 
-    public boolean deletePedido(int pedidoId) {
-        if (pedidoRepository.findById(pedidoId).isEmpty())
-            return false;
+    public Optional<Pedido> deletePedido(int pedidoId) {
+        Optional<Pedido> existente = pedidoRepository.findById(pedidoId);
+        if (existente.isEmpty())
+            return Optional.empty();
 
         pedidoRepository.deleteById(pedidoId);
-        return true;
+        return existente;
     }
 }
