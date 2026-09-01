@@ -41,7 +41,7 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
         if (carritoId != null)
             return detalleCarritoRepository.findByCarritoId(carritoId);
 
-        return detalleCarritoRepository.findAll();
+        return detalleCarritoRepository.findByActivoTrue();
     }
 
     @Transactional(readOnly = true)
@@ -90,11 +90,15 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
         if (existente.isEmpty())
             return Optional.empty();
 
-        detalleCarritoRepository.deleteById(existente.get().getDetalleCarritoId());
-        return existente;
+        DetalleCarrito detalleCarrito = existente.get();
+        detalleCarrito.setActivo(false);
+        return Optional.of(detalleCarritoRepository.save(detalleCarrito));
     }
 
     public void deleteDetallesByCarritoId(int carritoId) {
-        detalleCarritoRepository.deleteAll(detalleCarritoRepository.findByCarritoId(carritoId));
+        List<DetalleCarrito> items = detalleCarritoRepository.findByCarritoId(carritoId);
+        for (DetalleCarrito item : items)
+            item.setActivo(false);
+        detalleCarritoRepository.saveAll(items);
     }
 }

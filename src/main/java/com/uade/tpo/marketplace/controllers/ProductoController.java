@@ -76,7 +76,7 @@ public class ProductoController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Producto eliminado correctamente", ProductoResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Producto desactivado correctamente", ProductoResponse.from(result.get())));
     }
 
     @PatchMapping("{productoId}/stock")

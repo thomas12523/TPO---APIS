@@ -40,7 +40,7 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
         if (pedidoId != null)
             return detallePedidoRepository.findByPedidoId(pedidoId);
 
-        return detallePedidoRepository.findAll();
+        return detallePedidoRepository.findByActivoTrue();
     }
 
     @Transactional(readOnly = true)
@@ -91,16 +91,12 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
 
         DetallePedido detallePedido = existente.get();
         productoService.ajustarStock(detallePedido.getProducto().getProductoId(), detallePedido.getCantidad());
+        detallePedido.setActivo(false);
 
-        detallePedidoRepository.deleteById(detallePedidoId);
-        return existente;
+        return Optional.of(detallePedidoRepository.save(detallePedido));
     }
 
     public DetallePedido guardarDetallePedido(DetallePedido detallePedido) {
         return detallePedidoRepository.save(detallePedido);
-    }
-
-    public void deleteDetallesByPedidoId(int pedidoId) {
-        detallePedidoRepository.deleteAll(detallePedidoRepository.findByPedidoId(pedidoId));
     }
 }

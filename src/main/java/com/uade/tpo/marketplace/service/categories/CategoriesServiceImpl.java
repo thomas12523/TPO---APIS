@@ -22,7 +22,7 @@ public class CategoriesServiceImpl implements ICategoriesService {
 
     @Transactional(readOnly = true)
     public Page<Category> getCategories(PageRequest pageRequest) {
-        return categoriesRepository.findAll(pageRequest);
+        return categoriesRepository.findByActivoTrue(pageRequest);
     }
 
     @Transactional(readOnly = true)
@@ -56,7 +56,8 @@ public class CategoriesServiceImpl implements ICategoriesService {
         if (existente.isEmpty())
             return Optional.empty();
 
-        categoriesRepository.deleteById(categoryId);
-        return existente;
+        Category category = existente.get();
+        category.setActivo(false);
+        return Optional.of(categoriesRepository.save(category));
     }
 }

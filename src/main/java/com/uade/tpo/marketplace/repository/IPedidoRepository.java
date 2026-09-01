@@ -13,9 +13,11 @@ import com.uade.tpo.marketplace.entity.Pedido;
 @Repository
 public interface IPedidoRepository extends JpaRepository<Pedido, Integer> {
 
-    @Query(value = "select p from Pedido p where p.usuario.usuarioId = ?1")
+    @Query(value = "select p from Pedido p where p.usuario.usuarioId = ?1 and p.activo = true")
     Page<Pedido> findByUsuarioId(int usuarioId, Pageable pageable);
 
     @Query(value = "select p from Pedido p where p.numeroPedido = ?1")
     Optional<Pedido> findByNumeroPedido(String numeroPedido);
+
+    Page<Pedido> findByActivoTrue(Pageable pageable);
 }

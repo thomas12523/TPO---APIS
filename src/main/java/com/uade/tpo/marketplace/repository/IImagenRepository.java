@@ -12,9 +12,11 @@ import com.uade.tpo.marketplace.entity.Imagen;
 @Repository
 public interface IImagenRepository extends JpaRepository<Imagen, Integer> {
 
-    @Query(value = "select i from Imagen i where i.producto.productoId = ?1 and i.imagenUrl = ?2")
+    @Query(value = "select i from Imagen i where i.producto.productoId = ?1 and i.imagenUrl = ?2 and i.activo = true")
     Optional<Imagen> findByProductoIdAndImagenUrl(int productoId, String imagenUrl);
 
-    @Query(value = "select i from Imagen i where i.producto.productoId = ?1")
+    @Query(value = "select i from Imagen i where i.producto.productoId = ?1 and i.activo = true")
     List<Imagen> findByProductoId(int productoId);
+
+    List<Imagen> findByActivoTrue();
 }

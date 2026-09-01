@@ -75,7 +75,7 @@ public class CarritoController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Carrito eliminado correctamente", CarritoResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Carrito desactivado correctamente", CarritoResponse.from(result.get())));
     }
 
     @PostMapping("{carritoId}/checkout")

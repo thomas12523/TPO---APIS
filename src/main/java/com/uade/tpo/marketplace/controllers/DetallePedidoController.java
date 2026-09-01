@@ -67,6 +67,6 @@ public class DetallePedidoController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Detalle de pedido eliminado correctamente", DetallePedidoResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Detalle de pedido desactivado correctamente", DetallePedidoResponse.from(result.get())));
     }
 }

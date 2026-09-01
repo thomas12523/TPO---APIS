@@ -13,6 +13,7 @@ public class DetalleCarritoResponse {
     private int cantidad;
     private double precioUnitario;
     private double subtotal;
+    private boolean activo;
 
     public static DetalleCarritoResponse from(DetalleCarrito detalleCarrito) {
         DetalleCarritoResponse response = new DetalleCarritoResponse();
@@ -23,6 +24,7 @@ public class DetalleCarritoResponse {
         response.setCantidad(detalleCarrito.getCantidad());
         response.setPrecioUnitario(detalleCarrito.getPrecioUnitario());
         response.setSubtotal(detalleCarrito.getCantidad() * detalleCarrito.getPrecioUnitario());
+        response.setActivo(detalleCarrito.isActivo());
         return response;
     }
 }

@@ -70,7 +70,7 @@ public class CategoriesController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Categoria eliminada correctamente", CategoryResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Categoria desactivada correctamente", CategoryResponse.from(result.get())));
     }
 
 }

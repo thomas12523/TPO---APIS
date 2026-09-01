@@ -30,7 +30,7 @@ public class PedidoServiceImpl implements IPedidoService {
         if (usuarioId != null)
             return pedidoRepository.findByUsuarioId(usuarioId, pageRequest);
 
-        return pedidoRepository.findAll(pageRequest);
+        return pedidoRepository.findByActivoTrue(pageRequest);
     }
 
     @Transactional(readOnly = true)
@@ -95,7 +95,8 @@ public class PedidoServiceImpl implements IPedidoService {
         if (existente.isEmpty())
             return Optional.empty();
 
-        pedidoRepository.deleteById(pedidoId);
-        return existente;
+        Pedido pedido = existente.get();
+        pedido.setActivo(false);
+        return Optional.of(pedidoRepository.save(pedido));
     }
 }

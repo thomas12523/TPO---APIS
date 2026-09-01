@@ -14,6 +14,7 @@ public class ProductoResponse {
     private double precioUnitario;
     private int stock;
     private String imagenUrl;
+    private boolean activo;
 
     public static ProductoResponse from(Producto producto) {
         ProductoResponse response = new ProductoResponse();
@@ -25,6 +26,7 @@ public class ProductoResponse {
         response.setPrecioUnitario(producto.getPrecioUnitario());
         response.setStock(producto.getStock());
         response.setImagenUrl(producto.getImagenUrl());
+        response.setActivo(producto.isActivo());
         return response;
     }
 }

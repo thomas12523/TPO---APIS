@@ -44,15 +44,9 @@ public class PedidoOrchestratorServiceImpl implements IPedidoOrchestratorService
     }
 
     public Optional<Pedido> eliminarPedido(int pedidoId) {
-        if (pedidoService.getPedidoById(pedidoId).isEmpty())
-            return Optional.empty();
-
-        List<DetallePedido> items = detallePedidoService.getDetallesPedido(pedidoId);
-        for (DetallePedido item : items) {
-            productoService.ajustarStock(item.getProducto().getProductoId(), item.getCantidad());
-        }
-        detallePedidoService.deleteDetallesByPedidoId(pedidoId);
-
+        // Baja logica del pedido: solo lo archiva (activo=false). No repone stock ni
+        // toca sus DetallePedido, porque eso es una operacion de negocio distinta
+        // (ver cancelarPedido, que si repone stock al cancelar una venta real).
         return pedidoService.deletePedido(pedidoId);
     }
 }

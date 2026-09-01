@@ -9,12 +9,14 @@ public class CarritoResponse {
     private int carritoId;
     private int usuarioId;
     private String fechaCarrito;
+    private boolean activo;
 
     public static CarritoResponse from(Carrito carrito) {
         CarritoResponse response = new CarritoResponse();
         response.setCarritoId(carrito.getCarritoId());
         response.setUsuarioId(carrito.getUsuario().getUsuarioId());
         response.setFechaCarrito(carrito.getFechaCarrito());
+        response.setActivo(carrito.isActivo());
         return response;
     }
 }

@@ -35,4 +35,7 @@ public class Imagen {
 
     @Column
     private String tipoContenido;
+
+    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 1")
+    private boolean activo = true;
 }

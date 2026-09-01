@@ -14,6 +14,7 @@ public class PedidoResponse {
     private double subtotal;
     private double total;
     private String metodoPago;
+    private boolean activo;
 
     public static PedidoResponse from(Pedido pedido) {
         PedidoResponse response = new PedidoResponse();
@@ -25,6 +26,7 @@ public class PedidoResponse {
         response.setSubtotal(pedido.getSubtotal());
         response.setTotal(pedido.getTotal());
         response.setMetodoPago(pedido.getMetodoPago());
+        response.setActivo(pedido.isActivo());
         return response;
     }
 }

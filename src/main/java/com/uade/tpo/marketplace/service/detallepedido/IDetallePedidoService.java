@@ -20,6 +20,4 @@ public interface IDetallePedidoService {
     public Optional<DetallePedido> deleteDetallePedido(int detallePedidoId);
 
     public DetallePedido guardarDetallePedido(DetallePedido detallePedido);
-
-    public void deleteDetallesByPedidoId(int pedidoId);
 }

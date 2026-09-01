@@ -91,6 +91,6 @@ public class PedidoController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Pedido eliminado correctamente", PedidoResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Pedido desactivado correctamente", PedidoResponse.from(result.get())));
     }
 }

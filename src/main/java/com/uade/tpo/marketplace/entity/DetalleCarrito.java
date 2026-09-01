@@ -34,4 +34,7 @@ public class DetalleCarrito {
 
     @Column
     private double precioUnitario;
+
+    @Column(nullable = false, columnDefinition = "TINYINT(1) DEFAULT 1")
+    private boolean activo = true;
 }

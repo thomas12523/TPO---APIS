@@ -14,6 +14,7 @@ public class DetallePedidoResponse {
     private double precioUnitario;
     private String observaciones;
     private double subtotal;
+    private boolean activo;
 
     public static DetallePedidoResponse from(DetallePedido detallePedido) {
         DetallePedidoResponse response = new DetallePedidoResponse();
@@ -25,6 +26,7 @@ public class DetallePedidoResponse {
         response.setPrecioUnitario(detallePedido.getPrecioUnitario());
         response.setObservaciones(detallePedido.getObservaciones());
         response.setSubtotal(detallePedido.getSubtotal());
+        response.setActivo(detallePedido.isActivo());
         return response;
     }
 }

@@ -75,8 +75,9 @@ public class ProductoServiceImpl implements IProductoService {
         if (existente.isEmpty())
             return Optional.empty();
 
-        productoRepository.deleteById(productoId);
-        return existente;
+        Producto producto = existente.get();
+        producto.setActivo(false);
+        return Optional.of(productoRepository.save(producto));
     }
 
     public Producto ajustarStock(int productoId, int delta) {

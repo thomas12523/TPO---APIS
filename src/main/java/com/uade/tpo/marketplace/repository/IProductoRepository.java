@@ -13,10 +13,10 @@ import com.uade.tpo.marketplace.entity.Producto;
 @Repository
 public interface IProductoRepository extends JpaRepository<Producto, Integer> {
 
-    @Query(value = "select p from Producto p where p.nombreProducto = ?1")
+    @Query(value = "select p from Producto p where p.nombreProducto = ?1 and p.activo = true")
     List<Producto> findByNombreProducto(String nombreProducto);
 
-    @Query("select p from Producto p where "
+    @Query("select p from Producto p where p.activo = true and "
             + "(:categoriaId is null or p.categoria.id = :categoriaId) and "
             + "(:nombre is null or lower(p.nombreProducto) like lower(concat('%', :nombre, '%'))) and "
             + "(:precioMin is null or p.precioUnitario >= :precioMin) and "

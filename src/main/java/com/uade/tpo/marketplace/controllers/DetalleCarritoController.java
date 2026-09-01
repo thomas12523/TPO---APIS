@@ -68,6 +68,6 @@ public class DetalleCarritoController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Detalle de carrito eliminado correctamente", DetalleCarritoResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Detalle de carrito desactivado correctamente", DetalleCarritoResponse.from(result.get())));
     }
 }

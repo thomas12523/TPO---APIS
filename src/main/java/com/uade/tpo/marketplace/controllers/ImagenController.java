@@ -77,6 +77,6 @@ public class ImagenController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Imagen eliminada correctamente", ImagenResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Imagen desactivada correctamente", ImagenResponse.from(result.get())));
     }
 }

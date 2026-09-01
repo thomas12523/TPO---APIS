@@ -74,8 +74,9 @@ public class DescuentoServiceImpl implements IDescuentoService {
         if (existente.isEmpty())
             return Optional.empty();
 
-        descuentoRepository.deleteById(descuentoId);
-        return existente;
+        Descuento descuento = existente.get();
+        descuento.setActivo(false);
+        return Optional.of(descuentoRepository.save(descuento));
     }
 
     @Transactional(readOnly = true)

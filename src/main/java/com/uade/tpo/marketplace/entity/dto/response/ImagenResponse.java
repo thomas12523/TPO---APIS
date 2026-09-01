@@ -13,6 +13,7 @@ public class ImagenResponse {
     private String imagenUrl;
     private String tipoContenido;
     private String imagenBase64;
+    private boolean activo;
 
     public static ImagenResponse from(Imagen imagen) {
         ImagenResponse response = new ImagenResponse();
@@ -22,6 +23,7 @@ public class ImagenResponse {
         response.setTipoContenido(imagen.getTipoContenido());
         if (imagen.getDatos() != null)
             response.setImagenBase64(Base64.getEncoder().encodeToString(imagen.getDatos()));
+        response.setActivo(imagen.isActivo());
         return response;
     }
 }

@@ -29,7 +29,7 @@ public class CarritoServiceImpl implements ICarritoService {
         if (usuarioId != null)
             return carritoRepository.findByUsuarioId(usuarioId);
 
-        return carritoRepository.findAll();
+        return carritoRepository.findByActivoTrue();
     }
 
     @Transactional(readOnly = true)
@@ -66,7 +66,8 @@ public class CarritoServiceImpl implements ICarritoService {
         if (existente.isEmpty())
             return Optional.empty();
 
-        carritoRepository.deleteById(carritoId);
-        return existente;
+        Carrito carrito = existente.get();
+        carrito.setActivo(false);
+        return Optional.of(carritoRepository.save(carrito));
     }
 }

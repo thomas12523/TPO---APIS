@@ -67,6 +67,6 @@ public class DescuentoController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Descuento eliminado correctamente", DescuentoResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Descuento desactivado correctamente", DescuentoResponse.from(result.get())));
     }
 }

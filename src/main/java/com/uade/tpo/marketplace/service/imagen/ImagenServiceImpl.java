@@ -32,7 +32,7 @@ public class ImagenServiceImpl implements IImagenService {
         if (productoId != null)
             return imagenRepository.findByProductoId(productoId);
 
-        return imagenRepository.findAll();
+        return imagenRepository.findByActivoTrue();
     }
 
     @Transactional(readOnly = true)
@@ -80,7 +80,8 @@ public class ImagenServiceImpl implements IImagenService {
         if (existente.isEmpty())
             return Optional.empty();
 
-        imagenRepository.deleteById(imagenId);
-        return existente;
+        Imagen imagen = existente.get();
+        imagen.setActivo(false);
+        return Optional.of(imagenRepository.save(imagen));
     }
 }

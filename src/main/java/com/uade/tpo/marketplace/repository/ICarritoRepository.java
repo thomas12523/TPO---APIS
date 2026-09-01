@@ -11,6 +11,8 @@ import com.uade.tpo.marketplace.entity.Carrito;
 @Repository
 public interface ICarritoRepository extends JpaRepository<Carrito, Integer> {
 
-    @Query(value = "select c from Carrito c where c.usuario.usuarioId = ?1")
+    @Query(value = "select c from Carrito c where c.usuario.usuarioId = ?1 and c.activo = true")
     List<Carrito> findByUsuarioId(int usuarioId);
+
+    List<Carrito> findByActivoTrue();
 }
