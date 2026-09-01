@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
                         // Auth: publico
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Auth/authenticate").permitAll()
 
