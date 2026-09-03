@@ -30,7 +30,7 @@ public class Imagen {
     private String imagenUrl;
 
     @Lob
-    @Column(length = 16777215)
+    @Column(length = 16777215) // 2^24 - 1 bytes (16 MB) maximo de una imagen
     private byte[] datos;
 
     @Column

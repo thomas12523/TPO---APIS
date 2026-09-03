@@ -41,6 +41,10 @@ public class CarritoServiceImpl implements ICarritoService {
         Usuario usuario = usuarioService.getUsuarioById(carritoRequest.getUsuarioId())
                 .orElseThrow(UsuarioNotFoundException::new);
 
+        Optional<Carrito> existente = carritoRepository.findActivoByUsuarioId(usuario.getUsuarioId());
+        if (existente.isPresent())
+            return existente.get();
+
         Carrito carrito = new Carrito();
         carrito.setUsuario(usuario);
         carrito.setFechaCarrito(carritoRequest.getFechaCarrito());
