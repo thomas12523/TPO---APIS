@@ -25,16 +25,16 @@ public class Producto {
     @JoinColumn(name = "categoria_id", nullable = false)
     private Category categoria;
 
-    @Column
+    @Column(nullable = false)
     private String nombreProducto;
 
     @Column
     private String descripcion;
 
-    @Column
+    @Column(nullable = false)
     private double precioUnitario;
 
-    @Column
+    @Column(nullable = false)
     private int stock;
 
     @Column

@@ -29,10 +29,10 @@ public class DetalleCarrito {
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
-    @Column
+    @Column(nullable = false)
     private int cantidad;
 
-    @Column
+    @Column(nullable = false)
     private double precioUnitario;
 
     @Column(nullable = false)

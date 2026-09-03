@@ -21,23 +21,23 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int pedidoId;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String numeroPedido;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @Column
+    @Column(nullable = false)
     private String fechaCreacion;
 
-    @Column
+    @Column(nullable = false)
     private String estado;
 
-    @Column
+    @Column(nullable = false)
     private double subtotal;
 
-    @Column
+    @Column(nullable = false)
     private double total;
 
     @Column

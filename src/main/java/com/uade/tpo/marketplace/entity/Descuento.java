@@ -25,15 +25,15 @@ public class Descuento {
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
-    @Column
+    @Column(nullable = false)
     private double porcentaje;
 
-    @Column
-    private boolean activo;
+    @Column(nullable = false)
+    private boolean activo = true;
 
-    @Column
+    @Column(nullable = false)
     private String fechaInicio;
 
-    @Column
+    @Column(nullable = false)
     private String fechaFin;
 }

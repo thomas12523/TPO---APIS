@@ -25,7 +25,7 @@ public class Carrito {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
-    @Column
+    @Column(nullable = false)
     private String fechaCarrito;
 
     @Column(nullable = false)
