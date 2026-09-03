@@ -36,10 +36,8 @@ public class PedidoController {
     @GetMapping
     public ResponseEntity<Page<PedidoResponse>> getPedidos(
             @RequestParam(required = false) Integer usuarioId,
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size) {
-        if (page == null || size == null)
-            return ResponseEntity.ok(pedidoService.getPedidos(usuarioId, PageRequest.of(0, Integer.MAX_VALUE)).map(PedidoResponse::from));
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "20") Integer size) {
         return ResponseEntity.ok(pedidoService.getPedidos(usuarioId, PageRequest.of(page, size)).map(PedidoResponse::from));
     }
 

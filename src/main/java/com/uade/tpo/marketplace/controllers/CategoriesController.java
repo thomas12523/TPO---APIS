@@ -33,10 +33,8 @@ public class CategoriesController {
 
     @GetMapping //localhost/8080/Categories
     public ResponseEntity<Page<CategoryResponse>> getCategories(
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size) {
-        if (page == null || size == null)
-            return ResponseEntity.ok(categoriesService.getCategories(PageRequest.of(0, Integer.MAX_VALUE)).map(CategoryResponse::from));
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "20") Integer size) {
         return ResponseEntity.ok(categoriesService.getCategories(PageRequest.of(page, size)).map(CategoryResponse::from));
     }
 
