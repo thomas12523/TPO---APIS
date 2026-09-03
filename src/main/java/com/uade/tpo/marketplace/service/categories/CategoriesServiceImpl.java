@@ -20,12 +20,12 @@ public class CategoriesServiceImpl implements ICategoriesService {
     @Autowired
     private ICategoriesRepository categoriesRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Page<Category> getCategories(PageRequest pageRequest) {
         return categoriesRepository.findByActivoTrue(pageRequest);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<Category> getCategoryById(int categoryId) {
         return categoriesRepository.findById(categoryId);
     }

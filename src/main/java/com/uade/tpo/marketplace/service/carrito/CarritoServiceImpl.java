@@ -24,7 +24,7 @@ public class CarritoServiceImpl implements ICarritoService {
     @Autowired
     private IUsuarioService usuarioService;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Carrito> getCarritos(Integer usuarioId) {
         if (usuarioId != null)
             return carritoRepository.findByUsuarioId(usuarioId);
@@ -32,7 +32,7 @@ public class CarritoServiceImpl implements ICarritoService {
         return carritoRepository.findByActivoTrue();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<Carrito> getCarritoById(int carritoId) {
         return carritoRepository.findById(carritoId);
     }

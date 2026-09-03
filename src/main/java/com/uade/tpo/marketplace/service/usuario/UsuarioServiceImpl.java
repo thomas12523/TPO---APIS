@@ -25,12 +25,12 @@ public class UsuarioServiceImpl implements IUsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Page<Usuario> getUsuarios(PageRequest pageRequest) {
         return usuarioRepository.findAll(pageRequest);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<Usuario> getUsuarioById(int usuarioId) {
         return usuarioRepository.findById(usuarioId);
     }

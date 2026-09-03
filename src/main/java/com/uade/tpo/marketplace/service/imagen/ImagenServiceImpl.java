@@ -27,7 +27,7 @@ public class ImagenServiceImpl implements IImagenService {
     @Autowired
     private IProductoService productoService;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Imagen> getImagenes(Integer productoId) {
         if (productoId != null)
             return imagenRepository.findByProductoId(productoId);
@@ -35,7 +35,7 @@ public class ImagenServiceImpl implements IImagenService {
         return imagenRepository.findByActivoTrue();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<Imagen> getImagenById(int imagenId) {
         return imagenRepository.findById(imagenId);
     }

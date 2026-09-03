@@ -26,7 +26,7 @@ public class DescuentoServiceImpl implements IDescuentoService {
     @Autowired
     private IProductoService productoService;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Descuento> getDescuentos(Integer productoId) {
         if (productoId != null)
             return descuentoRepository.findByProductoId(productoId);
@@ -34,7 +34,7 @@ public class DescuentoServiceImpl implements IDescuentoService {
         return descuentoRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<Descuento> getDescuentoById(int descuentoId) {
         return descuentoRepository.findById(descuentoId);
     }
@@ -79,7 +79,7 @@ public class DescuentoServiceImpl implements IDescuentoService {
         return Optional.of(descuentoRepository.save(descuento));
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public double getPrecioConDescuento(Producto producto) {
         Optional<Descuento> vigente = descuentoRepository.findByProductoId(producto.getProductoId()).stream()
                 .filter(this::esVigente)

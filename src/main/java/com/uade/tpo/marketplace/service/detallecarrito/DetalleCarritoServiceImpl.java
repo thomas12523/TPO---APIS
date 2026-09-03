@@ -36,7 +36,7 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
     @Autowired
     private IDescuentoService descuentoService;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<DetalleCarrito> getDetallesCarrito(Integer carritoId) {
         if (carritoId != null)
             return detalleCarritoRepository.findByCarritoId(carritoId);
@@ -44,7 +44,7 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
         return detalleCarritoRepository.findByActivoTrue();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<DetalleCarrito> getDetalleCarritoById(int carritoId, int productoId) {
         return detalleCarritoRepository.findByCarritoIdAndProductoId(carritoId, productoId);
     }

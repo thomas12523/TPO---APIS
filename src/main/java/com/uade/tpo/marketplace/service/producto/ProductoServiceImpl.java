@@ -28,12 +28,12 @@ public class ProductoServiceImpl implements IProductoService {
     @Autowired
     private ICategoriesService categoriesService;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Page<Producto> getProductos(Integer categoriaId, String nombre, Double precioMin, Double precioMax, PageRequest pageRequest) {
         return productoRepository.buscarProductos(categoriaId, nombre, precioMin, precioMax, pageRequest);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<Producto> getProductoById(int productoId) {
         return productoRepository.findById(productoId);
     }

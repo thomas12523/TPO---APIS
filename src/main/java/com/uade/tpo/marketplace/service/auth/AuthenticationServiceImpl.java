@@ -37,7 +37,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         return AuthenticationResponse.builder().accessToken(jwtToken).build();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

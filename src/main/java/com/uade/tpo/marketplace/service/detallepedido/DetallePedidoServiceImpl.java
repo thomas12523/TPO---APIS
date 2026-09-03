@@ -35,7 +35,7 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
     @Autowired
     private IDescuentoService descuentoService;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<DetallePedido> getDetallesPedido(Integer pedidoId) {
         if (pedidoId != null)
             return detallePedidoRepository.findByPedidoId(pedidoId);
@@ -43,7 +43,7 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
         return detallePedidoRepository.findByActivoTrue();
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<DetallePedido> getDetallePedidoById(int detallePedidoId) {
         return detallePedidoRepository.findById(detallePedidoId);
     }

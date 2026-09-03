@@ -25,7 +25,7 @@ public class PedidoServiceImpl implements IPedidoService {
     @Autowired
     private IUsuarioService usuarioService;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Page<Pedido> getPedidos(Integer usuarioId, PageRequest pageRequest) {
         if (usuarioId != null)
             return pedidoRepository.findByUsuarioId(usuarioId, pageRequest);
@@ -33,12 +33,12 @@ public class PedidoServiceImpl implements IPedidoService {
         return pedidoRepository.findByActivoTrue(pageRequest);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<Pedido> getPedidoById(int pedidoId) {
         return pedidoRepository.findById(pedidoId);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Optional<Pedido> getPedidoByNumero(String numeroPedido) {
         return pedidoRepository.findByNumeroPedido(numeroPedido);
     }
