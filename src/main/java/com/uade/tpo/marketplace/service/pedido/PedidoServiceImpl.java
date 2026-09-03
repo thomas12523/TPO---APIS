@@ -1,6 +1,7 @@
 package com.uade.tpo.marketplace.service.pedido;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -49,6 +50,7 @@ public class PedidoServiceImpl implements IPedidoService {
 
         Pedido pedido = new Pedido();
         pedido.setUsuario(usuario);
+        pedido.setNumeroPedido("PED-" + UUID.randomUUID());
         pedido.setFechaCreacion(pedidoRequest.getFechaCreacion());
         pedido.setEstado(pedidoRequest.getEstado());
         pedido.setSubtotal(pedidoRequest.getSubtotal());
