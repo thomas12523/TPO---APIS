@@ -14,7 +14,6 @@ import com.uade.tpo.marketplace.service.pedido.IPedidoService;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
 
 @Service
-@Transactional(rollbackFor = Throwable.class)
 public class PedidoOrchestratorServiceImpl implements IPedidoOrchestratorService {
 
     @Autowired
@@ -26,6 +25,7 @@ public class PedidoOrchestratorServiceImpl implements IPedidoOrchestratorService
     @Autowired
     private IProductoService productoService;
 
+    @Transactional
     public Pedido cancelarPedido(int pedidoId) {
         Optional<Pedido> pedidoOpt = pedidoService.getPedidoById(pedidoId);
         if (pedidoOpt.isEmpty())
@@ -42,11 +42,10 @@ public class PedidoOrchestratorServiceImpl implements IPedidoOrchestratorService
 
         return pedidoService.cancelarPedido(pedidoId);
     }
-
+    
+    @Transactional
     public Optional<Pedido> eliminarPedido(int pedidoId) {
-        // Baja logica del pedido: solo lo archiva (activo=false). No repone stock ni
-        // toca sus DetallePedido, porque eso es una operacion de negocio distinta
-        // (ver cancelarPedido, que si repone stock al cancelar una venta real).
+        
         return pedidoService.deletePedido(pedidoId);
     }
 }
