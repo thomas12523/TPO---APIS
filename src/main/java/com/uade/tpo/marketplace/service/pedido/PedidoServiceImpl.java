@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.request.PedidoRequest;
+import com.uade.tpo.marketplace.exceptions.PedidoNoCanceladoException;
 import com.uade.tpo.marketplace.exceptions.UsuarioNotFoundException;
 import com.uade.tpo.marketplace.repository.IPedidoRepository;
 import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
@@ -92,12 +93,15 @@ public class PedidoServiceImpl implements IPedidoService {
         return pedidoRepository.save(pedido);
     }
 
-    public Optional<Pedido> deletePedido(int pedidoId) {
+    public Optional<Pedido> deletePedido(int pedidoId) throws PedidoNoCanceladoException {
         Optional<Pedido> existente = pedidoRepository.findById(pedidoId);
         if (existente.isEmpty())
             return Optional.empty();
 
         Pedido pedido = existente.get();
+        if (!"CANCELADO".equals(pedido.getEstado()))
+            throw new PedidoNoCanceladoException();
+
         pedido.setActivo(false);
         return Optional.of(pedidoRepository.save(pedido));
     }

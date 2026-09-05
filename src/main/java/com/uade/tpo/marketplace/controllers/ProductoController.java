@@ -41,14 +41,14 @@ public class ProductoController {
             @RequestParam(required = false) Double precioMax,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer size) {
-        return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre, precioMin, precioMax, PageRequest.of(page, size)).map(ProductoResponse::from));
+        return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre, precioMin, precioMax, PageRequest.of(page, size)).map(ProductoResponse::new));
     }
 
     @GetMapping("{productoId}")
     public ResponseEntity<ProductoResponse> getProductoById(@PathVariable int productoId) {
         Optional<Producto> result = productoService.getProductoById(productoId);
         if (result.isPresent())
-            return ResponseEntity.ok(ProductoResponse.from(result.get()));
+            return ResponseEntity.ok(new ProductoResponse(result.get()));
 
         return ResponseEntity.notFound().build();
     }
@@ -56,14 +56,14 @@ public class ProductoController {
     @PostMapping
     public ResponseEntity<Object> crearProducto(@RequestBody ProductoRequest productoRequest) throws ProductoDuplicateException {
         Producto result = productoService.crearProducto(productoRequest);
-        return ResponseEntity.ok(ProductoResponse.from(result));
+        return ResponseEntity.ok(new ProductoResponse(result));
     }
 
     @PutMapping("{productoId}")
     public ResponseEntity<ProductoResponse> actualizarProducto(@PathVariable int productoId, @RequestBody ProductoRequest productoRequest) {
         Optional<Producto> result = productoService.actualizarProducto(productoId, productoRequest);
         if (result.isPresent())
-            return ResponseEntity.ok(ProductoResponse.from(result.get()));
+            return ResponseEntity.ok(new ProductoResponse(result.get()));
 
         return ResponseEntity.notFound().build();
     }
@@ -74,14 +74,14 @@ public class ProductoController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Producto desactivado correctamente", ProductoResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Producto desactivado correctamente", new ProductoResponse(result.get())));
     }
 
     @PatchMapping("{productoId}/stock")
     public ResponseEntity<ProductoResponse> actualizarStock(@PathVariable int productoId, @RequestBody StockRequest stockRequest) throws StockInvalidoException {
         Optional<Producto> result = productoService.actualizarStock(productoId, stockRequest.getStock());
         if (result.isPresent())
-            return ResponseEntity.ok(ProductoResponse.from(result.get()));
+            return ResponseEntity.ok(new ProductoResponse(result.get()));
 
         return ResponseEntity.notFound().build();
     }

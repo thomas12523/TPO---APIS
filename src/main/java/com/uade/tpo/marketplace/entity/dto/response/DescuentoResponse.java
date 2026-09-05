@@ -13,14 +13,12 @@ public class DescuentoResponse {
     private String fechaInicio;
     private String fechaFin;
 
-    public static DescuentoResponse from(Descuento descuento) {
-        DescuentoResponse response = new DescuentoResponse();
-        response.setDescuentoId(descuento.getDescuentoId());
-        response.setProductoId(descuento.getProducto().getProductoId());
-        response.setPorcentaje(descuento.getPorcentaje());
-        response.setActivo(descuento.isActivo());
-        response.setFechaInicio(descuento.getFechaInicio());
-        response.setFechaFin(descuento.getFechaFin());
-        return response;
+    public DescuentoResponse(Descuento descuento) {
+        this.descuentoId = descuento.getDescuentoId();
+        this.productoId = descuento.getProducto().getProductoId();
+        this.porcentaje = descuento.getPorcentaje();
+        this.activo = descuento.isActivo();
+        this.fechaInicio = descuento.getFechaInicio();
+        this.fechaFin = descuento.getFechaFin();
     }
 }

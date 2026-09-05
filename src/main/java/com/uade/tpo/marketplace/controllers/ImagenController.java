@@ -36,7 +36,7 @@ public class ImagenController {
     @GetMapping
     public ResponseEntity<List<ImagenResponse>> getImagenes(@RequestParam(required = false) Integer productoId) {
         return ResponseEntity.ok(imagenService.getImagenes(productoId).stream()
-                .map(ImagenResponse::from)
+                .map(ImagenResponse::new)
                 .collect(Collectors.toList()));
     }
 
@@ -44,7 +44,7 @@ public class ImagenController {
     public ResponseEntity<ImagenResponse> getImagenById(@PathVariable int imagenId) {
         Optional<Imagen> result = imagenService.getImagenById(imagenId);
         if (result.isPresent())
-            return ResponseEntity.ok(ImagenResponse.from(result.get()));
+            return ResponseEntity.ok(new ImagenResponse(result.get()));
 
         return ResponseEntity.notFound().build();
     }
@@ -52,14 +52,14 @@ public class ImagenController {
     @PostMapping
     public ResponseEntity<Object> crearImagen(@RequestBody ImagenRequest imagenRequest) throws ImagenDuplicateException {
         Imagen result = imagenService.crearImagen(imagenRequest);
-        return ResponseEntity.ok(ImagenResponse.from(result));
+        return ResponseEntity.ok(new ImagenResponse(result));
     }
 
     @PostMapping(value = "upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Object> subirImagen(@RequestParam("productoId") int productoId,
             @RequestParam("image") MultipartFile image) throws IOException {
         Imagen result = imagenService.subirImagen(productoId, image);
-        return ResponseEntity.ok(ImagenResponse.from(result));
+        return ResponseEntity.ok(new ImagenResponse(result));
     }
 
     @PutMapping("{imagenId}")
@@ -68,7 +68,7 @@ public class ImagenController {
         if (result == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(ImagenResponse.from(result));
+        return ResponseEntity.ok(new ImagenResponse(result));
     }
 
     @DeleteMapping("{imagenId}")
@@ -77,6 +77,6 @@ public class ImagenController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Imagen desactivada correctamente", ImagenResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Imagen desactivada correctamente", new ImagenResponse(result.get())));
     }
 }

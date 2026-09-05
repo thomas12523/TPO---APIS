@@ -35,14 +35,14 @@ public class CategoriesController {
     public ResponseEntity<Page<CategoryResponse>> getCategories(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer size) {
-        return ResponseEntity.ok(categoriesService.getCategories(PageRequest.of(page, size)).map(CategoryResponse::from));
+        return ResponseEntity.ok(categoriesService.getCategories(PageRequest.of(page, size)).map(CategoryResponse::new));
     }
 
     @GetMapping("{categoryId}") //localhost/8080/Categories/id
     public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable int categoryId) { //PATH VARIABLE es porque va a cambiar y que lo vaya cambiando
         Optional<Category> result = categoriesService.getCategoryById(categoryId);
         if (result.isPresent())
-            return ResponseEntity.ok(CategoryResponse.from(result.get()));
+            return ResponseEntity.ok(new CategoryResponse(result.get()));
 
         return ResponseEntity.notFound().build();
     }
@@ -50,7 +50,7 @@ public class CategoriesController {
     @PostMapping
     public ResponseEntity<Object> createCategory(@RequestBody CategoryRequest categoryRequest) throws CategoryDuplicateException {
         Category result = categoriesService.createCategory(categoryRequest.getNombre());
-        return ResponseEntity.ok(CategoryResponse.from(result));
+        return ResponseEntity.ok(new CategoryResponse(result));
     }
 
     @PutMapping("{categoryId}")
@@ -59,7 +59,7 @@ public class CategoriesController {
         if (result == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(CategoryResponse.from(result));
+        return ResponseEntity.ok(new CategoryResponse(result));
     }
 
     @DeleteMapping("{categoryId}")
@@ -68,7 +68,7 @@ public class CategoriesController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Categoria desactivada correctamente", CategoryResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Categoria desactivada correctamente", new CategoryResponse(result.get())));
     }
 
 }

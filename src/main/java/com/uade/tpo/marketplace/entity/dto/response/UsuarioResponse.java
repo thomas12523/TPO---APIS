@@ -16,16 +16,14 @@ public class UsuarioResponse {
     private Role role;
     private boolean activo;
 
-    public static UsuarioResponse from(Usuario usuario) {
-        UsuarioResponse response = new UsuarioResponse();
-        response.setUsuarioId(usuario.getUsuarioId());
-        response.setDni(usuario.getDni());
-        response.setUsername(usuario.getUsername());
-        response.setEmail(usuario.getEmail());
-        response.setNombre(usuario.getNombre());
-        response.setApellido(usuario.getApellido());
-        response.setRole(usuario.getRole());
-        response.setActivo(usuario.isActivo());
-        return response;
+    public UsuarioResponse(Usuario usuario) {
+        this.usuarioId = usuario.getUsuarioId();
+        this.dni = usuario.getDni();
+        this.username = usuario.getUsername();
+        this.email = usuario.getEmail();
+        this.nombre = usuario.getNombre();
+        this.apellido = usuario.getApellido();
+        this.role = usuario.getRole();
+        this.activo = usuario.isActivo();
     }
 }

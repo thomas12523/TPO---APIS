@@ -15,15 +15,13 @@ public class ImagenResponse {
     private String imagenBase64;
     private boolean activo;
 
-    public static ImagenResponse from(Imagen imagen) {
-        ImagenResponse response = new ImagenResponse();
-        response.setImagenId(imagen.getImagenId());
-        response.setProductoId(imagen.getProducto().getProductoId());
-        response.setImagenUrl(imagen.getImagenUrl());
-        response.setTipoContenido(imagen.getTipoContenido());
+    public ImagenResponse(Imagen imagen) {
+        this.imagenId = imagen.getImagenId();
+        this.productoId = imagen.getProducto().getProductoId();
+        this.imagenUrl = imagen.getImagenUrl();
+        this.tipoContenido = imagen.getTipoContenido();
         if (imagen.getDatos() != null)
-            response.setImagenBase64(Base64.getEncoder().encodeToString(imagen.getDatos()));
-        response.setActivo(imagen.isActivo());
-        return response;
+            this.imagenBase64 = Base64.getEncoder().encodeToString(imagen.getDatos());
+        this.activo = imagen.isActivo();
     }
 }

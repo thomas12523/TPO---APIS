@@ -33,7 +33,7 @@ public class DescuentoController {
     @GetMapping
     public ResponseEntity<List<DescuentoResponse>> getDescuentos(@RequestParam(required = false) Integer productoId) {
         return ResponseEntity.ok(descuentoService.getDescuentos(productoId).stream()
-                .map(DescuentoResponse::from)
+                .map(DescuentoResponse::new)
                 .collect(Collectors.toList()));
     }
 
@@ -41,7 +41,7 @@ public class DescuentoController {
     public ResponseEntity<DescuentoResponse> getDescuentoById(@PathVariable int descuentoId) {
         Optional<Descuento> result = descuentoService.getDescuentoById(descuentoId);
         if (result.isPresent())
-            return ResponseEntity.ok(DescuentoResponse.from(result.get()));
+            return ResponseEntity.ok(new DescuentoResponse(result.get()));
 
         return ResponseEntity.notFound().build();
     }
@@ -49,7 +49,7 @@ public class DescuentoController {
     @PostMapping
     public ResponseEntity<Object> crearDescuento(@RequestBody DescuentoRequest descuentoRequest) throws DescuentoInvalidoException {
         Descuento result = descuentoService.crearDescuento(descuentoRequest);
-        return ResponseEntity.ok(DescuentoResponse.from(result));
+        return ResponseEntity.ok(new DescuentoResponse(result));
     }
 
     @PutMapping("{descuentoId}")
@@ -58,7 +58,7 @@ public class DescuentoController {
         if (result == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(DescuentoResponse.from(result));
+        return ResponseEntity.ok(new DescuentoResponse(result));
     }
 
     @DeleteMapping("{descuentoId}")
@@ -67,6 +67,6 @@ public class DescuentoController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Descuento desactivado correctamente", DescuentoResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Descuento desactivado correctamente", new DescuentoResponse(result.get())));
     }
 }

@@ -10,11 +10,9 @@ public class CategoryResponse {
     private String nombre;
     private boolean activo;
 
-    public static CategoryResponse from(Category category) {
-        CategoryResponse response = new CategoryResponse();
-        response.setId(category.getId());
-        response.setNombre(category.getNombre());
-        response.setActivo(category.isActivo());
-        return response;
+    public CategoryResponse(Category category) {
+        this.id = category.getId();
+        this.nombre = category.getNombre();
+        this.activo = category.isActivo();
     }
 }

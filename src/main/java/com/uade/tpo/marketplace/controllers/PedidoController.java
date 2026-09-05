@@ -20,6 +20,7 @@ import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.dto.request.PedidoRequest;
 import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.entity.dto.response.PedidoResponse;
+import com.uade.tpo.marketplace.exceptions.PedidoNoCanceladoException;
 import com.uade.tpo.marketplace.service.pedido.IPedidoService;
 import com.uade.tpo.marketplace.service.soporte.IPedidoOrchestratorService;
 
@@ -38,14 +39,14 @@ public class PedidoController {
             @RequestParam(required = false) Integer usuarioId,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer size) {
-        return ResponseEntity.ok(pedidoService.getPedidos(usuarioId, PageRequest.of(page, size)).map(PedidoResponse::from));
+        return ResponseEntity.ok(pedidoService.getPedidos(usuarioId, PageRequest.of(page, size)).map(PedidoResponse::new));
     }
 
     @GetMapping("{pedidoId}")
     public ResponseEntity<PedidoResponse> getPedidoById(@PathVariable int pedidoId) {
         Optional<Pedido> result = pedidoService.getPedidoById(pedidoId);
         if (result.isPresent())
-            return ResponseEntity.ok(PedidoResponse.from(result.get()));
+            return ResponseEntity.ok(new PedidoResponse(result.get()));
 
         return ResponseEntity.notFound().build();
     }
@@ -54,7 +55,7 @@ public class PedidoController {
     public ResponseEntity<PedidoResponse> getPedidoByNumero(@PathVariable String numeroPedido) {
         Optional<Pedido> result = pedidoService.getPedidoByNumero(numeroPedido);
         if (result.isPresent())
-            return ResponseEntity.ok(PedidoResponse.from(result.get()));
+            return ResponseEntity.ok(new PedidoResponse(result.get()));
 
         return ResponseEntity.notFound().build();
     }
@@ -62,7 +63,7 @@ public class PedidoController {
     @PostMapping
     public ResponseEntity<Object> crearPedido(@RequestBody PedidoRequest pedidoRequest) {
         Pedido result = pedidoService.crearPedido(pedidoRequest);
-        return ResponseEntity.ok(PedidoResponse.from(result));
+        return ResponseEntity.ok(new PedidoResponse(result));
     }
 
     @PutMapping("{pedidoId}")
@@ -71,7 +72,7 @@ public class PedidoController {
         if (result == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(PedidoResponse.from(result));
+        return ResponseEntity.ok(new PedidoResponse(result));
     }
 
     @PostMapping("{pedidoId}/cancelar")
@@ -80,15 +81,15 @@ public class PedidoController {
         if (result == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(PedidoResponse.from(result));
+        return ResponseEntity.ok(new PedidoResponse(result));
     }
 
     @DeleteMapping("{pedidoId}")
-    public ResponseEntity<Object> deletePedido(@PathVariable int pedidoId) {
+    public ResponseEntity<Object> deletePedido(@PathVariable int pedidoId) throws PedidoNoCanceladoException {
         Optional<Pedido> result = pedidoOrchestratorService.eliminarPedido(pedidoId);
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Pedido desactivado correctamente", PedidoResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Pedido desactivado correctamente", new PedidoResponse(result.get())));
     }
 }

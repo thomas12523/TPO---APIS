@@ -15,16 +15,14 @@ public class DetalleCarritoResponse {
     private double subtotal;
     private boolean activo;
 
-    public static DetalleCarritoResponse from(DetalleCarrito detalleCarrito) {
-        DetalleCarritoResponse response = new DetalleCarritoResponse();
-        response.setDetalleCarritoId(detalleCarrito.getDetalleCarritoId());
-        response.setCarritoId(detalleCarrito.getCarrito().getCarritoId());
-        response.setProductoId(detalleCarrito.getProducto().getProductoId());
-        response.setProductoNombre(detalleCarrito.getProducto().getNombreProducto());
-        response.setCantidad(detalleCarrito.getCantidad());
-        response.setPrecioUnitario(detalleCarrito.getPrecioUnitario());
-        response.setSubtotal(detalleCarrito.getCantidad() * detalleCarrito.getPrecioUnitario());
-        response.setActivo(detalleCarrito.isActivo());
-        return response;
+    public DetalleCarritoResponse(DetalleCarrito detalleCarrito) {
+        this.detalleCarritoId = detalleCarrito.getDetalleCarritoId();
+        this.carritoId = detalleCarrito.getCarrito().getCarritoId();
+        this.productoId = detalleCarrito.getProducto().getProductoId();
+        this.productoNombre = detalleCarrito.getProducto().getNombreProducto();
+        this.cantidad = detalleCarrito.getCantidad();
+        this.precioUnitario = detalleCarrito.getPrecioUnitario();
+        this.subtotal = detalleCarrito.getCantidad() * detalleCarrito.getPrecioUnitario();
+        this.activo = detalleCarrito.isActivo();
     }
 }

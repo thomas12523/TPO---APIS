@@ -16,17 +16,15 @@ public class ProductoResponse {
     private String imagenUrl;
     private boolean activo;
 
-    public static ProductoResponse from(Producto producto) {
-        ProductoResponse response = new ProductoResponse();
-        response.setProductoId(producto.getProductoId());
-        response.setCategoriaId(producto.getCategoria().getId());
-        response.setCategoriaNombre(producto.getCategoria().getNombre());
-        response.setNombreProducto(producto.getNombreProducto());
-        response.setDescripcion(producto.getDescripcion());
-        response.setPrecioUnitario(producto.getPrecioUnitario());
-        response.setStock(producto.getStock());
-        response.setImagenUrl(producto.getImagenUrl());
-        response.setActivo(producto.isActivo());
-        return response;
+    public ProductoResponse(Producto producto) {
+        this.productoId = producto.getProductoId();
+        this.categoriaId = producto.getCategoria().getId();
+        this.categoriaNombre = producto.getCategoria().getNombre();
+        this.nombreProducto = producto.getNombreProducto();
+        this.descripcion = producto.getDescripcion();
+        this.precioUnitario = producto.getPrecioUnitario();
+        this.stock = producto.getStock();
+        this.imagenUrl = producto.getImagenUrl();
+        this.activo = producto.isActivo();
     }
 }

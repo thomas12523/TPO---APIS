@@ -34,7 +34,7 @@ public class DetalleCarritoController {
     @GetMapping
     public ResponseEntity<List<DetalleCarritoResponse>> getDetallesCarrito(@RequestParam(required = false) Integer carritoId) {
         return ResponseEntity.ok(detalleCarritoService.getDetallesCarrito(carritoId).stream()
-                .map(DetalleCarritoResponse::from)
+                .map(DetalleCarritoResponse::new)
                 .collect(Collectors.toList()));
     }
 
@@ -42,7 +42,7 @@ public class DetalleCarritoController {
     public ResponseEntity<DetalleCarritoResponse> getDetalleCarritoById(@PathVariable int carritoId, @PathVariable int productoId) {
         Optional<DetalleCarrito> result = detalleCarritoService.getDetalleCarritoById(carritoId, productoId);
         if (result.isPresent())
-            return ResponseEntity.ok(DetalleCarritoResponse.from(result.get()));
+            return ResponseEntity.ok(new DetalleCarritoResponse(result.get()));
 
         return ResponseEntity.notFound().build();
     }
@@ -50,7 +50,7 @@ public class DetalleCarritoController {
     @PostMapping
     public ResponseEntity<Object> crearDetalleCarrito(@RequestBody DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException, StockInsuficienteException {
         DetalleCarrito result = detalleCarritoService.crearDetalleCarrito(detalleCarritoRequest);
-        return ResponseEntity.ok(DetalleCarritoResponse.from(result));
+        return ResponseEntity.ok(new DetalleCarritoResponse(result));
     }
 
     @PutMapping("{carritoId}/{productoId}")
@@ -59,7 +59,7 @@ public class DetalleCarritoController {
         if (result == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(DetalleCarritoResponse.from(result));
+        return ResponseEntity.ok(new DetalleCarritoResponse(result));
     }
 
     @DeleteMapping("{carritoId}/{productoId}")
@@ -68,6 +68,6 @@ public class DetalleCarritoController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Detalle de carrito desactivado correctamente", DetalleCarritoResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Detalle de carrito desactivado correctamente", new DetalleCarritoResponse(result.get())));
     }
 }

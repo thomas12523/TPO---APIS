@@ -11,12 +11,10 @@ public class CarritoResponse {
     private String fechaCarrito;
     private boolean activo;
 
-    public static CarritoResponse from(Carrito carrito) {
-        CarritoResponse response = new CarritoResponse();
-        response.setCarritoId(carrito.getCarritoId());
-        response.setUsuarioId(carrito.getUsuario().getUsuarioId());
-        response.setFechaCarrito(carrito.getFechaCarrito());
-        response.setActivo(carrito.isActivo());
-        return response;
+    public CarritoResponse(Carrito carrito) {
+        this.carritoId = carrito.getCarritoId();
+        this.usuarioId = carrito.getUsuario().getUsuarioId();
+        this.fechaCarrito = carrito.getFechaCarrito();
+        this.activo = carrito.isActivo();
     }
 }

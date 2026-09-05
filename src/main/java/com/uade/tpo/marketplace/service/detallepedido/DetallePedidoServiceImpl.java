@@ -14,6 +14,7 @@ import com.uade.tpo.marketplace.entity.dto.request.DetallePedidoRequest;
 import com.uade.tpo.marketplace.exceptions.DetallePedidoDuplicateException;
 import com.uade.tpo.marketplace.exceptions.PedidoNotFoundException;
 import com.uade.tpo.marketplace.exceptions.ProductoNotFoundException;
+import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.repository.IDetallePedidoRepository;
 import com.uade.tpo.marketplace.service.descuento.IDescuentoService;
 import com.uade.tpo.marketplace.service.pedido.IPedidoService;
@@ -48,7 +49,7 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
         return detallePedidoRepository.findById(detallePedidoId);
     }
 
-    public DetallePedido crearDetallePedido(DetallePedidoRequest detallePedidoRequest) throws DetallePedidoDuplicateException {
+    public DetallePedido crearDetallePedido(DetallePedidoRequest detallePedidoRequest) throws DetallePedidoDuplicateException, StockInsuficienteException {
         if (detallePedidoRepository.findByPedidoIdAndProductoId(
                 detallePedidoRequest.getPedidoId(), detallePedidoRequest.getProductoId()).isPresent())
             throw new DetallePedidoDuplicateException();
@@ -59,6 +60,9 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
         Producto producto = productoService.getProductoById(detallePedidoRequest.getProductoId())
                 .orElseThrow(ProductoNotFoundException::new);
 
+        if (detallePedidoRequest.getCantidad() > producto.getStock())
+            throw new StockInsuficienteException();
+
         DetallePedido detallePedido = new DetallePedido();
         detallePedido.setPedido(pedido);
         detallePedido.setProducto(producto);
@@ -67,21 +71,32 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
         detallePedido.setPrecioUnitario(precioConDescuento);
         detallePedido.setObservaciones(detallePedidoRequest.getObservaciones());
         detallePedido.setSubtotal(detallePedidoRequest.getCantidad() * precioConDescuento);
-        return detallePedidoRepository.save(detallePedido);
+        detallePedido = detallePedidoRepository.save(detallePedido);
+
+        productoService.ajustarStock(producto.getProductoId(), -detallePedidoRequest.getCantidad());
+        return detallePedido;
     }
 
-    public DetallePedido actualizarDetallePedido(int detallePedidoId, DetallePedidoRequest detallePedidoRequest) {
+    public DetallePedido actualizarDetallePedido(int detallePedidoId, DetallePedidoRequest detallePedidoRequest) throws StockInsuficienteException {
         Optional<DetallePedido> existente = detallePedidoRepository.findById(detallePedidoId);
         if (existente.isEmpty())
             return null;
 
         DetallePedido detallePedido = existente.get();
-        double precioConDescuento = descuentoService.getPrecioConDescuento(detallePedido.getProducto());
+        Producto producto = detallePedido.getProducto();
+        int delta = detallePedidoRequest.getCantidad() - detallePedido.getCantidad();
+        if (delta > producto.getStock())
+            throw new StockInsuficienteException();
+
+        double precioConDescuento = descuentoService.getPrecioConDescuento(producto);
         detallePedido.setCantidad(detallePedidoRequest.getCantidad());
         detallePedido.setPrecioUnitario(precioConDescuento);
         detallePedido.setObservaciones(detallePedidoRequest.getObservaciones());
         detallePedido.setSubtotal(detallePedidoRequest.getCantidad() * precioConDescuento);
-        return detallePedidoRepository.save(detallePedido);
+        detallePedido = detallePedidoRepository.save(detallePedido);
+
+        productoService.ajustarStock(producto.getProductoId(), -delta);
+        return detallePedido;
     }
 
     public Optional<DetallePedido> deleteDetallePedido(int detallePedidoId) {
@@ -90,6 +105,9 @@ public class DetallePedidoServiceImpl implements IDetallePedidoService {
             return Optional.empty();
 
         DetallePedido detallePedido = existente.get();
+        if (!detallePedido.isActivo())
+            return Optional.of(detallePedido);
+
         productoService.ajustarStock(detallePedido.getProducto().getProductoId(), detallePedido.getCantidad());
         detallePedido.setActivo(false);
 

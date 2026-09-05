@@ -41,7 +41,7 @@ public class CarritoController {
     @GetMapping
     public ResponseEntity<List<CarritoResponse>> getCarritos(@RequestParam(required = false) Integer usuarioId) {
         return ResponseEntity.ok(carritoService.getCarritos(usuarioId).stream()
-                .map(CarritoResponse::from)
+                .map(CarritoResponse::new)
                 .collect(Collectors.toList()));
     }
 
@@ -49,7 +49,7 @@ public class CarritoController {
     public ResponseEntity<CarritoResponse> getCarritoById(@PathVariable int carritoId) {
         Optional<Carrito> result = carritoService.getCarritoById(carritoId);
         if (result.isPresent())
-            return ResponseEntity.ok(CarritoResponse.from(result.get()));
+            return ResponseEntity.ok(new CarritoResponse(result.get()));
 
         return ResponseEntity.notFound().build();
     }
@@ -57,7 +57,7 @@ public class CarritoController {
     @PostMapping
     public ResponseEntity<Object> crearCarrito(@RequestBody CarritoRequest carritoRequest) {
         Carrito result = carritoService.crearCarrito(carritoRequest);
-        return ResponseEntity.ok(CarritoResponse.from(result));
+        return ResponseEntity.ok(new CarritoResponse(result));
     }
 
     @PutMapping("{carritoId}")
@@ -66,7 +66,7 @@ public class CarritoController {
         if (result == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(CarritoResponse.from(result));
+        return ResponseEntity.ok(new CarritoResponse(result));
     }
 
     @DeleteMapping("{carritoId}")
@@ -75,12 +75,12 @@ public class CarritoController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Carrito desactivado correctamente", CarritoResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Carrito desactivado correctamente", new CarritoResponse(result.get())));
     }
 
     @PostMapping("{carritoId}/checkout")
     public ResponseEntity<Object> checkout(@PathVariable int carritoId, @RequestBody CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException {
         Pedido result = checkoutService.checkout(carritoId, checkoutRequest);
-        return ResponseEntity.ok(PedidoResponse.from(result));
+        return ResponseEntity.ok(new PedidoResponse(result));
     }
 }

@@ -16,17 +16,15 @@ public class DetallePedidoResponse {
     private double subtotal;
     private boolean activo;
 
-    public static DetallePedidoResponse from(DetallePedido detallePedido) {
-        DetallePedidoResponse response = new DetallePedidoResponse();
-        response.setDetallePedidoId(detallePedido.getDetallePedidoId());
-        response.setPedidoId(detallePedido.getPedido().getPedidoId());
-        response.setProductoId(detallePedido.getProducto().getProductoId());
-        response.setProductoNombre(detallePedido.getProducto().getNombreProducto());
-        response.setCantidad(detallePedido.getCantidad());
-        response.setPrecioUnitario(detallePedido.getPrecioUnitario());
-        response.setObservaciones(detallePedido.getObservaciones());
-        response.setSubtotal(detallePedido.getSubtotal());
-        response.setActivo(detallePedido.isActivo());
-        return response;
+    public DetallePedidoResponse(DetallePedido detallePedido) {
+        this.detallePedidoId = detallePedido.getDetallePedidoId();
+        this.pedidoId = detallePedido.getPedido().getPedidoId();
+        this.productoId = detallePedido.getProducto().getProductoId();
+        this.productoNombre = detallePedido.getProducto().getNombreProducto();
+        this.cantidad = detallePedido.getCantidad();
+        this.precioUnitario = detallePedido.getPrecioUnitario();
+        this.observaciones = detallePedido.getObservaciones();
+        this.subtotal = detallePedido.getSubtotal();
+        this.activo = detallePedido.isActivo();
     }
 }

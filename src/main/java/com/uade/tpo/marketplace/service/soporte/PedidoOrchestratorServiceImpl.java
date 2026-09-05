@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.uade.tpo.marketplace.entity.DetallePedido;
 import com.uade.tpo.marketplace.entity.Pedido;
+import com.uade.tpo.marketplace.exceptions.PedidoNoCanceladoException;
 import com.uade.tpo.marketplace.service.detallepedido.IDetallePedidoService;
 import com.uade.tpo.marketplace.service.pedido.IPedidoService;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
@@ -44,8 +45,8 @@ public class PedidoOrchestratorServiceImpl implements IPedidoOrchestratorService
     }
     
     @Transactional
-    public Optional<Pedido> eliminarPedido(int pedidoId) {
-        
+    public Optional<Pedido> eliminarPedido(int pedidoId) throws PedidoNoCanceladoException {
+
         return pedidoService.deletePedido(pedidoId);
     }
 }

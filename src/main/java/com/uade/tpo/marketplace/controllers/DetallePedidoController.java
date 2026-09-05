@@ -21,6 +21,7 @@ import com.uade.tpo.marketplace.entity.dto.request.DetallePedidoRequest;
 import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.entity.dto.response.DetallePedidoResponse;
 import com.uade.tpo.marketplace.exceptions.DetallePedidoDuplicateException;
+import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.service.detallepedido.IDetallePedidoService;
 
 @RestController
@@ -33,7 +34,7 @@ public class DetallePedidoController {
     @GetMapping
     public ResponseEntity<List<DetallePedidoResponse>> getDetallesPedido(@RequestParam(required = false) Integer pedidoId) {
         return ResponseEntity.ok(detallePedidoService.getDetallesPedido(pedidoId).stream()
-                .map(DetallePedidoResponse::from)
+                .map(DetallePedidoResponse::new)
                 .collect(Collectors.toList()));
     }
 
@@ -41,24 +42,24 @@ public class DetallePedidoController {
     public ResponseEntity<DetallePedidoResponse> getDetallePedidoById(@PathVariable int detallePedidoId) {
         Optional<DetallePedido> result = detallePedidoService.getDetallePedidoById(detallePedidoId);
         if (result.isPresent())
-            return ResponseEntity.ok(DetallePedidoResponse.from(result.get()));
+            return ResponseEntity.ok(new DetallePedidoResponse(result.get()));
 
         return ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public ResponseEntity<Object> crearDetallePedido(@RequestBody DetallePedidoRequest detallePedidoRequest) throws DetallePedidoDuplicateException {
+    public ResponseEntity<Object> crearDetallePedido(@RequestBody DetallePedidoRequest detallePedidoRequest) throws DetallePedidoDuplicateException, StockInsuficienteException {
         DetallePedido result = detallePedidoService.crearDetallePedido(detallePedidoRequest);
-        return ResponseEntity.ok(DetallePedidoResponse.from(result));
+        return ResponseEntity.ok(new DetallePedidoResponse(result));
     }
 
     @PutMapping("{detallePedidoId}")
-    public ResponseEntity<DetallePedidoResponse> actualizarDetallePedido(@PathVariable int detallePedidoId, @RequestBody DetallePedidoRequest detallePedidoRequest) {
+    public ResponseEntity<DetallePedidoResponse> actualizarDetallePedido(@PathVariable int detallePedidoId, @RequestBody DetallePedidoRequest detallePedidoRequest) throws StockInsuficienteException {
         DetallePedido result = detallePedidoService.actualizarDetallePedido(detallePedidoId, detallePedidoRequest);
         if (result == null)
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(DetallePedidoResponse.from(result));
+        return ResponseEntity.ok(new DetallePedidoResponse(result));
     }
 
     @DeleteMapping("{detallePedidoId}")
@@ -67,6 +68,6 @@ public class DetallePedidoController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Detalle de pedido desactivado correctamente", DetallePedidoResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Detalle de pedido desactivado correctamente", new DetallePedidoResponse(result.get())));
     }
 }

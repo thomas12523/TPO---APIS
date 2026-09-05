@@ -36,14 +36,14 @@ public class UsuarioController {
     public ResponseEntity<Page<UsuarioResponse>> getUsuarios(
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer size) {
-        return ResponseEntity.ok(usuarioService.getUsuarios(PageRequest.of(page, size)).map(UsuarioResponse::from));
+        return ResponseEntity.ok(usuarioService.getUsuarios(PageRequest.of(page, size)).map(UsuarioResponse::new));
     }
 
     @GetMapping("{usuarioId}")
     public ResponseEntity<UsuarioResponse> getUsuarioById(@PathVariable int usuarioId) {
         Optional<Usuario> result = usuarioService.getUsuarioById(usuarioId);
         if (result.isPresent())
-            return ResponseEntity.ok(UsuarioResponse.from(result.get()));
+            return ResponseEntity.ok(new UsuarioResponse(result.get()));
 
         return ResponseEntity.notFound().build();
     }
@@ -51,14 +51,14 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<Object> crearUsuario(@RequestBody UsuarioRequest usuarioRequest) throws UsuarioDuplicateException {
         Usuario result = usuarioService.crearUsuario(usuarioRequest);
-        return ResponseEntity.ok(UsuarioResponse.from(result));
+        return ResponseEntity.ok(new UsuarioResponse(result));
     }
 
     @PutMapping("{usuarioId}")
     public ResponseEntity<UsuarioResponse> actualizarUsuario(@PathVariable int usuarioId, @RequestBody UsuarioRequest usuarioRequest) {
         Optional<Usuario> result = usuarioService.actualizarUsuario(usuarioId, usuarioRequest);
         if (result.isPresent())
-            return ResponseEntity.ok(UsuarioResponse.from(result.get()));
+            return ResponseEntity.ok(new UsuarioResponse(result.get()));
 
         return ResponseEntity.notFound().build();
     }
@@ -67,7 +67,7 @@ public class UsuarioController {
     public ResponseEntity<UsuarioResponse> actualizarPermisos(@PathVariable int usuarioId, @RequestParam Role role) {
         Optional<Usuario> result = usuarioService.actualizarPermisos(usuarioId, role);
         if (result.isPresent())
-            return ResponseEntity.ok(UsuarioResponse.from(result.get()));
+            return ResponseEntity.ok(new UsuarioResponse(result.get()));
 
         return ResponseEntity.notFound().build();
     }
@@ -76,7 +76,7 @@ public class UsuarioController {
     public ResponseEntity<UsuarioResponse> actualizarEstado(@PathVariable int usuarioId, @RequestParam boolean activo) {
         Optional<Usuario> result = usuarioService.actualizarEstado(usuarioId, activo);
         if (result.isPresent())
-            return ResponseEntity.ok(UsuarioResponse.from(result.get()));
+            return ResponseEntity.ok(new UsuarioResponse(result.get()));
 
         return ResponseEntity.notFound().build();
     }
@@ -87,6 +87,6 @@ public class UsuarioController {
         if (result.isEmpty())
             return ResponseEntity.notFound().build();
 
-        return ResponseEntity.ok(new DeleteResponse<>("Usuario desactivado correctamente", UsuarioResponse.from(result.get())));
+        return ResponseEntity.ok(new DeleteResponse<>("Usuario desactivado correctamente", new UsuarioResponse(result.get())));
     }
 }

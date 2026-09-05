@@ -16,17 +16,15 @@ public class PedidoResponse {
     private String metodoPago;
     private boolean activo;
 
-    public static PedidoResponse from(Pedido pedido) {
-        PedidoResponse response = new PedidoResponse();
-        response.setPedidoId(pedido.getPedidoId());
-        response.setNumeroPedido(pedido.getNumeroPedido());
-        response.setUsuarioId(pedido.getUsuario().getUsuarioId());
-        response.setFechaCreacion(pedido.getFechaCreacion());
-        response.setEstado(pedido.getEstado());
-        response.setSubtotal(pedido.getSubtotal());
-        response.setTotal(pedido.getTotal());
-        response.setMetodoPago(pedido.getMetodoPago());
-        response.setActivo(pedido.isActivo());
-        return response;
+    public PedidoResponse(Pedido pedido) {
+        this.pedidoId = pedido.getPedidoId();
+        this.numeroPedido = pedido.getNumeroPedido();
+        this.usuarioId = pedido.getUsuario().getUsuarioId();
+        this.fechaCreacion = pedido.getFechaCreacion();
+        this.estado = pedido.getEstado();
+        this.subtotal = pedido.getSubtotal();
+        this.total = pedido.getTotal();
+        this.metodoPago = pedido.getMetodoPago();
+        this.activo = pedido.isActivo();
     }
 }

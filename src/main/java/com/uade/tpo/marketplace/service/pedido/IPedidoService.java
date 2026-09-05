@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 
 import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.dto.request.PedidoRequest;
+import com.uade.tpo.marketplace.exceptions.PedidoNoCanceladoException;
 
 public interface IPedidoService {
 
@@ -22,5 +23,5 @@ public interface IPedidoService {
 
     public Pedido cancelarPedido(int pedidoId);
 
-    public Optional<Pedido> deletePedido(int pedidoId);
+    public Optional<Pedido> deletePedido(int pedidoId) throws PedidoNoCanceladoException;
 }
