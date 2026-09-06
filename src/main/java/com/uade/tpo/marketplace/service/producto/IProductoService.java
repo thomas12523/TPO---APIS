@@ -22,6 +22,8 @@ public interface IProductoService {
 
     public Optional<Producto> deleteProducto(int productoId);
 
+    public Optional<Producto> actualizarEstado(int productoId, boolean activo);
+
     public Producto ajustarStock(int productoId, int delta);
 
     public Optional<Producto> actualizarStock(int productoId, int nuevoStock) throws StockInvalidoException;

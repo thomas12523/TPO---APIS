@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/Producto").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/Producto/{productoId}").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/Producto/{productoId}/stock").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/Producto/{productoId}/estado").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/Producto/{productoId}").hasAuthority("ROLE_ADMIN")
 
                         // Categories: gestion solo vendedor (ROLE_ADMIN)
@@ -69,12 +70,17 @@ public class SecurityConfig {
                         // Usuario: administracion de cuentas solo vendedor (ROLE_ADMIN)
                         .requestMatchers(HttpMethod.GET, "/Usuario").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/Usuario").hasAuthority("ROLE_ADMIN")
+                        // Usuario: perfil propio (cualquier autenticado)
+                        .requestMatchers(HttpMethod.GET, "/Usuario/me").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/Usuario/me").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/Usuario/{usuarioId}").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/Usuario/{usuarioId}").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/Usuario/{usuarioId}/permisos").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/Usuario/{usuarioId}/estado").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/Usuario/{usuarioId}").hasAuthority("ROLE_ADMIN")
 
                         // Todo lo demas: cualquier usuario autenticado (Carrito, DetalleCarrito,
-                        // Pedido, DetallePedido, perfil propio de Usuario)
+                        // Pedido, DetallePedido)
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

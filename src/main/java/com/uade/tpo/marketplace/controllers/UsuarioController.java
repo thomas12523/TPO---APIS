@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -39,7 +40,22 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.getUsuarios(PageRequest.of(page, size)).map(UsuarioResponse::new));
     }
 
-    @GetMapping("{usuarioId}")
+    @GetMapping("me") // perfil propio del usuario autenticado(se inyecta directamenete) sin necesidad del usuarioId.
+    public ResponseEntity<UsuarioResponse> getMiPerfil(@AuthenticationPrincipal Usuario usuarioActual) {
+        return ResponseEntity.ok(new UsuarioResponse(usuarioActual));
+    }
+
+    @PutMapping("me") // actualizacion del perfil propio del usuario autenticado sin necesidad del usuarioId.
+    public ResponseEntity<UsuarioResponse> actualizarMiPerfil(@AuthenticationPrincipal Usuario usuarioActual,
+            @RequestBody UsuarioRequest usuarioRequest) {
+        Optional<Usuario> result = usuarioService.actualizarUsuario(usuarioActual.getUsuarioId(), usuarioRequest);
+        if (result.isPresent())
+            return ResponseEntity.ok(new UsuarioResponse(result.get()));
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("{usuarioId}") // solo ROLE_ADMIN (ver SecurityConfig)
     public ResponseEntity<UsuarioResponse> getUsuarioById(@PathVariable int usuarioId) {
         Optional<Usuario> result = usuarioService.getUsuarioById(usuarioId);
         if (result.isPresent())
@@ -54,7 +70,7 @@ public class UsuarioController {
         return ResponseEntity.ok(new UsuarioResponse(result));
     }
 
-    @PutMapping("{usuarioId}")
+    @PutMapping("{usuarioId}") // solo ROLE_ADMIN (ver SecurityConfig)
     public ResponseEntity<UsuarioResponse> actualizarUsuario(@PathVariable int usuarioId, @RequestBody UsuarioRequest usuarioRequest) {
         Optional<Usuario> result = usuarioService.actualizarUsuario(usuarioId, usuarioRequest);
         if (result.isPresent())

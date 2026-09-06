@@ -80,6 +80,13 @@ public class ProductoServiceImpl implements IProductoService {
         return Optional.of(productoRepository.save(producto));
     }
 
+    public Optional<Producto> actualizarEstado(int productoId, boolean activo) {
+        return productoRepository.findById(productoId).map(producto -> {
+            producto.setActivo(activo);
+            return productoRepository.save(producto);
+        });
+    }
+
     public Producto ajustarStock(int productoId, int delta) {
         Producto producto = productoRepository.findById(productoId)
                 .orElseThrow(ProductoNotFoundException::new);

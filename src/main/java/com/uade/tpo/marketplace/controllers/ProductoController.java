@@ -77,6 +77,15 @@ public class ProductoController {
         return ResponseEntity.ok(new DeleteResponse<>("Producto desactivado correctamente", new ProductoResponse(result.get())));
     }
 
+    @PatchMapping("{productoId}/estado")
+    public ResponseEntity<ProductoResponse> actualizarEstado(@PathVariable int productoId, @RequestParam boolean activo) {
+        Optional<Producto> result = productoService.actualizarEstado(productoId, activo);
+        if (result.isPresent())
+            return ResponseEntity.ok(new ProductoResponse(result.get()));
+
+        return ResponseEntity.notFound().build();
+    }
+
     @PatchMapping("{productoId}/stock")
     public ResponseEntity<ProductoResponse> actualizarStock(@PathVariable int productoId, @RequestBody StockRequest stockRequest) throws StockInvalidoException {
         Optional<Producto> result = productoService.actualizarStock(productoId, stockRequest.getStock());

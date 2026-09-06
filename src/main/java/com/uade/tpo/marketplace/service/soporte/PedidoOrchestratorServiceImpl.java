@@ -15,6 +15,7 @@ import com.uade.tpo.marketplace.service.pedido.IPedidoService;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
 
 @Service
+@Transactional(rollbackFor = Throwable.class)
 public class PedidoOrchestratorServiceImpl implements IPedidoOrchestratorService {
 
     @Autowired
@@ -26,7 +27,6 @@ public class PedidoOrchestratorServiceImpl implements IPedidoOrchestratorService
     @Autowired
     private IProductoService productoService;
 
-    @Transactional
     public Pedido cancelarPedido(int pedidoId) {
         Optional<Pedido> pedidoOpt = pedidoService.getPedidoById(pedidoId);
         if (pedidoOpt.isEmpty())
@@ -44,9 +44,7 @@ public class PedidoOrchestratorServiceImpl implements IPedidoOrchestratorService
         return pedidoService.cancelarPedido(pedidoId);
     }
     
-    @Transactional
     public Optional<Pedido> eliminarPedido(int pedidoId) throws PedidoNoCanceladoException {
-
         return pedidoService.deletePedido(pedidoId);
     }
 }
