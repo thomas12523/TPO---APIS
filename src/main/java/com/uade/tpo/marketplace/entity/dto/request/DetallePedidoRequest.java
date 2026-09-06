@@ -7,7 +7,5 @@ public class DetallePedidoRequest {
     private int pedidoId;
     private int productoId;
     private int cantidad;
-    private double precioUnitario;
     private String observaciones;
-    private double subtotal;
 }
