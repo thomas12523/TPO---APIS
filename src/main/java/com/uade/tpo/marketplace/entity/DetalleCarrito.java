@@ -34,7 +34,4 @@ public class DetalleCarrito {
 
     @Column(nullable = false)
     private double precioUnitario;
-
-    @Column(nullable = false)
-    private boolean activo = true;
 }

@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -62,7 +62,7 @@ public class DetallePedidoController {
         return ResponseEntity.ok(new DetallePedidoResponse(result));
     }
 
-    @DeleteMapping("{detallePedidoId}")
+    @PatchMapping("{detallePedidoId}")
     public ResponseEntity<Object> deleteDetallePedido(@PathVariable int detallePedidoId) {
         Optional<DetallePedido> result = detallePedidoService.deleteDetallePedido(detallePedidoId);
         if (result.isEmpty())

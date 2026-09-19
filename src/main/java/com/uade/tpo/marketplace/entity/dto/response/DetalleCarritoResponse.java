@@ -13,7 +13,6 @@ public class DetalleCarritoResponse {
     private int cantidad;
     private double precioUnitario;
     private double subtotal;
-    private boolean activo;
 
     public DetalleCarritoResponse(DetalleCarrito detalleCarrito) {
         this.detalleCarritoId = detalleCarrito.getDetalleCarritoId();
@@ -23,6 +22,5 @@ public class DetalleCarritoResponse {
         this.cantidad = detalleCarrito.getCantidad();
         this.precioUnitario = detalleCarrito.getPrecioUnitario();
         this.subtotal = detalleCarrito.getCantidad() * detalleCarrito.getPrecioUnitario();
-        this.activo = detalleCarrito.isActivo();
     }
 }

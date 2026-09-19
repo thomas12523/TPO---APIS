@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -54,12 +54,6 @@ public class CarritoController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping
-    public ResponseEntity<Object> crearCarrito(@RequestBody CarritoRequest carritoRequest) {
-        Carrito result = carritoService.crearCarrito(carritoRequest);
-        return ResponseEntity.ok(new CarritoResponse(result));
-    }
-
     @PutMapping("{carritoId}")
     public ResponseEntity<CarritoResponse> actualizarCarrito(@PathVariable int carritoId, @RequestBody CarritoRequest carritoRequest) {
         Carrito result = carritoService.actualizarCarrito(carritoId, carritoRequest);
@@ -69,7 +63,7 @@ public class CarritoController {
         return ResponseEntity.ok(new CarritoResponse(result));
     }
 
-    @DeleteMapping("{carritoId}")
+    @PatchMapping("{carritoId}")
     public ResponseEntity<Object> deleteCarrito(@PathVariable int carritoId) {
         Optional<Carrito> result = carritoService.deleteCarrito(carritoId);
         if (result.isEmpty())

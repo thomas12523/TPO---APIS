@@ -12,17 +12,21 @@ public class ProductoResponse {
     private String nombreProducto;
     private String descripcion;
     private double precioUnitario;
+    private double precioConDescuento;
+    private boolean tieneDescuento;
     private int stock;
     private String imagenUrl;
     private boolean activo;
 
-    public ProductoResponse(Producto producto) {
+    public ProductoResponse(Producto producto, double precioConDescuento) {
         this.productoId = producto.getProductoId();
         this.categoriaId = producto.getCategoria().getId();
         this.categoriaNombre = producto.getCategoria().getNombre();
         this.nombreProducto = producto.getNombreProducto();
         this.descripcion = producto.getDescripcion();
         this.precioUnitario = producto.getPrecioUnitario();
+        this.precioConDescuento = precioConDescuento;
+        this.tieneDescuento = precioConDescuento < producto.getPrecioUnitario();
         this.stock = producto.getStock();
         this.imagenUrl = producto.getImagenUrl();
         this.activo = producto.isActivo();

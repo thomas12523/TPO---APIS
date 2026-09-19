@@ -1,5 +1,7 @@
 package com.uade.tpo.marketplace.service.auth;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,9 +12,11 @@ import com.uade.tpo.marketplace.config.JwtService;
 import com.uade.tpo.marketplace.controllers.auth.AuthenticationRequest;
 import com.uade.tpo.marketplace.controllers.auth.AuthenticationResponse;
 import com.uade.tpo.marketplace.entity.Usuario;
+import com.uade.tpo.marketplace.entity.dto.request.CarritoRequest;
 import com.uade.tpo.marketplace.entity.dto.request.UsuarioRequest;
 import com.uade.tpo.marketplace.exceptions.UsuarioDuplicateException;
 import com.uade.tpo.marketplace.repository.IUsuarioRepository;
+import com.uade.tpo.marketplace.service.carrito.ICarritoService;
 import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 
 @Service
@@ -26,6 +30,9 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
     private IUsuarioRepository usuarioRepository;
 
     @Autowired
+    private ICarritoService carritoService;
+
+    @Autowired
     private JwtService jwtService;
 
     @Autowired
@@ -33,6 +40,12 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
 
     public AuthenticationResponse register(UsuarioRequest usuarioRequest) throws UsuarioDuplicateException {
         Usuario usuario = usuarioService.crearUsuario(usuarioRequest);
+
+        CarritoRequest carritoRequest = new CarritoRequest();
+        carritoRequest.setUsuarioId(usuario.getUsuarioId());
+        carritoRequest.setFechaCarrito(LocalDate.now().toString());
+        carritoService.crearCarrito(carritoRequest);
+
         String jwtToken = jwtService.generateToken(usuario);
         return AuthenticationResponse.builder().accessToken(jwtToken).build();
     }

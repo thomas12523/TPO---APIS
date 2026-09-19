@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -61,7 +61,7 @@ public class DescuentoController {
         return ResponseEntity.ok(new DescuentoResponse(result));
     }
 
-    @DeleteMapping("{descuentoId}")
+    @PatchMapping("{descuentoId}")
     public ResponseEntity<Object> deleteDescuento(@PathVariable int descuentoId) {
         Optional<Descuento> result = descuentoService.deleteDescuento(descuentoId);
         if (result.isEmpty())
