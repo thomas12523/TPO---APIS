@@ -55,6 +55,10 @@ public class CheckoutServiceImpl implements ICheckoutService {
         }
 
         double subtotal = items.stream()
+                .mapToDouble(item -> item.getCantidad() * item.getProducto().getPrecioUnitario())
+                .sum();
+
+        double total = items.stream()
                 .mapToDouble(item -> item.getCantidad() * item.getPrecioUnitario())
                 .sum();
 
@@ -63,7 +67,7 @@ public class CheckoutServiceImpl implements ICheckoutService {
         pedidoRequest.setFechaCreacion(LocalDate.now().toString());
         pedidoRequest.setEstado("PENDIENTE");
         pedidoRequest.setSubtotal(subtotal);
-        pedidoRequest.setTotal(subtotal);
+        pedidoRequest.setTotal(total);
         pedidoRequest.setMetodoPago(checkoutRequest.getMetodoPago());
         Pedido pedido = pedidoService.crearPedido(pedidoRequest);
 

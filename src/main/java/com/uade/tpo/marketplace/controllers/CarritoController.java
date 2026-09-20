@@ -26,6 +26,7 @@ import com.uade.tpo.marketplace.entity.dto.response.PedidoResponse;
 import com.uade.tpo.marketplace.exceptions.CarritoVacioException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.service.carrito.ICarritoService;
+import com.uade.tpo.marketplace.service.detallecarrito.IDetalleCarritoService;
 import com.uade.tpo.marketplace.service.soporte.ICheckoutService;
 
 @RestController
@@ -34,6 +35,9 @@ public class CarritoController {
 
     @Autowired
     private ICarritoService carritoService;
+
+    @Autowired
+    private IDetalleCarritoService detalleCarritoService;
 
     @Autowired
     private ICheckoutService checkoutService;
@@ -49,7 +53,7 @@ public class CarritoController {
     public ResponseEntity<CarritoResponse> getCarritoById(@PathVariable int carritoId) {
         Optional<Carrito> result = carritoService.getCarritoById(carritoId);
         if (result.isPresent())
-            return ResponseEntity.ok(new CarritoResponse(result.get()));
+            return ResponseEntity.ok(new CarritoResponse(result.get(), detalleCarritoService.getDetallesCarrito(carritoId)));
 
         return ResponseEntity.notFound().build();
     }
