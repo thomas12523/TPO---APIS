@@ -43,6 +43,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/Imagen/{imagenId}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/Descuento").permitAll()
                         .requestMatchers(HttpMethod.GET, "/Descuento/{descuentoId}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/Resena").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/Resena/{resenaId}").permitAll()
 
                         // Producto: alta/gestion solo vendedor (ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, "/Producto").hasAuthority("ROLE_ADMIN")

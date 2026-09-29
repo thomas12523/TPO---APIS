@@ -9,43 +9,34 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Pedido {
+public class Resena {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int pedidoId;
+    private int resenaId;
 
-    @Column(nullable = false, unique = true)
-    private String numeroPedido;
+    @ManyToOne
+    @JoinColumn(name = "producto_id", nullable = false)
+    private Producto producto;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private Usuario usuario;
 
     @Column(nullable = false)
-    private String fechaCreacion;
-
-    @Column(nullable = false)
-    private String estado;
-
-    @Column(nullable = false)
-    private double subtotal;
-
-    @Column(nullable = false)
-    private double total;
+    private int puntuacion;
 
     @Column
-    private String metodoPago;
+    private String comentario;
+
+    @Column(nullable = false)
+    private String fecha;
 
     @Column(nullable = false)
     private boolean activo = true;

@@ -17,7 +17,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -55,6 +57,8 @@ public class Usuario implements UserDetails {
     private boolean activo = true;
 
     @OneToMany(mappedBy = "usuario")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<Pedido> pedidos;
 
     @Override

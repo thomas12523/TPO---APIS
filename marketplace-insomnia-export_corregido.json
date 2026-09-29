@@ -1,0 +1,495 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-08-27T00:00:00.000Z",
+  "__export_source": "claude-code:marketplace-api",
+  "resources": [
+    {
+      "_id": "wrk_marketplace",
+      "_type": "workspace",
+      "parentId": null,
+      "name": "Marketplace API",
+      "description": "TPO Marketplace endpoints (con seguridad JWT)"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_marketplace",
+      "name": "Base Environment",
+      "data": { "base_url": "http://localhost:4002", "token": "", "adminToken": "" }
+    },
+    {
+      "_id": "grp_auth",
+      "_type": "request_group",
+      "parentId": "wrk_marketplace",
+      "name": "00 - Auth (hacer esto primero)"
+    },
+    {
+      "_id": "req_auth_register",
+      "_type": "request",
+      "parentId": "grp_auth",
+      "name": "1) REGISTRAR COMPRADOR (tomas123)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Auth/register",
+      "body": { "mimeType": "application/json", "text": "{\n  \"dni\": 12345678,\n  \"username\": \"tomas123\",\n  \"email\": \"tomas@mail.com\",\n  \"nombre\": \"Tomas\",\n  \"apellido\": \"Pacheco\",\n  \"contrasenia\": \"123456\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "afterResponseScript": "const body = insomnia.response.json();\nif (body && body.access_token) {\n  insomnia.environment.set('token', body.access_token);\n  console.log('token guardado (usuario normal)');\n}"
+    },
+    {
+      "_id": "req_auth_register_vendedor",
+      "_type": "request",
+      "parentId": "grp_auth",
+      "name": "2) REGISTRAR VENDEDOR candidato (vendedor1) -- despues hay que promoverlo con SQL antes del login",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Auth/register",
+      "body": { "mimeType": "application/json", "text": "{\n  \"dni\": 87654321,\n  \"username\": \"vendedor1\",\n  \"email\": \"vendedor1@mail.com\",\n  \"nombre\": \"Vera\",\n  \"apellido\": \"Vendedora\",\n  \"contrasenia\": \"123456\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }]
+    },
+    {
+      "_id": "req_auth_authenticate",
+      "_type": "request",
+      "parentId": "grp_auth",
+      "name": "3) LOGIN COMPRADOR (tomas123) -> guarda en 'token' -- NO editar el body, usar la request de abajo para vendedor",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Auth/authenticate",
+      "body": { "mimeType": "application/json", "text": "{\n  \"username\": \"tomas123\",\n  \"contrasenia\": \"123456\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "afterResponseScript": "const body = insomnia.response.json();\nif (body && body.access_token) {\n  insomnia.environment.set('token', body.access_token);\n  console.log('token guardado (comprador)');\n}"
+    },
+    {
+      "_id": "req_auth_authenticate_vendedor",
+      "_type": "request",
+      "parentId": "grp_auth",
+      "name": "4) LOGIN VENDEDOR (vendedor1, YA PROMOVIDO EN LA BASE) -> guarda en 'adminToken' -- usar ESTA, no la de arriba",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Auth/authenticate",
+      "body": { "mimeType": "application/json", "text": "{\n  \"username\": \"vendedor1\",\n  \"contrasenia\": \"123456\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }],
+      "afterResponseScript": "const body = insomnia.response.json();\nif (body && body.access_token) {\n  insomnia.environment.set('adminToken', body.access_token);\n  console.log('adminToken guardado (vendedor)');\n}"
+    },
+    {
+      "_id": "req_err_login_mal",
+      "_type": "request",
+      "parentId": "grp_auth",
+      "name": "5) POST Auth/authenticate con contrasenia incorrecta -> 403",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Auth/authenticate",
+      "body": { "mimeType": "application/json", "text": "{\n  \"username\": \"tomas123\",\n  \"contrasenia\": \"incorrecta\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }]
+    },
+
+    { "_id": "grp_categories", "_type": "request_group", "parentId": "wrk_marketplace", "name": "01 - Categories" },
+    { "_id": "req_get_categorias", "_type": "request", "parentId": "grp_categories", "name": "GET Categories [publico]", "method": "GET", "url": "{{ _.base_url }}/Categories" },
+    { "_id": "req_gid_categoria", "_type": "request", "parentId": "grp_categories", "name": "GET Categories/1 [publico]", "method": "GET", "url": "{{ _.base_url }}/Categories/1" },
+    {
+      "_id": "req_categoria",
+      "_type": "request",
+      "parentId": "grp_categories",
+      "name": "POST Categoria [ADMIN]",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Categories",
+      "body": { "mimeType": "application/json", "text": "{\n  \"nombre\": \"Calzado\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+    {
+      "_id": "req_put_categoria",
+      "_type": "request",
+      "parentId": "grp_categories",
+      "name": "PUT Categories/1 [ADMIN]",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Categories/1",
+      "body": { "mimeType": "application/json", "text": "{\n  \"nombre\": \"Calzado deportivo\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+    { "_id": "req_del_categoria", "_type": "request", "parentId": "grp_categories", "name": "DELETE Categories/1 [ADMIN]", "method": "DELETE", "url": "{{ _.base_url }}/Categories/1", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }] },
+    {
+      "_id": "req_err_categoria_dup",
+      "_type": "request",
+      "parentId": "grp_categories",
+      "name": "POST Categoria duplicada [ADMIN] -> 400 CategoryDuplicateException",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Categories",
+      "body": { "mimeType": "application/json", "text": "{\n  \"nombre\": \"Calzado\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+
+    { "_id": "grp_usuario", "_type": "request_group", "parentId": "wrk_marketplace", "name": "02 - Usuario" },
+    { "_id": "req_get_usuarios", "_type": "request", "parentId": "grp_usuario", "name": "GET Usuario [ADMIN]", "method": "GET", "url": "{{ _.base_url }}/Usuario", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }] },
+    { "_id": "req_gid_usuario", "_type": "request", "parentId": "grp_usuario", "name": "GET Usuario/1 [autenticado]", "method": "GET", "url": "{{ _.base_url }}/Usuario/1", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }] },
+    {
+      "_id": "req_usuario",
+      "_type": "request",
+      "parentId": "grp_usuario",
+      "name": "POST Usuario [ADMIN] (alta publica va por Auth/register)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Usuario",
+      "body": { "mimeType": "application/json", "text": "{\n  \"dni\": 11111111,\n  \"username\": \"creado_por_admin\",\n  \"email\": \"creado_por_admin@mail.com\",\n  \"nombre\": \"Nuevo\",\n  \"apellido\": \"Usuario\",\n  \"contrasenia\": \"123456\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+    {
+      "_id": "req_put_usuario",
+      "_type": "request",
+      "parentId": "grp_usuario",
+      "name": "PUT Usuario/1 [autenticado]",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Usuario/1",
+      "body": { "mimeType": "application/json", "text": "{\n  \"dni\": 12345678,\n  \"username\": \"tomas123\",\n  \"email\": \"tomas.nuevo@mail.com\",\n  \"nombre\": \"Tomas\",\n  \"apellido\": \"Pacheco\",\n  \"contrasenia\": \"123456\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_permisos",
+      "_type": "request",
+      "parentId": "grp_usuario",
+      "name": "PATCH Usuario permisos [ADMIN] (promover a vendedor, role=ADMIN)",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/Usuario/1/permisos?role=ADMIN",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+    { "_id": "req_del_usuario", "_type": "request", "parentId": "grp_usuario", "name": "DELETE Usuario/1 [ADMIN]", "method": "DELETE", "url": "{{ _.base_url }}/Usuario/1", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }] },
+    {
+      "_id": "req_err_usuario_no_admin",
+      "_type": "request",
+      "parentId": "grp_usuario",
+      "name": "GET Usuario con token de comprador (no admin) -> 403",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Usuario",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_err_usuario_dup",
+      "_type": "request",
+      "parentId": "grp_usuario",
+      "name": "POST Usuario duplicado [ADMIN] -> 400 UsuarioDuplicateException",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Usuario",
+      "body": { "mimeType": "application/json", "text": "{\n  \"dni\": 12345678,\n  \"username\": \"tomas123\",\n  \"email\": \"tomas@mail.com\",\n  \"nombre\": \"Tomas\",\n  \"apellido\": \"Pacheco\",\n  \"contrasenia\": \"123456\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+
+    { "_id": "grp_producto", "_type": "request_group", "parentId": "wrk_marketplace", "name": "03 - Producto" },
+    { "_id": "req_get_productos", "_type": "request", "parentId": "grp_producto", "name": "GET Producto [publico]", "method": "GET", "url": "{{ _.base_url }}/Producto" },
+    { "_id": "req_gid_producto", "_type": "request", "parentId": "grp_producto", "name": "GET Producto/1 [publico]", "method": "GET", "url": "{{ _.base_url }}/Producto/1" },
+    {
+      "_id": "req_producto",
+      "_type": "request",
+      "parentId": "grp_producto",
+      "name": "POST Producto [ADMIN]",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Producto",
+      "body": { "mimeType": "application/json", "text": "{\n  \"categoriaId\": 1,\n  \"nombreProducto\": \"Zapatillas running\",\n  \"descripcion\": \"Livianas, talle 42\",\n  \"precioUnitario\": 25000.0,\n  \"stock\": 10,\n  \"imagenUrl\": \"https://ejemplo.com/img.jpg\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+    {
+      "_id": "req_put_producto",
+      "_type": "request",
+      "parentId": "grp_producto",
+      "name": "PUT Producto/1 [ADMIN]",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Producto/1",
+      "body": { "mimeType": "application/json", "text": "{\n  \"categoriaId\": 1,\n  \"nombreProducto\": \"Zapatillas running\",\n  \"descripcion\": \"Livianas, talle 42, EDICION ACTUALIZADA\",\n  \"precioUnitario\": 27000.0,\n  \"stock\": 8,\n  \"imagenUrl\": \"https://ejemplo.com/img.jpg\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+    { "_id": "req_del_producto", "_type": "request", "parentId": "grp_producto", "name": "DELETE Producto/1 [ADMIN]", "method": "DELETE", "url": "{{ _.base_url }}/Producto/1", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }] },
+    {
+      "_id": "req_err_sin_token",
+      "_type": "request",
+      "parentId": "grp_producto",
+      "name": "POST Producto SIN token -> 401/403",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Producto",
+      "body": { "mimeType": "application/json", "text": "{\n  \"categoriaId\": 1,\n  \"nombreProducto\": \"Sin token\",\n  \"descripcion\": \"x\",\n  \"precioUnitario\": 1.0,\n  \"stock\": 1,\n  \"imagenUrl\": \"x\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }]
+    },
+    {
+      "_id": "req_err_no_admin",
+      "_type": "request",
+      "parentId": "grp_producto",
+      "name": "POST Producto con token de comprador (no admin) -> 403",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Producto",
+      "body": { "mimeType": "application/json", "text": "{\n  \"categoriaId\": 1,\n  \"nombreProducto\": \"No deberia crearse\",\n  \"descripcion\": \"x\",\n  \"precioUnitario\": 1.0,\n  \"stock\": 1,\n  \"imagenUrl\": \"x\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_err_producto_dup",
+      "_type": "request",
+      "parentId": "grp_producto",
+      "name": "POST Producto duplicado [ADMIN] (mismo nombreProducto) -> 400 ProductoDuplicateException",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Producto",
+      "body": { "mimeType": "application/json", "text": "{\n  \"categoriaId\": 1,\n  \"nombreProducto\": \"Zapatillas running\",\n  \"descripcion\": \"Otra descripcion\",\n  \"precioUnitario\": 30000.0,\n  \"stock\": 5,\n  \"imagenUrl\": \"https://ejemplo.com/otra.jpg\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+    {
+      "_id": "req_err_get_inexistente",
+      "_type": "request",
+      "parentId": "grp_producto",
+      "name": "GET Producto/99999 (id inexistente, publico) -> 204 No Content (no 404)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Producto/99999"
+    },
+    {
+      "_id": "req_err_put_inexistente",
+      "_type": "request",
+      "parentId": "grp_producto",
+      "name": "PUT Producto/99999 [ADMIN] (id inexistente) -> 404 Not Found",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Producto/99999",
+      "body": { "mimeType": "application/json", "text": "{\n  \"categoriaId\": 1,\n  \"nombreProducto\": \"No existe\",\n  \"descripcion\": \"No existe\",\n  \"precioUnitario\": 1.0,\n  \"stock\": 1,\n  \"imagenUrl\": \"https://ejemplo.com/x.jpg\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+    {
+      "_id": "req_err_delete_inexistente",
+      "_type": "request",
+      "parentId": "grp_producto",
+      "name": "DELETE Producto/99999 [ADMIN] (id inexistente) -> 404 Not Found",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/Producto/99999",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+
+    { "_id": "grp_carrito", "_type": "request_group", "parentId": "wrk_marketplace", "name": "04 - Carrito" },
+    { "_id": "req_get_carritos", "_type": "request", "parentId": "grp_carrito", "name": "GET Carrito [autenticado]", "method": "GET", "url": "{{ _.base_url }}/Carrito", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }] },
+    { "_id": "req_gid_carrito", "_type": "request", "parentId": "grp_carrito", "name": "GET Carrito/1 [autenticado]", "method": "GET", "url": "{{ _.base_url }}/Carrito/1", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }] },
+    {
+      "_id": "req_carrito",
+      "_type": "request",
+      "parentId": "grp_carrito",
+      "name": "POST Carrito [autenticado]",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Carrito",
+      "body": { "mimeType": "application/json", "text": "{\n  \"usuarioId\": 1,\n  \"fechaCarrito\": \"2026-08-27\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_put_carrito",
+      "_type": "request",
+      "parentId": "grp_carrito",
+      "name": "PUT Carrito/1 [autenticado]",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Carrito/1",
+      "body": { "mimeType": "application/json", "text": "{\n  \"usuarioId\": 1,\n  \"fechaCarrito\": \"2026-08-27\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    { "_id": "req_del_carrito", "_type": "request", "parentId": "grp_carrito", "name": "DELETE Carrito/1 [autenticado]", "method": "DELETE", "url": "{{ _.base_url }}/Carrito/1", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }] },
+    {
+      "_id": "req_checkout",
+      "_type": "request",
+      "parentId": "grp_carrito",
+      "name": "POST Carrito checkout [autenticado] (cambiar 1 por carritoId real)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Carrito/1/checkout",
+      "body": { "mimeType": "application/json", "text": "{\n  \"metodoPago\": \"tarjeta_credito\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_err_checkout_vacio",
+      "_type": "request",
+      "parentId": "grp_carrito",
+      "name": "POST checkout de un carrito SIN items [autenticado] -> 400 CarritoVacioException (usar un carritoId nuevo sin DetalleCarrito)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Carrito/2/checkout",
+      "body": { "mimeType": "application/json", "text": "{\n  \"metodoPago\": \"tarjeta_credito\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+
+    { "_id": "grp_detallecarrito", "_type": "request_group", "parentId": "wrk_marketplace", "name": "05 - DetalleCarrito" },
+    { "_id": "req_get_detallecarrito", "_type": "request", "parentId": "grp_detallecarrito", "name": "GET DetalleCarrito [autenticado]", "method": "GET", "url": "{{ _.base_url }}/DetalleCarrito", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }] },
+    { "_id": "req_gid_detallecarrito", "_type": "request", "parentId": "grp_detallecarrito", "name": "GET DetalleCarrito/1/1 [autenticado] (carritoId/productoId)", "method": "GET", "url": "{{ _.base_url }}/DetalleCarrito/1/1", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }] },
+    {
+      "_id": "req_detallecarrito",
+      "_type": "request",
+      "parentId": "grp_detallecarrito",
+      "name": "POST DetalleCarrito [autenticado]",
+      "method": "POST",
+      "url": "{{ _.base_url }}/DetalleCarrito",
+      "body": { "mimeType": "application/json", "text": "{\n  \"carritoId\": 1,\n  \"productoId\": 1,\n  \"cantidad\": 2,\n  \"precioUnitario\": 25000.0\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_put_detallecarrito",
+      "_type": "request",
+      "parentId": "grp_detallecarrito",
+      "name": "PUT DetalleCarrito/1/1 [autenticado]",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/DetalleCarrito/1/1",
+      "body": { "mimeType": "application/json", "text": "{\n  \"carritoId\": 1,\n  \"productoId\": 1,\n  \"cantidad\": 3,\n  \"precioUnitario\": 25000.0\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    { "_id": "req_del_detallecarrito", "_type": "request", "parentId": "grp_detallecarrito", "name": "DELETE DetalleCarrito/1/1 [autenticado]", "method": "DELETE", "url": "{{ _.base_url }}/DetalleCarrito/1/1", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }] },
+    {
+      "_id": "req_err_detallecarrito_dup",
+      "_type": "request",
+      "parentId": "grp_detallecarrito",
+      "name": "POST DetalleCarrito duplicado [autenticado] (mismo carritoId+productoId) -> 400 DetalleCarritoDuplicateException",
+      "method": "POST",
+      "url": "{{ _.base_url }}/DetalleCarrito",
+      "body": { "mimeType": "application/json", "text": "{\n  \"carritoId\": 1,\n  \"productoId\": 1,\n  \"cantidad\": 1,\n  \"precioUnitario\": 25000.0\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_err_stock_insuficiente",
+      "_type": "request",
+      "parentId": "grp_detallecarrito",
+      "name": "POST DetalleCarrito con cantidad > stock [autenticado] -> 400 StockInsuficienteException",
+      "method": "POST",
+      "url": "{{ _.base_url }}/DetalleCarrito",
+      "body": { "mimeType": "application/json", "text": "{\n  \"carritoId\": 1,\n  \"productoId\": 1,\n  \"cantidad\": 99999,\n  \"precioUnitario\": 25000.0\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+
+    { "_id": "grp_imagen", "_type": "request_group", "parentId": "wrk_marketplace", "name": "06 - Imagen" },
+    { "_id": "req_get_imagenes", "_type": "request", "parentId": "grp_imagen", "name": "GET Imagen [publico]", "method": "GET", "url": "{{ _.base_url }}/Imagen" },
+    { "_id": "req_gid_imagen", "_type": "request", "parentId": "grp_imagen", "name": "GET Imagen/1 [publico]", "method": "GET", "url": "{{ _.base_url }}/Imagen/1" },
+    {
+      "_id": "req_imagen",
+      "_type": "request",
+      "parentId": "grp_imagen",
+      "name": "POST Imagen [ADMIN] (por URL)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Imagen",
+      "body": { "mimeType": "application/json", "text": "{\n  \"productoId\": 1,\n  \"imagenUrl\": \"https://ejemplo.com/otra-img.jpg\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+    {
+      "_id": "req_imagen_upload",
+      "_type": "request",
+      "parentId": "grp_imagen",
+      "name": "POST Imagen/upload [ADMIN] (multipart, archivo real -> elegir el archivo a mano)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Imagen/upload",
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          { "name": "productoId", "value": "1" },
+          { "name": "image", "type": "file", "fileName": "" }
+        ]
+      },
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+    {
+      "_id": "req_put_imagen",
+      "_type": "request",
+      "parentId": "grp_imagen",
+      "name": "PUT Imagen/1 [ADMIN]",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Imagen/1",
+      "body": { "mimeType": "application/json", "text": "{\n  \"productoId\": 1,\n  \"imagenUrl\": \"https://ejemplo.com/img-actualizada.jpg\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+    { "_id": "req_del_imagen", "_type": "request", "parentId": "grp_imagen", "name": "DELETE Imagen/1 [ADMIN]", "method": "DELETE", "url": "{{ _.base_url }}/Imagen/1", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }] },
+    {
+      "_id": "req_err_imagen_dup",
+      "_type": "request",
+      "parentId": "grp_imagen",
+      "name": "POST Imagen duplicada [ADMIN] (mismo productoId+imagenUrl) -> 400 ImagenDuplicateException",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Imagen",
+      "body": { "mimeType": "application/json", "text": "{\n  \"productoId\": 1,\n  \"imagenUrl\": \"https://ejemplo.com/otra-img.jpg\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+
+    { "_id": "grp_descuento", "_type": "request_group", "parentId": "wrk_marketplace", "name": "07 - Descuento" },
+    { "_id": "req_get_descuentos", "_type": "request", "parentId": "grp_descuento", "name": "GET Descuento [publico]", "method": "GET", "url": "{{ _.base_url }}/Descuento" },
+    { "_id": "req_gid_descuento", "_type": "request", "parentId": "grp_descuento", "name": "GET Descuento/1 [publico]", "method": "GET", "url": "{{ _.base_url }}/Descuento/1" },
+    {
+      "_id": "req_descuento",
+      "_type": "request",
+      "parentId": "grp_descuento",
+      "name": "POST Descuento [ADMIN]",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Descuento",
+      "body": { "mimeType": "application/json", "text": "{\n  \"productoId\": 1,\n  \"porcentaje\": 15.0,\n  \"activo\": true,\n  \"fechaInicio\": \"2026-08-26\",\n  \"fechaFin\": \"2026-09-26\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+    {
+      "_id": "req_put_descuento",
+      "_type": "request",
+      "parentId": "grp_descuento",
+      "name": "PUT Descuento/1 [ADMIN]",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Descuento/1",
+      "body": { "mimeType": "application/json", "text": "{\n  \"productoId\": 1,\n  \"porcentaje\": 20.0,\n  \"activo\": false,\n  \"fechaInicio\": \"2026-08-26\",\n  \"fechaFin\": \"2026-09-26\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+    { "_id": "req_del_descuento", "_type": "request", "parentId": "grp_descuento", "name": "DELETE Descuento/1 [ADMIN]", "method": "DELETE", "url": "{{ _.base_url }}/Descuento/1", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }] },
+    {
+      "_id": "req_err_descuento_invalido",
+      "_type": "request",
+      "parentId": "grp_descuento",
+      "name": "POST Descuento con porcentaje fuera de rango [ADMIN] -> 400 DescuentoInvalidoException",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Descuento",
+      "body": { "mimeType": "application/json", "text": "{\n  \"productoId\": 1,\n  \"porcentaje\": 150.0,\n  \"activo\": true,\n  \"fechaInicio\": \"2026-08-26\",\n  \"fechaFin\": \"2026-09-26\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.adminToken }}" }]
+    },
+
+    { "_id": "grp_pedido", "_type": "request_group", "parentId": "wrk_marketplace", "name": "08 - Pedido" },
+    { "_id": "req_get_pedidos", "_type": "request", "parentId": "grp_pedido", "name": "GET Pedido [autenticado]", "method": "GET", "url": "{{ _.base_url }}/Pedido", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }] },
+    { "_id": "req_gid_pedido", "_type": "request", "parentId": "grp_pedido", "name": "GET Pedido/1 [autenticado]", "method": "GET", "url": "{{ _.base_url }}/Pedido/1", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }] },
+    {
+      "_id": "req_pedido_por_numero",
+      "_type": "request",
+      "parentId": "grp_pedido",
+      "name": "GET Pedido por numero [autenticado] (cambiar el numero)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/Pedido/numero/PED-1",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_pedido",
+      "_type": "request",
+      "parentId": "grp_pedido",
+      "name": "POST Pedido [autenticado]",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Pedido",
+      "body": { "mimeType": "application/json", "text": "{\n  \"usuarioId\": 1,\n  \"fechaCreacion\": \"2026-08-26\",\n  \"estado\": \"PENDIENTE\",\n  \"subtotal\": 50000.0,\n  \"total\": 50000.0,\n  \"metodoPago\": \"tarjeta_credito\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_put_pedido",
+      "_type": "request",
+      "parentId": "grp_pedido",
+      "name": "PUT Pedido/1 [autenticado]",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/Pedido/1",
+      "body": { "mimeType": "application/json", "text": "{\n  \"usuarioId\": 1,\n  \"fechaCreacion\": \"2026-08-26\",\n  \"estado\": \"CONFIRMADO\",\n  \"subtotal\": 50000.0,\n  \"total\": 50000.0,\n  \"metodoPago\": \"tarjeta_credito\"\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    { "_id": "req_del_pedido", "_type": "request", "parentId": "grp_pedido", "name": "DELETE Pedido/1 [autenticado]", "method": "DELETE", "url": "{{ _.base_url }}/Pedido/1", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }] },
+    {
+      "_id": "req_cancelar_pedido",
+      "_type": "request",
+      "parentId": "grp_pedido",
+      "name": "POST Pedido cancelar [autenticado] (cambiar 1 por pedidoId real)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/Pedido/1/cancelar",
+      "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+
+    { "_id": "grp_detallepedido", "_type": "request_group", "parentId": "wrk_marketplace", "name": "09 - DetallePedido" },
+    { "_id": "req_get_detallepedido", "_type": "request", "parentId": "grp_detallepedido", "name": "GET DetallePedido [autenticado]", "method": "GET", "url": "{{ _.base_url }}/DetallePedido", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }] },
+    { "_id": "req_gid_detallepedido", "_type": "request", "parentId": "grp_detallepedido", "name": "GET DetallePedido/1 [autenticado]", "method": "GET", "url": "{{ _.base_url }}/DetallePedido/1", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }] },
+    {
+      "_id": "req_detallepedido",
+      "_type": "request",
+      "parentId": "grp_detallepedido",
+      "name": "POST DetallePedido [autenticado]",
+      "method": "POST",
+      "url": "{{ _.base_url }}/DetallePedido",
+      "body": { "mimeType": "application/json", "text": "{\n  \"pedidoId\": 1,\n  \"productoId\": 1,\n  \"cantidad\": 2,\n  \"precioUnitario\": 25000.0,\n  \"observaciones\": \"Sin observaciones\",\n  \"subtotal\": 50000.0\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    {
+      "_id": "req_put_detallepedido",
+      "_type": "request",
+      "parentId": "grp_detallepedido",
+      "name": "PUT DetallePedido/1 [autenticado]",
+      "method": "PUT",
+      "url": "{{ _.base_url }}/DetallePedido/1",
+      "body": { "mimeType": "application/json", "text": "{\n  \"pedidoId\": 1,\n  \"productoId\": 1,\n  \"cantidad\": 3,\n  \"precioUnitario\": 25000.0,\n  \"observaciones\": \"Editado\",\n  \"subtotal\": 75000.0\n}" },
+      "headers": [{ "name": "Content-Type", "value": "application/json" }, { "name": "Authorization", "value": "Bearer {{ _.token }}" }]
+    },
+    { "_id": "req_del_detallepedido", "_type": "request", "parentId": "grp_detallepedido", "name": "DELETE DetallePedido/1 [autenticado]", "method": "DELETE", "url": "{{ _.base_url }}/DetallePedido/1", "headers": [{ "name": "Authorization", "value": "Bearer {{ _.token }}" }] }
+  ]
+}
