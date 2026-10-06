@@ -1,6 +1,6 @@
 import { useState } from "react"
-import UsuarioFila from "./UsuarioFila"
-import EncabezadoTabla from "./EncabezadoTabla"
+import TablaUsuarios from "./tablas/TablaUsuarios"
+import UsuariosVacio from "./vacio/UsuariosVacio"
 import { usuariosPrueba } from "../../data/datosPrueba"
 
 const GestionUsuarios = () => {
@@ -23,34 +23,10 @@ const GestionUsuarios = () => {
     }
 
     if(usuarios.length === 0){
-        return <p className="bg-surface-container-low text-body-lg text-on-surface-variant p-space-xl">No hay usuarios registrados.</p>
+        return <UsuariosVacio />
     }
 
-    return(
-        <div className="bg-surface-container-low overflow-x-auto">
-            <table className="w-full">
-                <EncabezadoTabla columnas={['Usuario', 'Email', 'Rol', 'Estado', 'Acciones']} />
-                <tbody>
-                    {
-                        usuarios.map((value)=>(
-                            <UsuarioFila
-                            key={value.usuarioId}
-                            usuarioId={value.usuarioId}
-                            nombre={value.nombre}
-                            apellido={value.apellido}
-                            username={value.username}
-                            email={value.email}
-                            role={value.role}
-                            activo={value.activo}
-                            cambiarRol={cambiarRol}
-                            cambiarEstado={cambiarEstado}
-                            />
-                        ))
-                    }
-                </tbody>
-            </table>
-        </div>
-    )
+    return <TablaUsuarios usuarios={usuarios} cambiarRol={cambiarRol} cambiarEstado={cambiarEstado} />
 }
 
 export default GestionUsuarios

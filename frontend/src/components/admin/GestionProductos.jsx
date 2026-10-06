@@ -1,7 +1,6 @@
 import { useState } from "react"
 import ProductoForm from "./ProductoForm"
-import ProductoFila from "./ProductoFila"
-import EncabezadoTabla from "./EncabezadoTabla"
+import TablaProductos from "./tablas/TablaProductos"
 import { categoriasPrueba, productosPrueba } from "../../data/datosPrueba"
 
 const GestionProductos = () => {
@@ -44,28 +43,7 @@ const GestionProductos = () => {
         guardarProducto={guardarProducto}
         cancelarEdicion={()=>setEditando(null)}
         />
-        <div className="bg-surface-container-low overflow-x-auto">
-            <table className="w-full">
-                <EncabezadoTabla columnas={['Producto', 'Categoría', 'Precio', 'Stock', 'Estado', 'Acciones']} />
-                <tbody>
-                    {
-                        productos.map((value)=>(
-                            <ProductoFila
-                            key={value.productoId}
-                            productoId={value.productoId}
-                            nombreProducto={value.nombreProducto}
-                            categoriaNombre={value.categoriaNombre}
-                            precioUnitario={value.precioUnitario}
-                            stock={value.stock}
-                            activo={value.activo}
-                            editarProducto={editarProducto}
-                            cambiarEstado={cambiarEstado}
-                            />
-                        ))
-                    }
-                </tbody>
-            </table>
-        </div>
+        <TablaProductos productos={productos} editarProducto={editarProducto} cambiarEstado={cambiarEstado} />
         </>
     )
 }

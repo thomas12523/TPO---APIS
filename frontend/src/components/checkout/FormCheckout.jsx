@@ -1,14 +1,8 @@
 import { useState } from "react"
-import MetodoPagoOpcion from "./MetodoPagoOpcion"
+import SeleccionMetodoPago from "./metodos/SeleccionMetodoPago"
 import ResumenCheckout from "./ResumenCheckout"
 import MensajeError from "../ui/MensajeError"
 import { carritoPrueba } from "../../data/datosPrueba"
-
-const metodosPago = [
-    {valor: 'TARJETA_CREDITO', titulo: 'Tarjeta de crédito', descripcion: 'Hasta 6 cuotas sin interés', icono: 'credit_card'},
-    {valor: 'TARJETA_DEBITO', titulo: 'Tarjeta de débito', descripcion: 'Se debita en el momento', icono: 'payments'},
-    {valor: 'TRANSFERENCIA', titulo: 'Transferencia', descripcion: 'Te enviamos los datos por mail', icono: 'account_balance'}
-]
 
 const FormCheckout = () => {
 
@@ -37,21 +31,7 @@ const FormCheckout = () => {
                     <span className="w-2 h-2 bg-primary-container"></span>
                     Medio de pago
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-space-sm">
-                    {
-                        metodosPago.map((value)=>(
-                            <MetodoPagoOpcion
-                            key={value.valor}
-                            valor={value.valor}
-                            titulo={value.titulo}
-                            descripcion={value.descripcion}
-                            icono={value.icono}
-                            seleccionado={checkout.metodoPago === value.valor}
-                            handleChange={handleChange}
-                            />
-                        ))
-                    }
-                </div>
+                <SeleccionMetodoPago metodoPago={checkout.metodoPago} handleChange={handleChange} />
                 <MensajeError mensaje={error} />
             </section>
             <ResumenCheckout items={carrito.items} subtotal={carrito.subtotal} total={carrito.total} />

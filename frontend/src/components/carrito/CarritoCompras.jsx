@@ -1,5 +1,6 @@
 import { useState } from "react"
-import CarritoItem from "./CarritoItem"
+import CarritoVacio from "./vacio/CarritoVacio"
+import ListaItems from "./lista/ListaItems"
 import ResumenOrden from "./ResumenOrden"
 import { carritoPrueba } from "../../data/datosPrueba"
 
@@ -30,33 +31,12 @@ const CarritoCompras = () => {
     }
 
     if(carrito.items.length === 0){
-        return(
-            <div className="bg-surface-container-low p-space-xl text-center flex flex-col items-center gap-space-md">
-                <span className="material-symbols-outlined text-5xl text-on-surface-variant">shopping_bag</span>
-                <p className="text-body-lg text-on-surface-variant">Tu carrito está vacío.</p>
-                <a href="/catalogo" className="bg-primary-container text-surface-container-lowest font-bold text-label-lg uppercase px-space-lg py-space-sm">Ir al catálogo</a>
-            </div>
-        )
+        return <CarritoVacio />
     }
 
     return(
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-space-lg">
-            <div className="flex flex-col gap-space-md">
-                {
-                    carrito.items.map((value, index)=>(
-                        <CarritoItem
-                        key={value.detalleCarritoId}
-                        index={index}
-                        productoNombre={value.productoNombre}
-                        precioUnitario={value.precioUnitario}
-                        cantidad={value.cantidad}
-                        subtotal={value.subtotal}
-                        cambiarCantidad={cambiarCantidad}
-                        eliminarItem={eliminarItem}
-                        />
-                    ))
-                }
-            </div>
+            <ListaItems items={carrito.items} cambiarCantidad={cambiarCantidad} eliminarItem={eliminarItem} />
             <ResumenOrden subtotal={carrito.subtotal} total={carrito.total} />
         </div>
     )

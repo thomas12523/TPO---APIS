@@ -2,6 +2,7 @@ import { useState } from "react"
 import GaleriaImagenes from "./GaleriaImagenes"
 import InfoProducto from "./InfoProducto"
 import ProductosRelacionados from "./ProductosRelacionados"
+import BreadcrumbProducto from "./breadcrumb/BreadcrumbProducto"
 import SeccionResenas from "../resenas/SeccionResenas"
 import { imagenesPrueba, productosPrueba } from "../../data/datosPrueba"
 
@@ -17,9 +18,7 @@ const FichaProducto = () => {
     return(
         <>
         <section className="max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-xl">
-            <p className="font-bold text-label-tag uppercase tracking-widest text-on-surface-variant mb-space-lg">
-                <a href="/" className="hover:text-primary">Inicio</a> / <a href="/catalogo" className="hover:text-primary">Catálogo</a> / <span className="text-primary">{producto.nombreProducto}</span>
-            </p>
+            <BreadcrumbProducto nombreProducto={producto.nombreProducto} />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-space-xl">
                 <GaleriaImagenes imagenes={urls} nombreProducto={producto.nombreProducto} />
                 <InfoProducto

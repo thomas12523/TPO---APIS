@@ -1,6 +1,7 @@
 import { useState } from "react"
 import FiltroEstados from "./FiltroEstados"
-import PedidoCard from "./PedidoCard"
+import ListaPedidos from "./lista/ListaPedidos"
+import PedidosVacio from "./vacio/PedidosVacio"
 import { pedidosPrueba } from "../../data/datosPrueba"
 
 const HistorialPedidos = () => {
@@ -27,26 +28,14 @@ const HistorialPedidos = () => {
         <>
         <FiltroEstados pedidos={pedidos} filtro={filtro} cambiarFiltro={setFiltro} />
         {pedidosFiltrados.length === 0 ? (
-            <p className="bg-surface-container-low text-body-lg text-on-surface-variant p-space-xl text-center">No hay pedidos para mostrar.</p>
+            <PedidosVacio />
         ) : (
-            <div className="flex flex-col gap-space-md">
-                {
-                    pedidosFiltrados.map((value)=>(
-                        <PedidoCard
-                        key={value.pedidoId}
-                        pedidoId={value.pedidoId}
-                        numeroPedido={value.numeroPedido}
-                        fechaCreacion={value.fechaCreacion}
-                        estado={value.estado}
-                        total={value.total}
-                        metodoPago={value.metodoPago}
-                        abierto={pedidoAbierto === value.pedidoId}
-                        alternarDetalle={alternarDetalle}
-                        cancelarPedido={cancelarPedido}
-                        />
-                    ))
-                }
-            </div>
+            <ListaPedidos
+            pedidos={pedidosFiltrados}
+            pedidoAbierto={pedidoAbierto}
+            alternarDetalle={alternarDetalle}
+            cancelarPedido={cancelarPedido}
+            />
         )}
         </>
     )

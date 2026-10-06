@@ -1,15 +1,8 @@
 import { useState } from "react"
 import CategoriaCard from "./CategoriaCard"
 import TituloSeccion from "../ui/TituloSeccion"
-import categoria1 from "../../assets/categoria-1.jpg"
-import categoria2 from "../../assets/categoria-2.jpg"
-import categoria3 from "../../assets/categoria-3.jpg"
-import categoria4 from "../../assets/categoria-4.jpg"
-import categoria5 from "../../assets/categoria-5.jpg"
+import imagenesCategoria from "./imagenes/imagenesCategoria"
 import { categoriasPrueba } from "../../data/datosPrueba"
-
-// El back no guarda imagen de categoría: usamos imágenes fijas de assets
-const imagenes = [categoria1, categoria2, categoria3, categoria4, categoria5]
 
 const CategoriaGrid = () => {
 
@@ -28,7 +21,7 @@ const CategoriaGrid = () => {
                         <CategoriaCard
                         key={value.id}
                         nombre={value.nombre}
-                        imagen={imagenes[index % imagenes.length]}
+                        imagen={imagenesCategoria[index % imagenesCategoria.length]}
                         />
                     ))
                 }

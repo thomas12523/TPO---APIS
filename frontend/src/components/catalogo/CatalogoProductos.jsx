@@ -1,6 +1,7 @@
 import { useState } from "react"
-import FiltrosCatalogo from "./FiltrosCatalogo"
-import Paginacion from "./Paginacion"
+import FiltrosCatalogo from "./filtros/FiltrosCatalogo"
+import Paginacion from "./paginacion/Paginacion"
+import ContadorResultados from "./contador/ContadorResultados"
 import ProductoGrid from "../producto/ProductoGrid"
 import { categoriasPrueba, productosPrueba } from "../../data/datosPrueba"
 
@@ -46,9 +47,7 @@ const CatalogoProductos = () => {
             limpiarFiltros={limpiarFiltros}
             />
             <div>
-                <p className="font-bold text-label-md uppercase tracking-wider text-on-surface-variant mb-space-md">
-                    Mostrando <span className="text-primary">{productosPagina.length}</span> de <span className="text-primary">{productosFiltrados.length}</span> productos
-                </p>
+                <ContadorResultados mostrados={productosPagina.length} total={productosFiltrados.length} />
                 <ProductoGrid productos={productosPagina} />
                 <Paginacion pagina={pagina} totalPaginas={totalPaginas} cambiarPagina={setPagina} />
             </div>

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import ResenaCard from "./ResenaCard"
+import ListaResenas from "./lista/ListaResenas"
 import ResenaForm from "./ResenaForm"
 import TituloSeccion from "../ui/TituloSeccion"
 import { resenasPrueba } from "../../data/datosPrueba"
@@ -25,23 +25,7 @@ const SeccionResenas = ({productoId}) => {
         <section className="max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-xl">
             <TituloSeccion etiqueta="Opiniones de compradores" titulo={`Reseñas (${resenas.length})`} />
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-space-lg">
-                {resenas.length === 0 ? (
-                    <p className="text-body-lg text-on-surface-variant">Todavía no hay reseñas. ¡Sé el primero!</p>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-space-md h-fit">
-                        {
-                            resenas.map((value)=>(
-                                <ResenaCard
-                                key={value.resenaId}
-                                username={value.username}
-                                puntuacion={value.puntuacion}
-                                comentario={value.comentario}
-                                fecha={value.fecha}
-                                />
-                            ))
-                        }
-                    </div>
-                )}
+                <ListaResenas resenas={resenas} />
                 <ResenaForm agregarResena={agregarResena} />
             </div>
         </section>
