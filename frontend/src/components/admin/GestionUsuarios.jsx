@@ -1,32 +1,69 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import TablaUsuarios from "./tablas/TablaUsuarios"
 import UsuariosVacio from "./vacio/UsuariosVacio"
-import { usuariosPrueba } from "../../data/datosPrueba"
+import MensajeError from "../ui/MensajeError"
+import { URL, opciones, leerRespuesta } from "../../utils/api"
 
 const GestionUsuarios = () => {
 
-    // Al conectar: GET /Usuario
-    const [usuarios, setUsuarios] = useState(usuariosPrueba)
+    const [usuarios, setUsuarios] = useState([])
+    const [error, setError] = useState('')
 
-    // Al conectar: PATCH /Usuario/{id}/permisos
-    const cambiarRol = (usuarioId, role) => {
+    useEffect(()=>{
+        fetch(`${URL}/Usuario?size=100`, opciones('GET'))
+        .then(leerRespuesta)
+        .then((data)=>setUsuarios(data.content))
+        .catch((error)=>{
+            console.error('Error al cargar los usuarios', error)
+            setError('No pudimos cargar los usuarios.')
+        })
+    }, [])
+
+    // Reemplaza en la lista el usuario que devolvió el back
+    const reemplazarUsuario = (usuarioActualizado) => {
         setUsuarios(usuarios.map((value)=>(
-            value.usuarioId === usuarioId ? {...value, role: role} : value
+            value.usuarioId === usuarioActualizado.usuarioId ? usuarioActualizado : value
         )))
+        setError('')
     }
 
-    // Al conectar: PATCH /Usuario/{id}/estado
+    const cambiarRol = (usuarioId, role) => {
+        fetch(`${URL}/Usuario/${usuarioId}/permisos?role=${role}`, opciones('PATCH'))
+        .then(leerRespuesta)
+        .then((data)=>reemplazarUsuario(data))
+        .catch((error)=>{
+            console.error('Error al cambiar el rol', error)
+            setError(error.message)
+        })
+    }
+
     const cambiarEstado = (usuarioId) => {
-        setUsuarios(usuarios.map((value)=>(
-            value.usuarioId === usuarioId ? {...value, activo: !value.activo} : value
-        )))
+        const usuario = usuarios.find((value)=>value.usuarioId === usuarioId)
+
+        fetch(`${URL}/Usuario/${usuarioId}/estado?activo=${!usuario.activo}`, opciones('PATCH'))
+        .then(leerRespuesta)
+        .then((data)=>reemplazarUsuario(data))
+        .catch((error)=>{
+            console.error('Error al cambiar el estado del usuario', error)
+            setError(error.message)
+        })
     }
 
     if(usuarios.length === 0){
-        return <UsuariosVacio />
+        return(
+            <>
+            <MensajeError mensaje={error} />
+            <UsuariosVacio />
+            </>
+        )
     }
 
-    return <TablaUsuarios usuarios={usuarios} cambiarRol={cambiarRol} cambiarEstado={cambiarEstado} />
+    return(
+        <>
+        <MensajeError mensaje={error} />
+        <TablaUsuarios usuarios={usuarios} cambiarRol={cambiarRol} cambiarEstado={cambiarEstado} />
+        </>
+    )
 }
 
 export default GestionUsuarios

@@ -34,7 +34,13 @@ const DescuentoForm = ({inicial, productos, guardarDescuento, cancelarEdicion}) 
         }
         setError('')
         guardarDescuento({...descuento, productoId: Number(descuento.productoId), porcentaje: Number(descuento.porcentaje)})
-        setDescuento(descuentoVacio)
+        .then(()=>{
+            setDescuento(descuentoVacio)
+        })
+        .catch((error)=>{
+            console.error('Error al guardar el descuento', error)
+            setError(error.message)
+        })
     }
 
     return(

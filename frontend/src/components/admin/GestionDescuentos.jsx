@@ -1,36 +1,62 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import DescuentoForm from "./DescuentoForm"
 import TablaDescuentos from "./tablas/TablaDescuentos"
-import { descuentosPrueba, productosPrueba } from "../../data/datosPrueba"
+import MensajeError from "../ui/MensajeError"
+import Modal from "../ui/Modal"
+import { URL, opciones, leerRespuesta } from "../../utils/api"
 
 const GestionDescuentos = () => {
 
-    // Al conectar: GET /Descuento y GET /Producto
-    const [descuentos, setDescuentos] = useState(descuentosPrueba)
-    const [productos, setProductos] = useState(productosPrueba)
+    const [descuentos, setDescuentos] = useState([])
+    const [productos, setProductos] = useState([])
     const [editando, setEditando] = useState(null)
+    const [error, setError] = useState('')
 
-    // Al conectar: POST /Descuento o PUT /Descuento/{id}
+    useEffect(()=>{
+        fetch(`${URL}/Descuento`)
+        .then(leerRespuesta)
+        .then((data)=>setDescuentos(data))
+        .catch((error)=>console.error('Error al cargar los descuentos', error))
+
+        fetch(`${URL}/Producto?size=100`)
+        .then(leerRespuesta)
+        .then((data)=>setProductos(data.content))
+        .catch((error)=>console.error('Error al cargar los productos', error))
+    }, [])
+
+    // Devolvemos la promesa para que el formulario sepa si salió bien o mal
     const guardarDescuento = (datos) => {
         if(editando === null){
-            setDescuentos([...descuentos, {...datos, descuentoId: descuentos.length + 1, activo: true}])
-            return
+            return fetch(`${URL}/Descuento`, opciones('POST', {...datos, activo: true}))
+            .then(leerRespuesta)
+            .then((data)=>setDescuentos([...descuentos, data]))
         }
-        setDescuentos(descuentos.map((value)=>(
-            value.descuentoId === editando.descuentoId ? {...value, ...datos} : value
-        )))
-        setEditando(null)
+        return fetch(`${URL}/Descuento/${editando.descuentoId}`, opciones('PUT', {...datos, activo: editando.activo}))
+        .then(leerRespuesta)
+        .then((data)=>{
+            setDescuentos(descuentos.map((value)=>(value.descuentoId === data.descuentoId ? data : value)))
+            setEditando(null)
+        })
     }
 
     const editarDescuento = (descuentoId) => {
         setEditando(descuentos.find((value)=>value.descuentoId === descuentoId))
     }
 
-    // Al conectar: PATCH /Descuento/{id}
+    // Usamos el PUT con activo invertido, porque el PATCH del back solo sirve para desactivar
     const cambiarEstado = (descuentoId) => {
-        setDescuentos(descuentos.map((value)=>(
-            value.descuentoId === descuentoId ? {...value, activo: !value.activo} : value
-        )))
+        const descuento = descuentos.find((value)=>value.descuentoId === descuentoId)
+
+        fetch(`${URL}/Descuento/${descuentoId}`, opciones('PUT', {...descuento, activo: !descuento.activo}))
+        .then(leerRespuesta)
+        .then((data)=>{
+            setDescuentos(descuentos.map((value)=>(value.descuentoId === descuentoId ? data : value)))
+            setError('')
+        })
+        .catch((error)=>{
+            console.error('Error al cambiar el estado del descuento', error)
+            setError(error.message)
+        })
     }
 
     // El DescuentoResponse trae el productoId; buscamos el nombre para mostrarlo
@@ -41,14 +67,21 @@ const GestionDescuentos = () => {
 
     return(
         <>
-        <DescuentoForm
-        key={editando === null ? 'nuevo' : editando.descuentoId}
-        inicial={editando}
-        productos={productos}
-        guardarDescuento={guardarDescuento}
-        cancelarEdicion={()=>setEditando(null)}
-        />
+        <DescuentoForm inicial={null} productos={productos} guardarDescuento={guardarDescuento} />
+        <MensajeError mensaje={error} />
         <TablaDescuentos descuentos={descuentos} nombreDe={nombreDe} editarDescuento={editarDescuento} cambiarEstado={cambiarEstado} />
+        {/* Al tocar la lapicera, el formulario de edición se abre encima de la tabla */}
+        {editando !== null && (
+            <Modal cerrar={()=>setEditando(null)}>
+                <DescuentoForm
+                key={editando.descuentoId}
+                inicial={editando}
+                productos={productos}
+                guardarDescuento={guardarDescuento}
+                cancelarEdicion={()=>setEditando(null)}
+                />
+            </Modal>
+        )}
         </>
     )
 }

@@ -1,13 +1,24 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 const Buscador = () => {
 
     const [nombre, setNombre] = useState('')
+    const navigate = useNavigate()
 
     const handleChange = (e) => {setNombre(e.target.value)}
 
+    // El catálogo lee el nombre del state de la ruta y filtra con eso
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        if(nombre.trim() === ''){
+            return
+        }
+        navigate('/catalogo', {state: {nombre: nombre.trim()}})
+    }
+
     return(
-        <form onSubmit={(e)=>{e.preventDefault()}} className="hidden xl:flex flex-1 max-w-md mx-space-md">
+        <form onSubmit={handleSubmit} className="hidden xl:flex flex-1 max-w-md mx-space-md">
             <div className="relative w-full">
                 <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
                 <input

@@ -1,11 +1,31 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import Precio from "../ui/Precio"
 import SelectorCantidad from "../ui/SelectorCantidad"
 import BotonPrincipal from "../ui/BotonPrincipal"
+import MensajeError from "../ui/MensajeError"
+import { agregarAlCarrito } from "../../utils/carrito"
 
-const InfoProducto = ({nombreProducto, categoriaNombre, descripcion, precioUnitario, precioConDescuento, tieneDescuento, stock}) => {
+const InfoProducto = ({productoId, nombreProducto, categoriaNombre, descripcion, precioUnitario, precioConDescuento, tieneDescuento, stock}) => {
 
     const [cantidad, setCantidad] = useState(1)
+    const [error, setError] = useState('')
+    const navigate = useNavigate()
+
+    const handleClick = () => {
+        if(localStorage.getItem('token') === null){
+            navigate('/login')
+            return
+        }
+        agregarAlCarrito(productoId, cantidad, precioConDescuento)
+        .then(()=>{
+            navigate('/carrito')
+        })
+        .catch((error)=>{
+            console.error('Error al agregar al carrito', error)
+            setError(error.message)
+        })
+    }
 
     return(
         <div className="flex flex-col gap-space-lg">
@@ -26,9 +46,10 @@ const InfoProducto = ({nombreProducto, categoriaNombre, descripcion, precioUnita
             {stock > 0 && (
                 <div className="flex items-center gap-space-md">
                     <SelectorCantidad cantidad={cantidad} cambiarCantidad={setCantidad} maximo={stock} />
-                    <BotonPrincipal texto="Agregar al carrito" icono="shopping_cart" />
+                    <BotonPrincipal texto="Agregar al carrito" icono="shopping_cart" onClick={handleClick} />
                 </div>
             )}
+            <MensajeError mensaje={error} />
         </div>
     )
 }

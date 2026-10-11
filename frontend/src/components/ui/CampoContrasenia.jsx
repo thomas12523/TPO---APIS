@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-const CampoContrasenia = ({label, name, value, onChange}) => {
+const CampoContrasenia = ({label, name, value, onChange, placeholder}) => {
 
     const [visible, setVisible] = useState(false)
 
@@ -14,6 +14,7 @@ const CampoContrasenia = ({label, name, value, onChange}) => {
                     name={name}
                     value={value}
                     onChange={onChange}
+                    placeholder={placeholder}
                     className="w-full bg-surface-container-high text-on-surface text-body-lg px-space-md py-space-sm pr-12 border border-white/10 focus:border-primary-container focus:outline-none"
                 />
                 <button type="button" onClick={()=>setVisible(!visible)} title="Mostrar u ocultar"

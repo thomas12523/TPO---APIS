@@ -1,9 +1,10 @@
+import { Link } from "react-router-dom"
 const EncabezadoCatalogo = () => {
     return(
         <section className="bg-surface-container-lowest">
             <div className="max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-xl">
                 <p className="font-bold text-label-tag uppercase tracking-widest text-on-surface-variant mb-space-sm">
-                    <a href="/" className="hover:text-primary">Inicio</a> / <span className="text-primary-container">Catálogo</span>
+                    <Link to="/" className="hover:text-primary">Inicio</Link> / <span className="text-primary-container">Catálogo</span>
                 </p>
                 <h1 className="font-headline font-black uppercase text-headline-hero-mobile md:text-headline-hero text-primary">
                     Equipamiento <span className="text-primary-container">& accesorios</span>

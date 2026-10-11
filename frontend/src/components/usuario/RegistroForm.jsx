@@ -1,4 +1,7 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { URL, leerRespuesta } from "../../utils/api"
+import { iniciarSesion } from "../../utils/sesion"
 import Campo from "../ui/Campo"
 import CampoContrasenia from "../ui/CampoContrasenia"
 import MensajeError from "../ui/MensajeError"
@@ -13,6 +16,7 @@ const RegistroForm = () => {
     // La confirmación solo se valida en el front, no viaja al back
     const [confirmacion, setConfirmacion] = useState('')
     const [error, setError] = useState('')
+    const navigate = useNavigate()
 
     const handleChange = (e) => {setUsuario({...usuario, [e.target.name]: e.target.value})}
 
@@ -35,9 +39,24 @@ const RegistroForm = () => {
             return
         }
         setError('')
-        // Al conectar: POST /Auth/register con {...usuario, dni: Number(usuario.dni)}
-        setUsuario(usuarioInicial)
-        setConfirmacion('')
+
+        const options = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({...usuario, dni: Number(usuario.dni)})
+        }
+
+        // Al registrarse el back ya crea el carrito del usuario y devuelve el token
+        fetch(`${URL}/Auth/register`, options)
+        .then(leerRespuesta)
+        .then((data)=>iniciarSesion(data.access_token))
+        .then(()=>{
+            navigate('/')
+        })
+        .catch((error)=>{
+            console.error('Error al registrarse', error)
+            setError(error.message)
+        })
     }
 
     return(

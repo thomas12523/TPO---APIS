@@ -18,7 +18,13 @@ const CategoriaForm = ({inicial, guardarCategoria, cancelarEdicion}) => {
         }
         setError('')
         guardarCategoria({nombre: categoria.nombre.trim()})
-        setCategoria({nombre: ''})
+        .then(()=>{
+            setCategoria({nombre: ''})
+        })
+        .catch((error)=>{
+            console.error('Error al guardar la categoría', error)
+            setError(error.message)
+        })
     }
 
     return(

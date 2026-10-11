@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 const secciones = [
     {ruta: '/admin/productos', texto: 'Productos', icono: 'inventory_2'},
     {ruta: '/admin/categorias', texto: 'Categorías', icono: 'category'},
@@ -14,12 +15,12 @@ const AdminSidebar = ({activa}) => {
             </p>
             {
                 secciones.map((value)=>(
-                    <a key={value.ruta} href={value.ruta}
+                    <Link key={value.ruta} to={value.ruta}
                         className={`flex items-center gap-space-sm px-space-sm py-space-sm font-bold text-label-lg uppercase
                         ${activa === value.texto ? 'bg-primary-container text-surface-container-lowest' : 'text-on-surface-variant hover:bg-surface-container hover:text-primary'}`}>
                         <span className="material-symbols-outlined">{value.icono}</span>
                         {value.texto}
-                    </a>
+                    </Link>
                 ))
             }
         </aside>

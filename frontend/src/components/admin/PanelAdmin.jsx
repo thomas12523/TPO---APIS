@@ -2,9 +2,26 @@ import Navbar from "../layout/Navbar"
 import Footer from "../layout/Footer"
 import AdminSidebar from "./AdminSidebar"
 import TituloPagina from "../ui/TituloPagina"
+import AvisoSesion from "../ui/AvisoSesion"
 
 // Arma la estructura que comparten todas las vistas del admin
 const PanelAdmin = ({activa, contenido}) => {
+
+    // El rol lo guardamos al iniciar sesión (ver utils/sesion.js)
+    if(localStorage.getItem('role') !== 'ADMIN'){
+        return(
+            <>
+            <Navbar />
+            <main className="pt-20 min-h-screen">
+                <div className="max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-xl">
+                    <AvisoSesion mensaje="Esta sección es solo para administradores. Iniciá sesión con una cuenta de administrador." />
+                </div>
+            </main>
+            <Footer />
+            </>
+        )
+    }
+
     return(
         <>
         <Navbar />

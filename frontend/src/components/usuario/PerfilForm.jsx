@@ -27,8 +27,14 @@ const PerfilForm = ({usuario, guardarCambios}) => {
             return
         }
         setError('')
-        setGuardado(true)
         guardarCambios({...datos, dni: Number(datos.dni)})
+        .then(()=>{
+            setGuardado(true)
+        })
+        .catch((error)=>{
+            console.error('Error al guardar el perfil', error)
+            setError('No se pudieron guardar los cambios. Revisá que el usuario, el email y el DNI no estén en uso.')
+        })
     }
 
     return(

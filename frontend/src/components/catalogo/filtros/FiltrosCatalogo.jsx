@@ -10,6 +10,17 @@ const FiltrosCatalogo = ({categorias, filtros, handleChange, limpiarFiltros}) =>
             </div>
 
             <div className="flex flex-col gap-space-sm">
+                <label htmlFor="orden" className="font-bold text-label-md uppercase text-primary">Ordenar por</label>
+                <select id="orden" name="orden" value={filtros.orden} onChange={handleChange}
+                    className="bg-surface-container text-on-surface text-body-md px-space-md py-space-sm border border-white/10 focus:border-primary-container focus:outline-none">
+                    <option value="">Predeterminado</option>
+                    <option value="precioAsc">Precio: menor a mayor</option>
+                    <option value="precioDesc">Precio: mayor a menor</option>
+                    <option value="nombre">Nombre: A-Z</option>
+                </select>
+            </div>
+
+            <div className="flex flex-col gap-space-sm">
                 <label className="font-bold text-label-md uppercase text-primary">Buscar</label>
                 <input type="text" name="nombre" value={filtros.nombre} onChange={handleChange} placeholder="Nombre del producto"
                     className="bg-surface-container text-on-surface text-body-md px-space-md py-space-sm border border-white/10 focus:border-primary-container focus:outline-none" />
@@ -34,9 +45,9 @@ const FiltrosCatalogo = ({categorias, filtros, handleChange, limpiarFiltros}) =>
             <div className="flex flex-col gap-space-sm">
                 <label className="font-bold text-label-md uppercase text-primary">Precio</label>
                 <div className="grid grid-cols-2 gap-space-sm">
-                    <input type="number" name="precioMin" value={filtros.precioMin} onChange={handleChange} placeholder="Mínimo" min="0"
+                    <input type="text" inputMode="numeric" name="precioMin" value={filtros.precioMin} onChange={handleChange} placeholder="Mínimo"
                         className="bg-surface-container text-on-surface text-body-md px-space-sm py-space-sm border border-white/10 focus:border-primary-container focus:outline-none" />
-                    <input type="number" name="precioMax" value={filtros.precioMax} onChange={handleChange} placeholder="Máximo" min="0"
+                    <input type="text" inputMode="numeric" name="precioMax" value={filtros.precioMax} onChange={handleChange} placeholder="Máximo"
                         className="bg-surface-container text-on-surface text-body-md px-space-sm py-space-sm border border-white/10 focus:border-primary-container focus:outline-none" />
                 </div>
             </div>

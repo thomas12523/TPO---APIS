@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import ResumenTotales from "../carrito/ResumenTotales"
 import BotonPrincipal from "../ui/BotonPrincipal"
 
@@ -6,7 +7,7 @@ const ResumenCheckout = ({items, subtotal, total}) => {
         <aside className="bg-surface-container-low p-space-lg flex flex-col gap-space-lg h-fit">
             <div className="flex items-center justify-between border-b border-white/10 pb-space-md">
                 <h2 className="font-headline font-extrabold text-headline-sm uppercase text-primary">Resumen del pedido</h2>
-                <a href="/carrito" className="font-bold text-label-tag uppercase text-on-surface-variant underline hover:text-primary">Editar</a>
+                <Link to="/carrito" className="font-bold text-label-tag uppercase text-on-surface-variant underline hover:text-primary">Editar</Link>
             </div>
             <ul className="flex flex-col gap-space-sm">
                 {

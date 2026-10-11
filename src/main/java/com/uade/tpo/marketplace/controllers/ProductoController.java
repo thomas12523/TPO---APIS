@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,10 +43,24 @@ public class ProductoController {
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) Double precioMin,
             @RequestParam(required = false) Double precioMax,
+            @RequestParam(required = false) String orden,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer size) {
-        return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre, precioMin, precioMax, PageRequest.of(page, size))
+        return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre, precioMin, precioMax, PageRequest.of(page, size, armarOrden(orden)))
                 .map(producto -> new ProductoResponse(producto, descuentoService.getPrecioConDescuento(producto))));
+    }
+
+    // orden: precioAsc (menor a mayor), precioDesc (mayor a menor) o nombre (A-Z).
+    // Sin orden (o uno desconocido) quedan en el orden en que se cargaron.
+    // El precio es el precioUnitario (sin descuento), porque el descuento no esta en la tabla.
+    private Sort armarOrden(String orden) {
+        if ("precioAsc".equals(orden))
+            return Sort.by("precioUnitario").ascending();
+        if ("precioDesc".equals(orden))
+            return Sort.by("precioUnitario").descending();
+        if ("nombre".equals(orden))
+            return Sort.by("nombreProducto").ascending();
+        return Sort.unsorted();
     }
 
     @GetMapping("{productoId}")

@@ -1,12 +1,25 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import CategoriaCard from "./CategoriaCard"
 import TituloSeccion from "../ui/TituloSeccion"
 import imagenesCategoria from "./imagenes/imagenesCategoria"
-import { categoriasPrueba } from "../../data/datosPrueba"
+import { URL, leerRespuesta } from "../../utils/api"
 
 const CategoriaGrid = () => {
 
-    const [categorias, setCategorias] = useState(categoriasPrueba)
+    const [categorias, setCategorias] = useState([])
+
+    useEffect(()=>{
+        // En el inicio mostramos una sola fila (5 categorías); todas se ven en los filtros del catálogo
+        fetch(`${URL}/Categories?size=5`)
+        .then(leerRespuesta)
+        .then((data)=>{
+            // El back devuelve una página: los objetos vienen en content
+            setCategorias(data.content)
+        })
+        .catch((error)=>{
+            console.error('Error al cargar las categorías', error)
+        })
+    }, [])
 
     if(categorias.length === 0){
         return null
@@ -20,6 +33,7 @@ const CategoriaGrid = () => {
                     categorias.map((value, index)=>(
                         <CategoriaCard
                         key={value.id}
+                        id={value.id}
                         nombre={value.nombre}
                         imagen={imagenesCategoria[index % imagenesCategoria.length]}
                         />

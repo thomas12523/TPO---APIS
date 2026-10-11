@@ -1,16 +1,33 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import SeleccionMetodoPago from "./metodos/SeleccionMetodoPago"
 import ResumenCheckout from "./ResumenCheckout"
 import MensajeError from "../ui/MensajeError"
-import { carritoPrueba } from "../../data/datosPrueba"
+import AvisoSesion from "../ui/AvisoSesion"
+import CarritoVacio from "../carrito/vacio/CarritoVacio"
+import { URL, opciones, leerRespuesta } from "../../utils/api"
+import { obtenerCarrito } from "../../utils/carrito"
 
 const FormCheckout = () => {
 
-    // Al conectar: GET /Carrito?usuarioId={id}
-    const [carrito, setCarrito] = useState(carritoPrueba)
+    const [carrito, setCarrito] = useState(null)
     // El nombre coincide con CheckoutRequest (metodoPago)
     const [checkout, setCheckout] = useState({metodoPago: ''})
     const [error, setError] = useState('')
+    const navigate = useNavigate()
+    const carritoId = localStorage.getItem('carritoId')
+
+    useEffect(()=>{
+        if(carritoId === null){
+            return
+        }
+        obtenerCarrito()
+        .then((data)=>setCarrito(data))
+        .catch((error)=>{
+            console.error('Error al cargar el carrito', error)
+            setError('No pudimos cargar tu carrito. Probá cerrar sesión y volver a entrar.')
+        })
+    }, [carritoId])
 
     const handleChange = (e) => {setCheckout({...checkout, [e.target.name]: e.target.value})}
 
@@ -21,7 +38,30 @@ const FormCheckout = () => {
             return
         }
         setError('')
-        // Al conectar: POST /Carrito/{carritoId}/checkout con {metodoPago} y vamos a la confirmación
+
+        // El back arma el pedido con lo que hay en el carrito, descuenta el stock y vacía el carrito
+        fetch(`${URL}/Carrito/${carritoId}/checkout`, opciones('POST', checkout))
+        .then(leerRespuesta)
+        .then((data)=>{
+            // Le pasamos el pedido creado a la vista de confirmación por el state de la ruta
+            navigate('/pedido-confirmado', {state: data})
+        })
+        .catch((error)=>{
+            console.error('Error al confirmar la compra', error)
+            setError(error.message)
+        })
+    }
+
+    if(carritoId === null){
+        return <AvisoSesion mensaje="Iniciá sesión para finalizar tu compra." />
+    }
+
+    if(carrito === null){
+        return <MensajeError mensaje={error} />
+    }
+
+    if(carrito.items.length === 0){
+        return <CarritoVacio />
     }
 
     return(

@@ -13,13 +13,23 @@ const ResenaForm = ({agregarResena}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        if(localStorage.getItem('token') === null){
+            setError('Iniciá sesión para escribir una reseña')
+            return
+        }
         if(resena.comentario.trim() === ''){
             setError('El comentario no puede estar vacío')
             return
         }
         agregarResena({puntuacion: Number(resena.puntuacion), comentario: resena.comentario.trim()})
-        setResena(resenaInicial)
-        setError('')
+        .then(()=>{
+            setResena(resenaInicial)
+            setError('')
+        })
+        .catch((error)=>{
+            console.error('Error al publicar la reseña', error)
+            setError(error.message)
+        })
     }
 
     return(

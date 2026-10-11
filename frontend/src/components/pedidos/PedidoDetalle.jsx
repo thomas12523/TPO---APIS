@@ -1,11 +1,23 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import DetallePedidoItem from "./DetallePedidoItem"
-import { detallesPedidoPrueba } from "../../data/datosPrueba"
+import { URL, opciones, leerRespuesta } from "../../utils/api"
 
 const PedidoDetalle = ({pedidoId}) => {
 
-    // Al conectar: GET /DetallePedido?pedidoId={pedidoId}
-    const [detalles, setDetalles] = useState(detallesPedidoPrueba.filter((value)=>value.pedidoId === pedidoId))
+    const [detalles, setDetalles] = useState(null)
+
+    // Se monta cuando el usuario abre el detalle, así que recién ahí pedimos los productos del pedido
+    useEffect(()=>{
+        fetch(`${URL}/DetallePedido?pedidoId=${pedidoId}`, opciones('GET'))
+        .then(leerRespuesta)
+        .then((data)=>setDetalles(data))
+        .catch((error)=>console.error('Error al cargar el detalle del pedido', error))
+    }, [pedidoId])
+
+    // Mientras la promesa está pendiente todavía no hay detalle para mostrar
+    if(detalles === null){
+        return null
+    }
 
     if(detalles.length === 0){
         return <p className="text-body-md text-on-surface-variant p-space-md">Este pedido no tiene productos.</p>

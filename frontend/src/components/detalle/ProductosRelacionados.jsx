@@ -1,15 +1,22 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ProductoGrid from "../producto/ProductoGrid"
 import TituloSeccion from "../ui/TituloSeccion"
-import { productosPrueba } from "../../data/datosPrueba"
+import { URL, leerRespuesta } from "../../utils/api"
 
 const ProductosRelacionados = ({productoId, categoriaId}) => {
 
-    // Al conectar: GET /Producto?categoriaId={categoriaId}
-    const [productos, setProductos] = useState(productosPrueba)
+    const [productos, setProductos] = useState([])
+
+    // Traemos 5 de la misma categoría porque uno puede ser el producto que estamos viendo
+    useEffect(()=>{
+        fetch(`${URL}/Producto?categoriaId=${categoriaId}&size=5`)
+        .then(leerRespuesta)
+        .then((data)=>setProductos(data.content))
+        .catch((error)=>console.error('Error al cargar los productos relacionados', error))
+    }, [categoriaId])
 
     const relacionados = productos
-        .filter((value)=>value.categoriaId === categoriaId && value.productoId !== productoId)
+        .filter((value)=>value.productoId !== productoId)
         .slice(0, 4)
 
     if(relacionados.length === 0){

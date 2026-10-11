@@ -1,11 +1,22 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ProductoGrid from "../producto/ProductoGrid"
 import TituloSeccion from "../ui/TituloSeccion"
-import { productosPrueba } from "../../data/datosPrueba"
+import { URL, leerRespuesta } from "../../utils/api"
 
 const ProductosDestacados = () => {
 
-    const [productos, setProductos] = useState(productosPrueba.slice(0, 4))
+    const [productos, setProductos] = useState([])
+
+    useEffect(()=>{
+        fetch(`${URL}/Producto?size=4`)
+        .then(leerRespuesta)
+        .then((data)=>{
+            setProductos(data.content)
+        })
+        .catch((error)=>{
+            console.error('Error al cargar los productos destacados', error)
+        })
+    }, [])
 
     return(
         <section className="max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-xl">

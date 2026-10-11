@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import hero from "../../assets/hero.jpg"
 
 const Hero = () => {
@@ -19,9 +20,9 @@ const Hero = () => {
                     Equipá tu gimnasio con equipamiento de nivel profesional, hecho para aguantar tus entrenamientos más pesados.
                 </p>
                 <div className="flex flex-wrap gap-space-md mt-space-xl">
-                    <a href="/catalogo" className="bg-primary-container text-surface-container-lowest font-bold text-label-lg uppercase px-space-lg py-space-md">
+                    <Link to="/catalogo" className="bg-primary-container text-surface-container-lowest font-bold text-label-lg uppercase px-space-lg py-space-md hover:bg-primary">
                         Ver catálogo
-                    </a>
+                    </Link>
                 </div>
             </div>
         </section>

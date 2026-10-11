@@ -32,7 +32,13 @@ const ProductoForm = ({inicial, categorias, guardarProducto, cancelarEdicion}) =
         }
         setError('')
         guardarProducto({...producto, categoriaId: Number(producto.categoriaId), precioUnitario: Number(producto.precioUnitario), stock: Number(producto.stock)})
-        setProducto(productoVacio)
+        .then(()=>{
+            setProducto(productoVacio)
+        })
+        .catch((error)=>{
+            console.error('Error al guardar el producto', error)
+            setError(error.message)
+        })
     }
 
     return(
