@@ -4,6 +4,7 @@ import Hero from "../components/home/Hero"
 import Beneficios from "../components/home/Beneficios"
 import CategoriaGrid from "../components/home/CategoriaGrid"
 import ProductosDestacados from "../components/home/ProductosDestacados"
+import FondoHome from "../components/home/FondoHome"
 
 const Home = () => {
     return(
@@ -11,9 +12,11 @@ const Home = () => {
         <Navbar />
         <main className="pt-20">
             <Hero />
-            <Beneficios />
-            <CategoriaGrid />
-            <ProductosDestacados />
+            <FondoHome>
+                <Beneficios />
+                <CategoriaGrid />
+                <ProductosDestacados />
+            </FondoHome>
         </main>
         <Footer />
         </>

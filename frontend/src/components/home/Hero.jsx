@@ -1,10 +1,13 @@
 import { Link } from "react-router-dom"
 import hero from "../../assets/hero.jpg"
+import heroVideo from "../../assets/hero.mp4"
 
 const Hero = () => {
     return(
         <section className="relative h-[40rem] flex items-center overflow-hidden">
-            <img src={hero} alt="Atleta levantando peso" className="absolute inset-0 w-full h-full object-cover opacity-50" />
+            {/* Video de fondo en loop. Tiene que ir muted para que el navegador lo reproduzca solo;
+                mientras carga se ve la foto (poster) */}
+            <video src={heroVideo} poster={hero} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover opacity-50"></video>
             <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent"></div>
 
             <div className="relative max-w-7xl w-full mx-auto px-margin md:px-margin-desktop">
