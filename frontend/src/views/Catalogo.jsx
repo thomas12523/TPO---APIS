@@ -6,8 +6,7 @@ import CatalogoProductos from "../components/catalogo/CatalogoProductos"
 
 const Catalogo = () => {
 
-    // El buscador y las categorías del inicio mandan el filtro en el state de la ruta.
-    // Con key={location.key} el catálogo arranca de cero cada vez que llegamos a esta ruta
+    // El buscador y las categorías del inicio mandan el filtro en el state de la ruta
     const location = useLocation()
 
     return(
@@ -15,7 +14,7 @@ const Catalogo = () => {
         <Navbar />
         <main className="pt-20">
             <EncabezadoCatalogo />
-            <CatalogoProductos key={location.key} filtroInicial={location.state} />
+            <CatalogoProductos filtroInicial={location.state} />
         </main>
         <Footer />
         </>

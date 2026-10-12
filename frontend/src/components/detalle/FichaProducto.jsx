@@ -55,9 +55,8 @@ const FichaProducto = () => {
         <section className="max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-xl">
             <BreadcrumbProducto nombreProducto={producto.nombreProducto} />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-space-xl">
-                <GaleriaImagenes key={producto.productoId} imagenes={urls} nombreProducto={producto.nombreProducto} />
+                <GaleriaImagenes productoId={producto.productoId} imagenes={urls} nombreProducto={producto.nombreProducto} />
                 <InfoProducto
-                key={producto.productoId}
                 productoId={producto.productoId}
                 nombreProducto={producto.nombreProducto}
                 categoriaNombre={producto.categoriaNombre}

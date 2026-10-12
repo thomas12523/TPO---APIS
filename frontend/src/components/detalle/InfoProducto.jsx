@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Precio from "../ui/Precio"
 import SelectorCantidad from "../ui/SelectorCantidad"
@@ -11,6 +11,12 @@ const InfoProducto = ({productoId, nombreProducto, categoriaNombre, descripcion,
     const [cantidad, setCantidad] = useState(1)
     const [error, setError] = useState('')
     const navigate = useNavigate()
+
+    // Si entramos a otro producto (por ejemplo, uno relacionado), reiniciamos la cantidad y el error
+    useEffect(()=>{
+        setCantidad(1)
+        setError('')
+    }, [productoId])
 
     const handleClick = () => {
         if(localStorage.getItem('token') === null){

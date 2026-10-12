@@ -74,7 +74,6 @@ const GestionDescuentos = () => {
         {editando !== null && (
             <Modal cerrar={()=>setEditando(null)}>
                 <DescuentoForm
-                key={editando.descuentoId}
                 inicial={editando}
                 productos={productos}
                 guardarDescuento={guardarDescuento}

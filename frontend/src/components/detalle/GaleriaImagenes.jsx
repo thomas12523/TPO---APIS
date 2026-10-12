@@ -1,8 +1,13 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
-const GaleriaImagenes = ({imagenes, nombreProducto}) => {
+const GaleriaImagenes = ({productoId, imagenes, nombreProducto}) => {
 
     const [seleccionada, setSeleccionada] = useState(0)
+
+    // Si entramos a otro producto (por ejemplo, uno relacionado), volvemos a la primera imagen
+    useEffect(()=>{
+        setSeleccionada(0)
+    }, [productoId])
 
     if(imagenes.length === 0){
         return <div className="aspect-[4/3] bg-surface-container-low"></div>

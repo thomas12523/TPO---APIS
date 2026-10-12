@@ -68,7 +68,6 @@ const GestionProductos = () => {
         {editando !== null && (
             <Modal cerrar={()=>setEditando(null)}>
                 <ProductoForm
-                key={editando.productoId}
                 inicial={editando}
                 categorias={categorias}
                 guardarProducto={guardarProducto}

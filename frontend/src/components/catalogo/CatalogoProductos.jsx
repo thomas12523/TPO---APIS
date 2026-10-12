@@ -29,6 +29,13 @@ const CatalogoProductos = ({filtroInicial}) => {
         .catch((error)=>console.error('Error al cargar las categorías', error))
     }, [])
 
+    // Si ya estamos en el catálogo y se busca algo desde el navbar, llega un filtro nuevo:
+    // arrancamos los filtros de cero con ese filtro y volvemos a la primera página
+    useEffect(()=>{
+        setFiltros({...filtrosIniciales, ...filtroInicial})
+        setPagina(0)
+    }, [filtroInicial])
+
     // Cada vez que cambian los filtros o la página, le volvemos a pedir los productos al back
     useEffect(()=>{
         // Solo mandamos los filtros que el usuario completó

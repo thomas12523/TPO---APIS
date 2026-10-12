@@ -60,7 +60,6 @@ const GestionCategorias = () => {
         {editando !== null && (
             <Modal cerrar={()=>setEditando(null)}>
                 <CategoriaForm
-                key={editando.id}
                 inicial={editando}
                 guardarCategoria={guardarCategoria}
                 cancelarEdicion={()=>setEditando(null)}
