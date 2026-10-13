@@ -44,9 +44,14 @@ public class ProductoController {
             @RequestParam(required = false) Double precioMin,
             @RequestParam(required = false) Double precioMax,
             @RequestParam(required = false) String orden,
+            @RequestParam(required = false, defaultValue = "true") boolean soloActivos,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer size) {
-        return ResponseEntity.ok(productoService.getProductos(categoriaId, nombre, precioMin, precioMax, PageRequest.of(page, size, armarOrden(orden)))
+        PageRequest pageRequest = PageRequest.of(page, size, armarOrden(orden));
+        Page<Producto> resultado = soloActivos
+                ? productoService.getProductos(categoriaId, nombre, precioMin, precioMax, pageRequest)
+                : productoService.getTodosProductos(categoriaId, nombre, precioMin, precioMax, pageRequest);
+        return ResponseEntity.ok(resultado
                 .map(producto -> new ProductoResponse(producto, descuentoService.getPrecioConDescuento(producto))));
     }
 

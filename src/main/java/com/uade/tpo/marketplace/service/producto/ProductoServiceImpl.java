@@ -34,6 +34,11 @@ public class ProductoServiceImpl implements IProductoService {
     }
 
     @Transactional
+    public Page<Producto> getTodosProductos(Integer categoriaId, String nombre, Double precioMin, Double precioMax, PageRequest pageRequest) {
+        return productoRepository.buscarTodosProductos(categoriaId, nombre, precioMin, precioMax, pageRequest);
+    }
+
+    @Transactional
     public Optional<Producto> getProductoById(int productoId) {
         return productoRepository.findById(productoId);
     }

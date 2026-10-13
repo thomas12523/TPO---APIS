@@ -22,4 +22,12 @@ public interface IProductoRepository extends JpaRepository<Producto, Integer> {
             + "(:precioMin is null or p.precioUnitario >= :precioMin) and "
             + "(:precioMax is null or p.precioUnitario <= :precioMax)")
     Page<Producto> buscarProductos(Integer categoriaId, String nombre, Double precioMin, Double precioMax, Pageable pageable);
+
+    // Para el panel de admin: trae activos e inactivos
+    @Query("select p from Producto p where "
+            + "(:categoriaId is null or p.categoria.id = :categoriaId) and "
+            + "(:nombre is null or lower(p.nombreProducto) like lower(concat('%', :nombre, '%'))) and "
+            + "(:precioMin is null or p.precioUnitario >= :precioMin) and "
+            + "(:precioMax is null or p.precioUnitario <= :precioMax)")
+    Page<Producto> buscarTodosProductos(Integer categoriaId, String nombre, Double precioMin, Double precioMax, Pageable pageable);
 }

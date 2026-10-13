@@ -13,7 +13,8 @@ const GestionProductos = () => {
     const [error, setError] = useState('')
 
     useEffect(()=>{
-        fetch(`${URL}/Producto?size=100`)
+        // soloActivos=false para que el admin vea también los productos desactivados
+        fetch(`${URL}/Producto?size=100&soloActivos=false`)
         .then(leerRespuesta)
         .then((data)=>setProductos(data.content))
         .catch((error)=>console.error('Error al cargar los productos', error))

@@ -14,6 +14,9 @@ public interface IProductoService {
 
     public Page<Producto> getProductos(Integer categoriaId, String nombre, Double precioMin, Double precioMax, PageRequest pageRequest);
 
+    // Para el panel de admin: trae todos los productos (activos e inactivos)
+    public Page<Producto> getTodosProductos(Integer categoriaId, String nombre, Double precioMin, Double precioMax, PageRequest pageRequest);
+
     public Optional<Producto> getProductoById(int productoId);
 
     public Producto crearProducto(ProductoRequest productoRequest) throws ProductoDuplicateException;
