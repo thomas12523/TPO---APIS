@@ -7,13 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.PrePersist;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class Carrito {
 
@@ -29,5 +24,24 @@ public class Carrito {
     private String fechaCarrito;
 
     @Column(nullable = false)
-    private boolean activo = true;
+    private boolean activo;
+
+    @PrePersist
+    private void prePersist() {
+        this.activo = true;
+    }
+
+    public Carrito() {}
+
+    public int getCarritoId() { return carritoId; }
+    public void setCarritoId(int carritoId) { this.carritoId = carritoId; }
+
+    public Usuario getUsuario() { return usuario; }
+    public void setUsuario(Usuario usuario) { this.usuario = usuario; }
+
+    public String getFechaCarrito() { return fechaCarrito; }
+    public void setFechaCarrito(String fechaCarrito) { this.fechaCarrito = fechaCarrito; }
+
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
 }

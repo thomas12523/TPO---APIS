@@ -5,13 +5,8 @@ import jakarta.persistence.Entity; // libreria de persistencia de springboot
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.PrePersist;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class Category {
 
@@ -23,6 +18,21 @@ public class Category {
     private String nombre;
 
     @Column(nullable = false)
-    private boolean activo = true;
+    private boolean activo;
 
+    @PrePersist
+    private void prePersist() {
+        this.activo = true;
+    }
+
+    public Category() {}
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
 }

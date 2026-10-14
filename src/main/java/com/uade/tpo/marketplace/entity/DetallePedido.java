@@ -7,13 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.PrePersist;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class DetallePedido {
 
@@ -42,5 +37,36 @@ public class DetallePedido {
     private double subtotal;
 
     @Column(nullable = false)
-    private boolean activo = true;
+    private boolean activo;
+
+    @PrePersist
+    private void prePersist() {
+        this.activo = true;
+    }
+
+    public DetallePedido() {}
+
+    public int getDetallePedidoId() { return detallePedidoId; }
+    public void setDetallePedidoId(int detallePedidoId) { this.detallePedidoId = detallePedidoId; }
+
+    public Pedido getPedido() { return pedido; }
+    public void setPedido(Pedido pedido) { this.pedido = pedido; }
+
+    public Producto getProducto() { return producto; }
+    public void setProducto(Producto producto) { this.producto = producto; }
+
+    public int getCantidad() { return cantidad; }
+    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
+
+    public double getPrecioUnitario() { return precioUnitario; }
+    public void setPrecioUnitario(double precioUnitario) { this.precioUnitario = precioUnitario; }
+
+    public String getObservaciones() { return observaciones; }
+    public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
+
+    public double getSubtotal() { return subtotal; }
+    public void setSubtotal(double subtotal) { this.subtotal = subtotal; }
+
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
 }

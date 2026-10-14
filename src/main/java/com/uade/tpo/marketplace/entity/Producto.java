@@ -7,13 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.PrePersist;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class Producto {
 
@@ -41,5 +36,36 @@ public class Producto {
     private String imagenUrl;
 
     @Column(nullable = false)
-    private boolean activo = true;
+    private boolean activo;
+
+    @PrePersist
+    private void prePersist() {
+        this.activo = true;
+    }
+
+    public Producto() {}
+
+    public int getProductoId() { return productoId; }
+    public void setProductoId(int productoId) { this.productoId = productoId; }
+
+    public Category getCategoria() { return categoria; }
+    public void setCategoria(Category categoria) { this.categoria = categoria; }
+
+    public String getNombreProducto() { return nombreProducto; }
+    public void setNombreProducto(String nombreProducto) { this.nombreProducto = nombreProducto; }
+
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+
+    public double getPrecioUnitario() { return precioUnitario; }
+    public void setPrecioUnitario(double precioUnitario) { this.precioUnitario = precioUnitario; }
+
+    public int getStock() { return stock; }
+    public void setStock(int stock) { this.stock = stock; }
+
+    public String getImagenUrl() { return imagenUrl; }
+    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
+
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
 }

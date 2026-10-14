@@ -15,15 +15,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import jakarta.persistence.PrePersist;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class Usuario implements UserDetails {
 
@@ -54,13 +47,48 @@ public class Usuario implements UserDetails {
     private Role role;
 
     @Column(nullable = false)
-    private boolean activo = true;
+    private boolean activo;
 
     @OneToMany(mappedBy = "usuario")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private List<Pedido> pedidos;
 
+    @PrePersist
+    private void prePersist() {
+        this.activo = true;
+    }
+
+    public Usuario() {}
+
+    public int getUsuarioId() { return usuarioId; }
+    public void setUsuarioId(int usuarioId) { this.usuarioId = usuarioId; }
+
+    public int getDni() { return dni; }
+    public void setDni(int dni) { this.dni = dni; }
+
+    public void setUsername(String username) { this.username = username; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public String getApellido() { return apellido; }
+    public void setApellido(String apellido) { this.apellido = apellido; }
+
+    public String getContrasenia() { return contrasenia; }
+    public void setContrasenia(String contrasenia) { this.contrasenia = contrasenia; }
+
+    public Role getRole() { return role; }
+    public void setRole(Role role) { this.role = role; }
+
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
+
+    public List<Pedido> getPedidos() { return pedidos; }
+    public void setPedidos(List<Pedido> pedidos) { this.pedidos = pedidos; }
+
+    // UserDetails implementation
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));

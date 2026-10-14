@@ -7,13 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 public class Descuento {
 
@@ -29,11 +23,31 @@ public class Descuento {
     private double porcentaje;
 
     @Column(nullable = false)
-    private boolean activo = true;
+    private boolean activo;
 
     @Column(nullable = false)
     private String fechaInicio;
 
     @Column(nullable = false)
     private String fechaFin;
+
+    public Descuento() {}
+
+    public int getDescuentoId() { return descuentoId; }
+    public void setDescuentoId(int descuentoId) { this.descuentoId = descuentoId; }
+
+    public Producto getProducto() { return producto; }
+    public void setProducto(Producto producto) { this.producto = producto; }
+
+    public double getPorcentaje() { return porcentaje; }
+    public void setPorcentaje(double porcentaje) { this.porcentaje = porcentaje; }
+
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
+
+    public String getFechaInicio() { return fechaInicio; }
+    public void setFechaInicio(String fechaInicio) { this.fechaInicio = fechaInicio; }
+
+    public String getFechaFin() { return fechaFin; }
+    public void setFechaFin(String fechaFin) { this.fechaFin = fechaFin; }
 }

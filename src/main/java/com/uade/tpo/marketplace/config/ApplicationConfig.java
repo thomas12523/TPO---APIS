@@ -13,12 +13,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.uade.tpo.marketplace.repository.IUsuarioRepository;
 
-import lombok.RequiredArgsConstructor;
+
 
 @Configuration
-@RequiredArgsConstructor
 public class ApplicationConfig {
     private final IUsuarioRepository usuarioRepository;
+
+    public ApplicationConfig(IUsuarioRepository usuarioRepository) {
+        super();
+        this.usuarioRepository = usuarioRepository;
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {
