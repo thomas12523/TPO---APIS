@@ -1,9 +1,12 @@
+import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Precio from "../ui/Precio"
+import MensajeError from "../ui/MensajeError"
 import { agregarAlCarrito } from "../../utils/carrito"
 
 const ProductoCard = ({productoId, nombreProducto, categoriaNombre, precioUnitario, precioConDescuento, tieneDescuento, stock, imagenUrl}) => {
 
+    const [error, setError] = useState('')
     const navigate = useNavigate()
 
     const handleClick = () => {
@@ -11,12 +14,14 @@ const ProductoCard = ({productoId, nombreProducto, categoriaNombre, precioUnitar
             navigate('/login')
             return
         }
+        setError('')
         agregarAlCarrito(productoId, 1, precioConDescuento)
         .then(()=>{
             navigate('/carrito')
         })
         .catch((error)=>{
-            alert(error.message)
+            console.error('Error al agregar al carrito', error)
+            setError(error.message)
         })
     }
 
@@ -41,6 +46,7 @@ const ProductoCard = ({productoId, nombreProducto, categoriaNombre, precioUnitar
                         <span className="material-symbols-outlined">add</span>
                     </button>
                 </div>
+                <MensajeError mensaje={error} />
             </div>
         </article>
     )
