@@ -15,18 +15,18 @@ export const opciones = (method, datos) => {
     }
 }
 
-// Claves que se guardan en localStorage al iniciar sesión
-const CLAVES_SESION = ['token', 'usuarioId', 'role', 'carritoId']
-
 // fetch solo rechaza la promesa si no hay conexión: si el back responde un 400 o un 401
 // igual entra al .then. Por eso, si la respuesta no es ok, tiramos el error para que
 // lo agarre el .catch con el mensaje que manda el back.
 // Si la respuesta es 401 (sesión vencida / token inválido), limpiamos el localStorage
-// y redirigimos al home para que la página se muestre sin usuario logueado.
+// (las mismas claves que se guardan al iniciar sesión) y el componente que agarre el
+// error se vuelve a dibujar sin usuario logueado.
 export const leerRespuesta = (response) => {
     if (response.status === 401) {
-        CLAVES_SESION.forEach((clave) => localStorage.removeItem(clave))
-        window.location.href = '/'
+        localStorage.removeItem('token')
+        localStorage.removeItem('usuarioId')
+        localStorage.removeItem('role')
+        localStorage.removeItem('carritoId')
         // Rechazamos igual para cortar la cadena de .then
         return Promise.reject(new Error('Sesión expirada. Por favor ingresá de nuevo.'))
     }
