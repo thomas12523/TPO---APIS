@@ -13,7 +13,7 @@ const GestionProductos = () => {
     const [error, setError] = useState('')
 
     useEffect(()=>{
-        // soloActivos=false para que el admin vea también los productos desactivados
+
         fetch(`${URL}/Producto?size=100&soloActivos=false`)
         .then(leerRespuesta)
         .then((data)=>setProductos(data.content))
@@ -25,8 +25,6 @@ const GestionProductos = () => {
         .catch((error)=>console.error('Error al cargar las categorías', error))
     }, [])
 
-    // Devolvemos la promesa para que el formulario sepa si salió bien o mal.
-    // Guardamos lo que devuelve el back, que ya trae la categoría y el precio con descuento
     const guardarProducto = (datos) => {
         if(editando === null){
             return fetch(`${URL}/Producto`, opciones('POST', datos))
@@ -65,7 +63,7 @@ const GestionProductos = () => {
         <ProductoForm inicial={null} categorias={categorias} guardarProducto={guardarProducto} />
         <MensajeError mensaje={error} />
         <TablaProductos productos={productos} editarProducto={editarProducto} cambiarEstado={cambiarEstado} />
-        {/* Al tocar la lapicera, el formulario de edición se abre encima de la tabla */}
+        {}
         {editando !== null && (
             <Modal cerrar={()=>setEditando(null)}>
                 <ProductoForm

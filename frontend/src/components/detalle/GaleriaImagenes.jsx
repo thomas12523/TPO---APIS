@@ -4,7 +4,6 @@ const GaleriaImagenes = ({productoId, imagenes, nombreProducto}) => {
 
     const [seleccionada, setSeleccionada] = useState(0)
 
-    // Si entramos a otro producto (por ejemplo, uno relacionado), volvemos a la primera imagen
     useEffect(()=>{
         setSeleccionada(0)
     }, [productoId])

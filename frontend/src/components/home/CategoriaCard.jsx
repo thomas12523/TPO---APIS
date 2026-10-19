@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom"
 
-// Al catálogo le mandamos la categoría en el state de la ruta, así arranca filtrado
 const CategoriaCard = ({id, nombre, imagen}) => {
     return(
         <Link to="/catalogo" state={{categoriaId: String(id)}} className="group relative h-72 overflow-hidden bg-surface-container-low">

@@ -11,7 +11,7 @@ import { obtenerCarrito } from "../../utils/carrito"
 const FormCheckout = () => {
 
     const [carrito, setCarrito] = useState(null)
-    // El nombre coincide con CheckoutRequest (metodoPago)
+
     const [checkout, setCheckout] = useState({metodoPago: ''})
     const [error, setError] = useState('')
     const navigate = useNavigate()
@@ -39,11 +39,10 @@ const FormCheckout = () => {
         }
         setError('')
 
-        // El back arma el pedido con lo que hay en el carrito, descuenta el stock y vacía el carrito
         fetch(`${URL}/Carrito/${carritoId}/checkout`, opciones('POST', checkout))
         .then(leerRespuesta)
         .then((data)=>{
-            // Le pasamos el pedido creado a la vista de confirmación por el state de la ruta
+
             navigate('/pedido-confirmado', {state: data})
         })
         .catch((error)=>{

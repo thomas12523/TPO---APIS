@@ -1,8 +1,5 @@
 import { URL, opciones, leerRespuesta } from "./api"
 
-// El login y el registro solo devuelven el token. Lo guardamos en el localStorage y,
-// con el token, le pedimos al back quién es el usuario y cuál es su carrito,
-// así el resto de los componentes los tienen a mano sin pasar props por todos lados
 export const iniciarSesion = (token) => {
     localStorage.setItem('token', token)
     return fetch(`${URL}/Usuario/me`, opciones('GET'))

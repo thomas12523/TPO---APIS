@@ -21,7 +21,7 @@ const HistorialPedidos = () => {
         fetch(`${URL}/Pedido?usuarioId=${usuarioId}&size=50`, opciones('GET'))
         .then(leerRespuesta)
         .then((data)=>{
-            // El back devuelve una página; mostramos primero los más nuevos
+
             setPedidos([...data.content].reverse())
         })
         .catch((error)=>{
@@ -38,7 +38,7 @@ const HistorialPedidos = () => {
         fetch(`${URL}/Pedido/${pedidoId}/cancelar`, opciones('POST'))
         .then(leerRespuesta)
         .then((data)=>{
-            // Reemplazamos el pedido por el que devolvió el back (ya con estado CANCELADO)
+
             setPedidos(pedidos.map((value)=>(
                 value.pedidoId === pedidoId ? data : value
             )))

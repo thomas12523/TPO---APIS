@@ -18,7 +18,6 @@ const GestionCategorias = () => {
         .catch((error)=>console.error('Error al cargar las categorías', error))
     }, [])
 
-    // Devolvemos la promesa para que el formulario sepa si salió bien o mal
     const guardarCategoria = (datos) => {
         if(editando === null){
             return fetch(`${URL}/Categories`, opciones('POST', datos))
@@ -37,7 +36,6 @@ const GestionCategorias = () => {
         setEditando(categorias.find((value)=>value.id === id))
     }
 
-    // Baja lógica: el back solo permite desactivar (no tiene cómo reactivar una categoría)
     const desactivarCategoria = (id) => {
         fetch(`${URL}/Categories/${id}`, opciones('PATCH'))
         .then(leerRespuesta)
@@ -56,7 +54,7 @@ const GestionCategorias = () => {
         <CategoriaForm inicial={null} guardarCategoria={guardarCategoria} />
         <MensajeError mensaje={error} />
         <TablaCategorias categorias={categorias} editarCategoria={editarCategoria} cambiarEstado={desactivarCategoria} />
-        {/* Al tocar la lapicera, el formulario de edición se abre encima de la tabla */}
+        {}
         {editando !== null && (
             <Modal cerrar={()=>setEditando(null)}>
                 <CategoriaForm

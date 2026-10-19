@@ -4,7 +4,6 @@ import IconoNav from "./IconoNav"
 
 const Navbar = () => {
 
-    // Lo guardamos al iniciar sesión (ver utils/sesion.js)
     const token = localStorage.getItem('token')
     const role = localStorage.getItem('role')
 

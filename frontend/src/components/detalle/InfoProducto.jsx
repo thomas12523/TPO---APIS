@@ -12,7 +12,6 @@ const InfoProducto = ({productoId, nombreProducto, categoriaNombre, descripcion,
     const [error, setError] = useState('')
     const navigate = useNavigate()
 
-    // Si entramos a otro producto (por ejemplo, uno relacionado), reiniciamos la cantidad y el error
     useEffect(()=>{
         setCantidad(1)
         setError('')

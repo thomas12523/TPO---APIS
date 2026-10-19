@@ -5,13 +5,10 @@ import ContadorResultados from "./contador/ContadorResultados"
 import ProductoGrid from "../producto/ProductoGrid"
 import { URL, leerRespuesta } from "../../utils/api"
 
-// Igual al tamaño de página por defecto del back (GET /Producto)
 const TAMANIO_PAGINA = 20
 
-// Los nombres coinciden con los parámetros de GET /Producto
 const filtrosIniciales = {categoriaId: '', nombre: '', precioMin: '', precioMax: '', orden: ''}
 
-// filtroInicial llega cuando venimos del buscador o de una categoría del inicio
 const CatalogoProductos = ({filtroInicial}) => {
 
     const [productos, setProductos] = useState([])
@@ -21,7 +18,6 @@ const CatalogoProductos = ({filtroInicial}) => {
     const [totalPaginas, setTotalPaginas] = useState(0)
     const [totalProductos, setTotalProductos] = useState(0)
 
-    // Las categorías se traen una sola vez, cuando el componente se monta
     useEffect(()=>{
         fetch(`${URL}/Categories`)
         .then(leerRespuesta)
@@ -29,16 +25,13 @@ const CatalogoProductos = ({filtroInicial}) => {
         .catch((error)=>console.error('Error al cargar las categorías', error))
     }, [])
 
-    // Si ya estamos en el catálogo y se busca algo desde el navbar, llega un filtro nuevo:
-    // arrancamos los filtros de cero con ese filtro y volvemos a la primera página
     useEffect(()=>{
         setFiltros({...filtrosIniciales, ...filtroInicial})
         setPagina(0)
     }, [filtroInicial])
 
-    // Cada vez que cambian los filtros o la página, le volvemos a pedir los productos al back
     useEffect(()=>{
-        // Solo mandamos los filtros que el usuario completó
+
         const parametros = Object.keys(filtros)
             .filter((value)=>filtros[value].trim() !== '')
             .map((value)=>`&${value}=${encodeURIComponent(filtros[value].trim())}`)
@@ -55,7 +48,7 @@ const CatalogoProductos = ({filtroInicial}) => {
     }, [filtros, pagina])
 
     const handleChange = (e) => {
-        // Los precios solo aceptan dígitos: si escribe otra cosa, no actualizamos el estado
+
         const esPrecio = e.target.name === 'precioMin' || e.target.name === 'precioMax'
         if(esPrecio && !/^\d*$/.test(e.target.value)){
             return

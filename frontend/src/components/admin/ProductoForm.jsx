@@ -3,7 +3,6 @@ import Campo from "../ui/Campo"
 import CampoSelect from "../ui/CampoSelect"
 import MensajeError from "../ui/MensajeError"
 
-// Los nombres coinciden con ProductoRequest
 const productoVacio = {categoriaId: '', nombreProducto: '', descripcion: '', precioUnitario: '', stock: '', imagenUrl: ''}
 
 const ProductoForm = ({inicial, categorias, guardarProducto, cancelarEdicion}) => {

@@ -1,4 +1,4 @@
-// PENDIENTE lo pone el checkout y CANCELADO el endpoint de cancelar
+
 const estados = ['TODOS', 'PENDIENTE', 'CANCELADO']
 
 const FiltroEstados = ({pedidos, filtro, cambiarFiltro}) => {

@@ -25,7 +25,6 @@ const CarritoCompras = () => {
         })
     }, [carritoId])
 
-    // Después de cada cambio volvemos a pedir el carrito, porque los totales con descuento los calcula el back
     const actualizarCarrito = () => {
         obtenerCarrito()
         .then((data)=>{
@@ -64,7 +63,6 @@ const CarritoCompras = () => {
         return <AvisoSesion mensaje="Iniciá sesión para ver tu carrito." />
     }
 
-    // Mientras la promesa está pendiente todavía no hay carrito para mostrar (o falló la carga)
     if(carrito === null){
         return <MensajeError mensaje={error} />
     }

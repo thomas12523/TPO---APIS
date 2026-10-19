@@ -1,14 +1,10 @@
 import { URL, opciones, leerRespuesta } from "./api"
 
-// GET /Carrito/{carritoId}: trae el carrito con sus items y los totales
-// (el subtotal sin descuentos y el total con descuentos los calcula el back)
 export const obtenerCarrito = () => {
     return fetch(`${URL}/Carrito/${localStorage.getItem('carritoId')}`, opciones('GET'))
     .then(leerRespuesta)
 }
 
-// POST /DetalleCarrito: agrega un producto al carrito del usuario logueado.
-// Los nombres coinciden con DetalleCarritoRequest
 export const agregarAlCarrito = (productoId, cantidad, precioUnitario) => {
     const datosAEnviar = {
         carritoId: Number(localStorage.getItem('carritoId')),
@@ -20,7 +16,7 @@ export const agregarAlCarrito = (productoId, cantidad, precioUnitario) => {
     return fetch(`${URL}/DetalleCarrito`, opciones('POST', datosAEnviar))
     .then(leerRespuesta)
     .catch((error)=>{
-        // Si el producto ya estaba, el back avisa que el detalle está duplicado
+
         if(error.message.includes('duplicado')){
             throw new Error('Ese producto ya está en tu carrito')
         }

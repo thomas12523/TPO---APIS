@@ -7,7 +7,6 @@ const ProductosRelacionados = ({productoId, categoriaId}) => {
 
     const [productos, setProductos] = useState([])
 
-    // Traemos 5 de la misma categoría porque uno puede ser el producto que estamos viendo
     useEffect(()=>{
         fetch(`${URL}/Producto?categoriaId=${categoriaId}&size=5`)
         .then(leerRespuesta)

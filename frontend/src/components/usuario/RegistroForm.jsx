@@ -7,13 +7,12 @@ import CampoContrasenia from "../ui/CampoContrasenia"
 import MensajeError from "../ui/MensajeError"
 import BotonPrincipal from "../ui/BotonPrincipal"
 
-// Los nombres coinciden con UsuarioRequest
 const usuarioInicial = {nombre: '', apellido: '', dni: '', username: '', email: '', contrasenia: ''}
 
 const RegistroForm = () => {
 
     const [usuario, setUsuario] = useState(usuarioInicial)
-    // La confirmación solo se valida en el front, no viaja al back
+
     const [confirmacion, setConfirmacion] = useState('')
     const [error, setError] = useState('')
     const navigate = useNavigate()
@@ -46,7 +45,6 @@ const RegistroForm = () => {
             body: JSON.stringify({...usuario, dni: Number(usuario.dni)})
         }
 
-        // Al registrarse el back ya crea el carrito del usuario y devuelve el token
         fetch(`${URL}/Auth/register`, options)
         .then(leerRespuesta)
         .then((data)=>iniciarSesion(data.access_token))

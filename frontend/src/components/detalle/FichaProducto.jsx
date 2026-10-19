@@ -9,13 +9,11 @@ import { URL, leerRespuesta } from "../../utils/api"
 
 const FichaProducto = () => {
 
-    // El id sale de la URL: /producto/:productoId
     const { productoId } = useParams()
     const [producto, setProducto] = useState(null)
     const [imagenes, setImagenes] = useState([])
     const [error, setError] = useState('')
 
-    // Se vuelve a ejecutar si cambia el id (por ejemplo, al entrar a un producto relacionado)
     useEffect(()=>{
         fetch(`${URL}/Producto/${productoId}`)
         .then(leerRespuesta)
@@ -38,16 +36,14 @@ const FichaProducto = () => {
         return <p className="max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-xl text-body-lg text-on-surface-variant">{error}</p>
     }
 
-    // Mientras la promesa está pendiente todavía no hay producto para mostrar
     if(producto === null){
         return null
     }
 
-    // Las imágenes pueden venir como URL o como archivo subido (en base64)
     const urlsExtra = imagenes.map((value)=>(
         value.imagenUrl !== null ? value.imagenUrl : `data:${value.tipoContenido};base64,${value.imagenBase64}`
     ))
-    // La imagen principal del producto va primero y después las extra
+
     const urls = [producto.imagenUrl, ...urlsExtra]
 
     return(

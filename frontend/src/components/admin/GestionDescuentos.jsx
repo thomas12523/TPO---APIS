@@ -24,7 +24,6 @@ const GestionDescuentos = () => {
         .catch((error)=>console.error('Error al cargar los productos', error))
     }, [])
 
-    // Devolvemos la promesa para que el formulario sepa si salió bien o mal
     const guardarDescuento = (datos) => {
         if(editando === null){
             return fetch(`${URL}/Descuento`, opciones('POST', {...datos, activo: true}))
@@ -43,7 +42,6 @@ const GestionDescuentos = () => {
         setEditando(descuentos.find((value)=>value.descuentoId === descuentoId))
     }
 
-    // Usamos el PUT con activo invertido, porque el PATCH del back solo sirve para desactivar
     const cambiarEstado = (descuentoId) => {
         const descuento = descuentos.find((value)=>value.descuentoId === descuentoId)
 
@@ -59,7 +57,6 @@ const GestionDescuentos = () => {
         })
     }
 
-    // El DescuentoResponse trae el productoId; buscamos el nombre para mostrarlo
     const nombreDe = (productoId) => {
         const producto = productos.find((value)=>value.productoId === productoId)
         return producto === undefined ? `Producto #${productoId}` : producto.nombreProducto
@@ -70,7 +67,7 @@ const GestionDescuentos = () => {
         <DescuentoForm inicial={null} productos={productos} guardarDescuento={guardarDescuento} />
         <MensajeError mensaje={error} />
         <TablaDescuentos descuentos={descuentos} nombreDe={nombreDe} editarDescuento={editarDescuento} cambiarEstado={cambiarEstado} />
-        {/* Al tocar la lapicera, el formulario de edición se abre encima de la tabla */}
+        {}
         {editando !== null && (
             <Modal cerrar={()=>setEditando(null)}>
                 <DescuentoForm
