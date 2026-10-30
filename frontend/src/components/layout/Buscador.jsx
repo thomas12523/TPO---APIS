@@ -8,6 +8,7 @@ const Buscador = () => {
 
     const handleChange = (e) => {setNombre(e.target.value)}
 
+    // El catálogo lee el nombre del state de la ruta y filtra con eso
     const handleSubmit = (e) => {
         e.preventDefault()
         if(nombre.trim() === ''){

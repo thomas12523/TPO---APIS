@@ -9,7 +9,7 @@ const CategoriaFila = ({id, nombre, activo, editarCategoria, cambiarEstado}) => 
             <td className="px-space-md py-space-sm"><EstadoBadge activo={activo} /></td>
             <td className="px-space-md py-space-sm flex gap-space-xs">
                 <BotonIcono icono="edit" titulo="Editar" onClick={()=>editarCategoria(id)} />
-                {activo && <BotonIcono icono="visibility_off" titulo="Desactivar" onClick={()=>cambiarEstado(id)} />}
+                <BotonIcono icono={activo ? 'visibility_off' : 'visibility'} titulo={activo ? 'Desactivar' : 'Activar'} onClick={()=>cambiarEstado(id)} />
             </td>
         </tr>
     )

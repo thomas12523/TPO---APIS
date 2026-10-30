@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uade.tpo.marketplace.entity.Role;
 import com.uade.tpo.marketplace.entity.Usuario;
+import com.uade.tpo.marketplace.entity.dto.request.ContraseniaRequest;
 import com.uade.tpo.marketplace.entity.dto.request.UsuarioRequest;
 import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.entity.dto.response.UsuarioResponse;
+import com.uade.tpo.marketplace.exceptions.ContraseniaIncorrectaException;
 import com.uade.tpo.marketplace.exceptions.UsuarioDuplicateException;
 import com.uade.tpo.marketplace.service.usuario.IUsuarioService;
 
@@ -48,6 +50,16 @@ public class UsuarioController {
     public ResponseEntity<UsuarioResponse> actualizarMiPerfil(@AuthenticationPrincipal Usuario usuarioActual,
             @RequestBody UsuarioRequest usuarioRequest) {
         Optional<Usuario> result = usuarioService.actualizarUsuario(usuarioActual.getUsuarioId(), usuarioRequest);
+        if (result.isPresent())
+            return ResponseEntity.ok(new UsuarioResponse(result.get()));
+
+        return ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("me/contrasenia") // cambio de contrasenia del usuario autenticado: pide la actual para confirmar
+    public ResponseEntity<UsuarioResponse> cambiarMiContrasenia(@AuthenticationPrincipal Usuario usuarioActual,
+            @RequestBody ContraseniaRequest contraseniaRequest) throws ContraseniaIncorrectaException {
+        Optional<Usuario> result = usuarioService.cambiarContrasenia(usuarioActual.getUsuarioId(), contraseniaRequest);
         if (result.isPresent())
             return ResponseEntity.ok(new UsuarioResponse(result.get()));
 

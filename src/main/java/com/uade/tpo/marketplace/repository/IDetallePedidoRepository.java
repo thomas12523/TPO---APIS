@@ -19,4 +19,8 @@ public interface IDetallePedidoRepository extends JpaRepository<DetallePedido, I
     List<DetallePedido> findByPedidoId(int pedidoId);
 
     List<DetallePedido> findByActivoTrue();
+
+    // true si el usuario tiene algun pedido no cancelado con ese producto
+    @Query(value = "select count(dp) > 0 from DetallePedido dp where dp.pedido.usuario.usuarioId = ?1 and dp.producto.productoId = ?2 and dp.activo = true and dp.pedido.activo = true and dp.pedido.estado <> 'CANCELADO'")
+    boolean existeCompra(int usuarioId, int productoId);
 }

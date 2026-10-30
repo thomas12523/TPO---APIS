@@ -1,11 +1,12 @@
 import PedidoDetalle from "./PedidoDetalle"
+import { iconoEstado } from "./estados"
 
 const PedidoCard = ({pedidoId, numeroPedido, fechaCreacion, estado, total, metodoPago, abierto, alternarDetalle, cancelarPedido}) => {
     return(
         <article className="bg-surface-container-low border border-white/5">
             <div className="flex flex-wrap items-center gap-space-lg p-space-lg">
                 <div className="w-14 h-14 flex items-center justify-center bg-surface-container-high text-primary-container">
-                    <span className="material-symbols-outlined text-3xl">{estado === 'CANCELADO' ? 'block' : 'local_shipping'}</span>
+                    <span className="material-symbols-outlined text-3xl">{iconoEstado[estado]}</span>
                 </div>
                 <div className="flex-1 min-w-48">
                     <div className="flex items-center gap-space-sm">

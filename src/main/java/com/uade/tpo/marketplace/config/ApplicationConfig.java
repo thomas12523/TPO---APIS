@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.uade.tpo.marketplace.repository.IUsuarioRepository;
 
+
+
 @Configuration
 public class ApplicationConfig {
     private final IUsuarioRepository usuarioRepository;

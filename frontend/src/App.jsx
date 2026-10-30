@@ -14,6 +14,7 @@ import AdminProductos from "./views/admin/AdminProductos"
 import AdminCategorias from "./views/admin/AdminCategorias"
 import AdminDescuentos from "./views/admin/AdminDescuentos"
 import AdminUsuarios from "./views/admin/AdminUsuarios"
+import AdminPedidos from "./views/admin/AdminPedidos"
 
 const App = () => {
   return (
@@ -33,6 +34,7 @@ const App = () => {
         <Route path="/admin/categorias" element={<AdminCategorias />} />
         <Route path="/admin/descuentos" element={<AdminDescuentos />} />
         <Route path="/admin/usuarios" element={<AdminUsuarios />} />
+        <Route path="/admin/pedidos" element={<AdminPedidos />} />
         <Route path="*" element={<NoEncontrado />} />
       </Routes>
     </>

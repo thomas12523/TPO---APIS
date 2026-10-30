@@ -1,6 +1,7 @@
 import { useState } from "react"
 import MensajeError from "../ui/MensajeError"
 
+// Los nombres coinciden con ResenaRequest (puntuacion, comentario)
 const resenaInicial = {puntuacion: '5', comentario: ''}
 
 const ResenaForm = ({agregarResena}) => {
@@ -12,10 +13,6 @@ const ResenaForm = ({agregarResena}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        if(localStorage.getItem('token') === null){
-            setError('Iniciá sesión para escribir una reseña')
-            return
-        }
         if(resena.comentario.trim() === ''){
             setError('El comentario no puede estar vacío')
             return

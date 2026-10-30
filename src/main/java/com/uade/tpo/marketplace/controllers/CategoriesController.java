@@ -33,9 +33,13 @@ public class CategoriesController {
 
     @GetMapping //localhost/8080/Categories
     public ResponseEntity<Page<CategoryResponse>> getCategories(
+            @RequestParam(required = false, defaultValue = "true") boolean soloActivos, // el admin pide false para ver tambien las desactivadas
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer size) {
-        return ResponseEntity.ok(categoriesService.getCategories(PageRequest.of(page, size)).map(CategoryResponse::new));
+        Page<Category> resultado = soloActivos
+                ? categoriesService.getCategories(PageRequest.of(page, size))
+                : categoriesService.getTodasCategories(PageRequest.of(page, size));
+        return ResponseEntity.ok(resultado.map(CategoryResponse::new));
     }
 
     @GetMapping("{categoryId}") //localhost/8080/Categories/id
@@ -60,6 +64,15 @@ public class CategoriesController {
             return ResponseEntity.notFound().build();
 
         return ResponseEntity.ok(new CategoryResponse(result));
+    }
+
+    @PatchMapping("{categoryId}/estado") // activa o desactiva la categoria (asi se puede volver a habilitar)
+    public ResponseEntity<CategoryResponse> actualizarEstado(@PathVariable int categoryId, @RequestParam boolean activo) {
+        Optional<Category> result = categoriesService.actualizarEstado(categoryId, activo);
+        if (result.isPresent())
+            return ResponseEntity.ok(new CategoryResponse(result.get()));
+
+        return ResponseEntity.notFound().build();
     }
 
     @PatchMapping("{categoryId}")

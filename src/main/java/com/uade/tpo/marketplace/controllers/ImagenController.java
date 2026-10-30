@@ -12,18 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.uade.tpo.marketplace.entity.Imagen;
-import com.uade.tpo.marketplace.entity.dto.request.ImagenRequest;
 import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.entity.dto.response.ImagenResponse;
-import com.uade.tpo.marketplace.exceptions.ImagenDuplicateException;
 import com.uade.tpo.marketplace.service.imagen.IImagenService;
 
 @RestController
@@ -49,25 +45,23 @@ public class ImagenController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping
-    public ResponseEntity<Object> crearImagen(@RequestBody ImagenRequest imagenRequest) throws ImagenDuplicateException {
-        Imagen result = imagenService.crearImagen(imagenRequest);
-        return ResponseEntity.ok(new ImagenResponse(result));
+    // devuelve el archivo de la primera imagen del producto, para usarlo directo en el src de un <img>
+    @GetMapping("principal/{productoId}")
+    public ResponseEntity<byte[]> getImagenPrincipal(@PathVariable int productoId) {
+        Optional<Imagen> result = imagenService.getImagenPrincipal(productoId);
+        if (result.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        Imagen imagen = result.get();
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(imagen.getTipoContenido()))
+                .body(imagen.getDatos());
     }
 
     @PostMapping(value = "upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Object> subirImagen(@RequestParam("productoId") int productoId,
             @RequestParam("image") MultipartFile image) throws IOException {
         Imagen result = imagenService.subirImagen(productoId, image);
-        return ResponseEntity.ok(new ImagenResponse(result));
-    }
-
-    @PutMapping("{imagenId}")
-    public ResponseEntity<ImagenResponse> actualizarImagen(@PathVariable int imagenId, @RequestBody ImagenRequest imagenRequest) {
-        Imagen result = imagenService.actualizarImagen(imagenId, imagenRequest);
-        if (result == null)
-            return ResponseEntity.notFound().build();
-
         return ResponseEntity.ok(new ImagenResponse(result));
     }
 

@@ -60,6 +60,21 @@
   --text-label-md--line-height: 0.875rem;
   --text-label-tag: 0.625rem;
   --text-label-tag--line-height: 0.75rem;
+
+  /* Animaciones del contador del carrito y del aviso */
+  --animate-pop: pop 0.3s ease-out;
+  --animate-entrar: entrar 0.3s ease-out;
+
+  @keyframes pop {
+    0% { transform: scale(0.5); }
+    60% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes entrar {
+    from { opacity: 0; transform: translateY(1rem); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 }
 
 body {
@@ -69,4 +84,11 @@ body {
   color: var(--color-on-surface);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+}
+
+/* Edge le agrega su propio ojito a los campos de contraseña: lo ocultamos
+   porque CampoContrasenia ya tiene el suyo (si no, aparecen dos) */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
 }

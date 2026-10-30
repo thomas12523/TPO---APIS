@@ -19,6 +19,7 @@ const GestionUsuarios = () => {
         })
     }, [])
 
+    // Reemplaza en la lista el usuario que devolvió el back
     const reemplazarUsuario = (usuarioActualizado) => {
         setUsuarios(usuarios.map((value)=>(
             value.usuarioId === usuarioActualizado.usuarioId ? usuarioActualizado : value

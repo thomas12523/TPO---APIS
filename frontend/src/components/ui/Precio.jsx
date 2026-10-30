@@ -4,6 +4,7 @@ const Precio = ({precioUnitario, precioConDescuento, tieneDescuento}) => {
         return <p className="font-headline font-black text-headline-md text-primary">${precioUnitario.toFixed(2)}</p>
     }
 
+    // El back manda los dos precios, así que el porcentaje sale de la diferencia
     const porcentaje = Math.round((1 - precioConDescuento / precioUnitario) * 100)
 
     return(

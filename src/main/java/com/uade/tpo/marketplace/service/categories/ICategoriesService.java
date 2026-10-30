@@ -12,7 +12,9 @@ import com.uade.tpo.marketplace.exceptions.CategoryDuplicateException;
 public interface ICategoriesService {
 
     public Page<Category> getCategories(PageRequest pageRequest);
+    public Page<Category> getTodasCategories(PageRequest pageRequest);
     public Optional<Category> getCategoryById(int categoryId);
+    public Optional<Category> actualizarEstado(int categoryId, boolean activo);
     public Category createCategory(String nombre) throws CategoryDuplicateException;
     public Category actualizarCategory(int categoryId, String nombre);
     public Optional<Category> deleteCategory(int categoryId);

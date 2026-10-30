@@ -25,9 +25,22 @@ public class CategoriesServiceImpl implements ICategoriesService {
         return categoriesRepository.findByActivoTrue(pageRequest);
     }
 
+    // incluye las desactivadas (para el panel admin)
+    @Transactional
+    public Page<Category> getTodasCategories(PageRequest pageRequest) {
+        return categoriesRepository.findAll(pageRequest);
+    }
+
     @Transactional
     public Optional<Category> getCategoryById(int categoryId) {
         return categoriesRepository.findById(categoryId);
+    }
+
+    public Optional<Category> actualizarEstado(int categoryId, boolean activo) {
+        return categoriesRepository.findById(categoryId).map(category -> {
+            category.setActivo(activo);
+            return categoriesRepository.save(category);
+        });
     }
 
     public Category createCategory(String nombre) throws CategoryDuplicateException {

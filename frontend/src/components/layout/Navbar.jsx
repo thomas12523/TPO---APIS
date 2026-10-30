@@ -1,11 +1,27 @@
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import Buscador from "./Buscador"
 import IconoNav from "./IconoNav"
+import { obtenerCarrito } from "../../utils/carrito"
 
-const Navbar = () => {
+// cambiosCarrito lo manda la vista: sube en uno cada vez que se agrega o se saca algo del carrito
+const Navbar = ({cambiosCarrito}) => {
 
+    // Lo guardamos al iniciar sesión (ver utils/sesion.js)
     const token = localStorage.getItem('token')
     const role = localStorage.getItem('role')
+    const carritoId = localStorage.getItem('carritoId')
+    const [cantidadCarrito, setCantidadCarrito] = useState(0)
+
+    // Al montarse y cada vez que cambia el carrito, volvemos a pedirlo para contar los productos
+    useEffect(()=>{
+        if(token === null || carritoId === null){
+            return
+        }
+        obtenerCarrito()
+        .then((data)=>setCantidadCarrito(data.items.length))
+        .catch((error)=>console.error('Error al contar el carrito', error))
+    }, [cambiosCarrito])
 
     return(
         <header className="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl shadow-lg">
@@ -38,7 +54,7 @@ const Navbar = () => {
                             </Link>
                         )}
                         <IconoNav ruta="/mis-pedidos" icono="local_shipping" titulo="Mis pedidos" />
-                        <IconoNav ruta="/carrito" icono="shopping_bag" titulo="Carrito" />
+                        <IconoNav ruta="/carrito" icono="shopping_bag" titulo="Carrito" contador={cantidadCarrito} />
                         <Link to="/perfil" title="Mi perfil" className="ml-space-xs w-8 h-8 rounded-full bg-primary flex items-center justify-center">
                             <span className="material-symbols-outlined text-on-primary text-lg">person</span>
                         </Link>

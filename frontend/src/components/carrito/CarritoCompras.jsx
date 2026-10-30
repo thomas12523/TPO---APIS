@@ -7,7 +7,8 @@ import MensajeError from "../ui/MensajeError"
 import { URL, opciones, leerRespuesta } from "../../utils/api"
 import { obtenerCarrito } from "../../utils/carrito"
 
-const CarritoCompras = () => {
+// carritoCambio viene de la vista: lo llamamos para que el contador del navbar se actualice
+const CarritoCompras = ({carritoCambio}) => {
 
     const [carrito, setCarrito] = useState(null)
     const [error, setError] = useState('')
@@ -25,11 +26,13 @@ const CarritoCompras = () => {
         })
     }, [carritoId])
 
+    // Después de cada cambio volvemos a pedir el carrito, porque los totales con descuento los calcula el back
     const actualizarCarrito = () => {
         obtenerCarrito()
         .then((data)=>{
             setCarrito(data)
             setError('')
+            carritoCambio()
         })
         .catch((error)=>console.error('Error al actualizar el carrito', error))
     }
@@ -63,6 +66,7 @@ const CarritoCompras = () => {
         return <AvisoSesion mensaje="Iniciá sesión para ver tu carrito." />
     }
 
+    // Mientras la promesa está pendiente todavía no hay carrito para mostrar (o falló la carga)
     if(carrito === null){
         return <MensajeError mensaje={error} />
     }

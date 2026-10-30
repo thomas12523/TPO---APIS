@@ -3,10 +3,11 @@ import ProductoGrid from "../producto/ProductoGrid"
 import TituloSeccion from "../ui/TituloSeccion"
 import { URL, leerRespuesta } from "../../utils/api"
 
-const ProductosRelacionados = ({productoId, categoriaId}) => {
+const ProductosRelacionados = ({productoId, categoriaId, carritoCambio}) => {
 
     const [productos, setProductos] = useState([])
 
+    // Traemos 5 de la misma categoría porque uno puede ser el producto que estamos viendo
     useEffect(()=>{
         fetch(`${URL}/Producto?categoriaId=${categoriaId}&size=5`)
         .then(leerRespuesta)
@@ -25,7 +26,7 @@ const ProductosRelacionados = ({productoId, categoriaId}) => {
     return(
         <section className="max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-xl">
             <TituloSeccion etiqueta="De la misma categoría" titulo="También te puede interesar" />
-            <ProductoGrid productos={relacionados} />
+            <ProductoGrid productos={relacionados} carritoCambio={carritoCambio} />
         </section>
     )
 }

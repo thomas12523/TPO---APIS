@@ -4,27 +4,39 @@ import Precio from "../ui/Precio"
 import SelectorCantidad from "../ui/SelectorCantidad"
 import BotonPrincipal from "../ui/BotonPrincipal"
 import MensajeError from "../ui/MensajeError"
+import Aviso from "../ui/Aviso"
 import { agregarAlCarrito } from "../../utils/carrito"
 
-const InfoProducto = ({productoId, nombreProducto, categoriaNombre, descripcion, precioUnitario, precioConDescuento, tieneDescuento, stock}) => {
+// carritoCambio viene de la vista: lo llamamos para avisarle que el carrito cambió
+const InfoProducto = ({productoId, nombreProducto, categoriaNombre, descripcion, precioUnitario, precioConDescuento, tieneDescuento, stock, carritoCambio}) => {
 
     const [cantidad, setCantidad] = useState(1)
     const [error, setError] = useState('')
+    const [aviso, setAviso] = useState('')
     const navigate = useNavigate()
 
+    // Si entramos a otro producto (por ejemplo, uno relacionado), reiniciamos la cantidad y el error
     useEffect(()=>{
         setCantidad(1)
         setError('')
     }, [productoId])
+
+    // El aviso se borra solo a los 2,5 segundos
+    useEffect(()=>{
+        const temporizador = setTimeout(()=>setAviso(''), 2500)
+        return ()=>clearTimeout(temporizador)
+    }, [aviso])
 
     const handleClick = () => {
         if(localStorage.getItem('token') === null){
             navigate('/login')
             return
         }
+        setError('')
         agregarAlCarrito(productoId, cantidad, precioConDescuento)
         .then(()=>{
-            navigate('/carrito')
+            setAviso('Producto agregado al carrito')
+            carritoCambio()
         })
         .catch((error)=>{
             console.error('Error al agregar al carrito', error)
@@ -55,6 +67,7 @@ const InfoProducto = ({productoId, nombreProducto, categoriaNombre, descripcion,
                 </div>
             )}
             <MensajeError mensaje={error} />
+            <Aviso mensaje={aviso} />
         </div>
     )
 }

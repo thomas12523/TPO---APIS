@@ -1,34 +1,14 @@
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import Precio from "../ui/Precio"
-import MensajeError from "../ui/MensajeError"
-import { agregarAlCarrito } from "../../utils/carrito"
+import BotonCarrito from "./BotonCarrito"
+import ImagenPrincipal from "./ImagenPrincipal"
 
-const ProductoCard = ({productoId, nombreProducto, categoriaNombre, precioUnitario, precioConDescuento, tieneDescuento, stock, imagenUrl}) => {
-
-    const [error, setError] = useState('')
-    const navigate = useNavigate()
-
-    const handleClick = () => {
-        if(localStorage.getItem('token') === null){
-            navigate('/login')
-            return
-        }
-        setError('')
-        agregarAlCarrito(productoId, 1, precioConDescuento)
-        .then(()=>{
-            navigate('/carrito')
-        })
-        .catch((error)=>{
-            console.error('Error al agregar al carrito', error)
-            setError(error.message)
-        })
-    }
-
+// cantidadEnCarrito y carritoCambio se los pasamos al botón del carrito
+const ProductoCard = ({productoId, nombreProducto, categoriaNombre, precioUnitario, precioConDescuento, tieneDescuento, stock, cantidadEnCarrito, carritoCambio}) => {
     return(
         <article className="group flex flex-col bg-surface-container-low border border-white/5 hover:border-primary-container transition-colors">
             <Link to={`/producto/${productoId}`} className="relative aspect-square overflow-hidden bg-surface-container">
-                <img src={imagenUrl} alt={nombreProducto} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <ImagenPrincipal productoId={productoId} nombreProducto={nombreProducto} />
                 {tieneDescuento && (
                     <span className="absolute top-space-sm left-space-sm bg-on-tertiary-container text-primary font-bold text-label-tag uppercase px-space-sm py-space-xs">Oferta -{Math.round((1 - precioConDescuento / precioUnitario) * 100)}%</span>
                 )}
@@ -40,13 +20,10 @@ const ProductoCard = ({productoId, nombreProducto, categoriaNombre, precioUnitar
             <div className="flex flex-col flex-1 gap-space-xs p-space-md">
                 <p className="font-bold text-label-tag uppercase tracking-widest text-on-surface-variant">{categoriaNombre}</p>
                 <Link to={`/producto/${productoId}`} className="font-headline font-extrabold text-headline-sm uppercase text-primary line-clamp-2 min-h-10">{nombreProducto}</Link>
-                <div className="flex items-center justify-between mt-auto pt-space-sm">
+                <div className="flex flex-wrap items-center justify-between gap-space-xs mt-auto pt-space-sm">
                     <Precio precioUnitario={precioUnitario} precioConDescuento={precioConDescuento} tieneDescuento={tieneDescuento} />
-                    <button onClick={handleClick} disabled={stock === 0} title="Agregar al carrito" className="w-9 h-9 flex items-center justify-center bg-surface-container-high text-primary hover:bg-primary-container hover:text-surface-container-lowest disabled:opacity-30">
-                        <span className="material-symbols-outlined">add</span>
-                    </button>
+                    <BotonCarrito productoId={productoId} precio={precioConDescuento} stock={stock} cantidadEnCarrito={cantidadEnCarrito} carritoCambio={carritoCambio} />
                 </div>
-                <MensajeError mensaje={error} />
             </div>
         </article>
     )

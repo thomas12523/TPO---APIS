@@ -7,6 +7,7 @@ import CampoContrasenia from "../ui/CampoContrasenia"
 import MensajeError from "../ui/MensajeError"
 import BotonPrincipal from "../ui/BotonPrincipal"
 
+// Los nombres coinciden con AuthenticationRequest (username, contrasenia)
 const credencialesIniciales = {username: '', contrasenia: ''}
 
 const LoginForm = () => {

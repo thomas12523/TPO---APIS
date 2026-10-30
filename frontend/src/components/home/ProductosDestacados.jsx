@@ -3,7 +3,7 @@ import ProductoGrid from "../producto/ProductoGrid"
 import TituloSeccion from "../ui/TituloSeccion"
 import { URL, leerRespuesta } from "../../utils/api"
 
-const ProductosDestacados = () => {
+const ProductosDestacados = ({carritoCambio}) => {
 
     const [productos, setProductos] = useState([])
 
@@ -21,7 +21,7 @@ const ProductosDestacados = () => {
     return(
         <section className="max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-xl">
             <TituloSeccion etiqueta="Lo más elegido" titulo="Productos destacados" />
-            <ProductoGrid productos={productos} />
+            <ProductoGrid productos={productos} carritoCambio={carritoCambio} />
         </section>
     )
 }

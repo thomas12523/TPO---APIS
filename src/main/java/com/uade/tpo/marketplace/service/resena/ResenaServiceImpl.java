@@ -17,6 +17,8 @@ import com.uade.tpo.marketplace.entity.dto.request.ResenaRequest;
 import com.uade.tpo.marketplace.exceptions.ProductoNotFoundException;
 import com.uade.tpo.marketplace.exceptions.ResenaDuplicateException;
 import com.uade.tpo.marketplace.exceptions.ResenaInvalidaException;
+import com.uade.tpo.marketplace.exceptions.ResenaSinCompraException;
+import com.uade.tpo.marketplace.repository.IDetallePedidoRepository;
 import com.uade.tpo.marketplace.repository.IResenaRepository;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
 
@@ -29,6 +31,9 @@ public class ResenaServiceImpl implements IResenaService {
 
     @Autowired
     private IProductoService productoService;
+
+    @Autowired
+    private IDetallePedidoRepository detallePedidoRepository;
 
     @Transactional
     public List<Resena> getResenas(Integer productoId) {
@@ -43,12 +48,21 @@ public class ResenaServiceImpl implements IResenaService {
         return resenaRepository.findById(resenaId);
     }
 
+    // Solo cuenta como compra si el producto esta en un pedido que no se cancelo
+    @Transactional
+    public boolean compro(int productoId, Usuario usuarioActual) {
+        return detallePedidoRepository.existeCompra(usuarioActual.getUsuarioId(), productoId);
+    }
+
     public Resena crearResena(ResenaRequest resenaRequest, Usuario usuarioActual)
-            throws ResenaInvalidaException, ResenaDuplicateException, ProductoNotFoundException {
+            throws ResenaInvalidaException, ResenaDuplicateException, ProductoNotFoundException, ResenaSinCompraException {
         validarPuntuacion(resenaRequest.getPuntuacion());
 
         Producto producto = productoService.getProductoById(resenaRequest.getProductoId())
                 .orElseThrow(ProductoNotFoundException::new);
+
+        if (!compro(producto.getProductoId(), usuarioActual))
+            throw new ResenaSinCompraException();
 
         if (resenaRepository.findByProductoIdAndUsuarioId(producto.getProductoId(), usuarioActual.getUsuarioId()).isPresent())
             throw new ResenaDuplicateException();

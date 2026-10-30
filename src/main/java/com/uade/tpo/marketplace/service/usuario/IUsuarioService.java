@@ -7,7 +7,9 @@ import org.springframework.data.domain.PageRequest;
 
 import com.uade.tpo.marketplace.entity.Role;
 import com.uade.tpo.marketplace.entity.Usuario;
+import com.uade.tpo.marketplace.entity.dto.request.ContraseniaRequest;
 import com.uade.tpo.marketplace.entity.dto.request.UsuarioRequest;
+import com.uade.tpo.marketplace.exceptions.ContraseniaIncorrectaException;
 import com.uade.tpo.marketplace.exceptions.UsuarioDuplicateException;
 
 public interface IUsuarioService {
@@ -19,6 +21,9 @@ public interface IUsuarioService {
     public Usuario crearUsuario(UsuarioRequest usuarioRequest) throws UsuarioDuplicateException;
 
     public Optional<Usuario> actualizarUsuario(int usuarioId, UsuarioRequest usuarioRequest);
+
+    public Optional<Usuario> cambiarContrasenia(int usuarioId, ContraseniaRequest contraseniaRequest)
+            throws ContraseniaIncorrectaException;
 
     public Optional<Usuario> actualizarPermisos(int usuarioId, Role role);
 

@@ -53,6 +53,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/Categories/{categoryId}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/Imagen").permitAll()
                         .requestMatchers(HttpMethod.GET, "/Imagen/{imagenId}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/Imagen/principal/{productoId}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/Descuento").permitAll()
                         .requestMatchers(HttpMethod.GET, "/Descuento/{descuentoId}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/Resena").permitAll()
@@ -69,12 +70,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/Categories").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/Categories/{categoryId}").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/Categories/{categoryId}").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/Categories/{categoryId}").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/Categories/{categoryId}/estado").hasAuthority("ROLE_ADMIN")
 
                         // Imagen: gestion solo vendedor (ROLE_ADMIN)
-                        .requestMatchers(HttpMethod.POST, "/Imagen").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/Imagen/upload").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/Imagen/{imagenId}").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/Imagen/{imagenId}").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/Imagen/{imagenId}").hasAuthority("ROLE_ADMIN")
 
                         // Descuento: gestion solo vendedor (ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, "/Descuento").hasAuthority("ROLE_ADMIN")
@@ -87,11 +88,22 @@ public class SecurityConfig {
                         // Usuario: perfil propio (cualquier autenticado)
                         .requestMatchers(HttpMethod.GET, "/Usuario/me").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/Usuario/me").authenticated()
+                        .requestMatchers(HttpMethod.PATCH, "/Usuario/me/contrasenia").authenticated()
                         .requestMatchers(HttpMethod.GET, "/Usuario/{usuarioId}").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/Usuario/{usuarioId}").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/Usuario/{usuarioId}/permisos").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/Usuario/{usuarioId}/estado").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/Usuario/{usuarioId}").hasAuthority("ROLE_ADMIN")
+
+                        // Pedido: cambiar el estado y el ABM a mano solo vendedor (ROLE_ADMIN).
+                        // Los clientes crean pedidos con el checkout y solo ven/cancelan los suyos (lo valida el controller)
+                        .requestMatchers(HttpMethod.PATCH, "/Pedido/{pedidoId}/estado").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/Pedido").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/Pedido/{pedidoId}").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/Pedido/{pedidoId}").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/DetallePedido").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/DetallePedido/{detallePedidoId}").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.PATCH, "/DetallePedido/{detallePedidoId}").hasAuthority("ROLE_ADMIN")
 
                         // Todo lo demas: cualquier usuario autenticado (Carrito, DetalleCarrito,
                         // Pedido, DetallePedido)

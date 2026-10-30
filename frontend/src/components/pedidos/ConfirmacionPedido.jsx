@@ -5,9 +5,11 @@ import AccionesConfirmacion from "./acciones/AccionesConfirmacion"
 
 const ConfirmacionPedido = () => {
 
+    // El checkout nos manda el PedidoResponse que devolvió el back en el state de la ruta
     const location = useLocation()
     const pedido = location.state
 
+    // Si se entra a esta ruta directo (sin pasar por el checkout) no hay pedido para mostrar
     if(pedido === null){
         return(
             <section className="bg-surface-container-low p-space-xl flex flex-col items-center text-center gap-space-md max-w-2xl mx-auto">

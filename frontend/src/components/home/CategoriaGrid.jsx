@@ -9,11 +9,11 @@ const CategoriaGrid = () => {
     const [categorias, setCategorias] = useState([])
 
     useEffect(()=>{
-
+        // En el inicio mostramos una sola fila (5 categorías); todas se ven en los filtros del catálogo
         fetch(`${URL}/Categories?size=5`)
         .then(leerRespuesta)
         .then((data)=>{
-
+            // El back devuelve una página: los objetos vienen en content
             setCategorias(data.content)
         })
         .catch((error)=>{

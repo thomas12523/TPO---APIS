@@ -11,8 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.uade.tpo.marketplace.entity.Imagen;
 import com.uade.tpo.marketplace.entity.Producto;
-import com.uade.tpo.marketplace.entity.dto.request.ImagenRequest;
-import com.uade.tpo.marketplace.exceptions.ImagenDuplicateException;
 import com.uade.tpo.marketplace.exceptions.ProductoNotFoundException;
 import com.uade.tpo.marketplace.repository.IImagenRepository;
 import com.uade.tpo.marketplace.service.producto.IProductoService;
@@ -40,18 +38,10 @@ public class ImagenServiceImpl implements IImagenService {
         return imagenRepository.findById(imagenId);
     }
 
-    public Imagen crearImagen(ImagenRequest imagenRequest) throws ImagenDuplicateException {
-        if (imagenRepository.findByProductoIdAndImagenUrl(
-                imagenRequest.getProductoId(), imagenRequest.getImagenUrl()).isPresent())
-            throw new ImagenDuplicateException();
-
-        Producto producto = productoService.getProductoById(imagenRequest.getProductoId())
-                .orElseThrow(ProductoNotFoundException::new);
-
-        Imagen imagen = new Imagen();
-        imagen.setProducto(producto);
-        imagen.setImagenUrl(imagenRequest.getImagenUrl());
-        return imagenRepository.save(imagen);
+    // la imagen principal es la primera que se subio (la de menor id)
+    @Transactional
+    public Optional<Imagen> getImagenPrincipal(int productoId) {
+        return imagenRepository.findByProductoId(productoId).stream().findFirst();
     }
 
     public Imagen subirImagen(int productoId, MultipartFile archivo) throws IOException {
@@ -62,16 +52,6 @@ public class ImagenServiceImpl implements IImagenService {
         imagen.setProducto(producto);
         imagen.setDatos(archivo.getBytes());
         imagen.setTipoContenido(archivo.getContentType());
-        return imagenRepository.save(imagen);
-    }
-
-    public Imagen actualizarImagen(int imagenId, ImagenRequest imagenRequest) {
-        Optional<Imagen> existente = imagenRepository.findById(imagenId);
-        if (existente.isEmpty())
-            return null;
-
-        Imagen imagen = existente.get();
-        imagen.setImagenUrl(imagenRequest.getImagenUrl());
         return imagenRepository.save(imagen);
     }
 

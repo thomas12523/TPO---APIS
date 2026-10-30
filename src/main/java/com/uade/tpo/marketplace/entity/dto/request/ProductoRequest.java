@@ -9,5 +9,4 @@ public class ProductoRequest {
     private String descripcion;
     private double precioUnitario;
     private int stock;
-    private String imagenUrl;
 }

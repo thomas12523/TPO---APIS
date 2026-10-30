@@ -4,6 +4,7 @@ import MensajeError from "../ui/MensajeError"
 
 const CategoriaForm = ({inicial, guardarCategoria, cancelarEdicion}) => {
 
+    // El nombre coincide con CategoryRequest
     const [categoria, setCategoria] = useState({nombre: inicial === null ? '' : inicial.nombre})
     const [error, setError] = useState('')
 

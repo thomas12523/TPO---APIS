@@ -1,5 +1,5 @@
-
-const estados = ['TODOS', 'PENDIENTE', 'CANCELADO']
+// Los estados en el orden en que avanza un pedido (ver estados.js)
+const estados = ['TODOS', 'PENDIENTE', 'ACEPTADO', 'ENVIADO', 'ENTREGADO', 'CANCELADO']
 
 const FiltroEstados = ({pedidos, filtro, cambiarFiltro}) => {
     return(

@@ -32,9 +32,6 @@ public class Producto {
     @Column(nullable = false)
     private int stock;
 
-    @Column
-    private String imagenUrl;
-
     @Column(nullable = false)
     private boolean activo;
 
@@ -63,8 +60,6 @@ public class Producto {
     public int getStock() { return stock; }
     public void setStock(int stock) { this.stock = stock; }
 
-    public String getImagenUrl() { return imagenUrl; }
-    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
 
     public boolean isActivo() { return activo; }
     public void setActivo(boolean activo) { this.activo = activo; }

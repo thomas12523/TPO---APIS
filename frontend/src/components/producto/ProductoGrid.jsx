@@ -1,6 +1,27 @@
+import { useEffect, useState } from "react"
 import ProductoCard from "./ProductoCard"
+import { obtenerCarrito } from "../../utils/carrito"
 
-const ProductoGrid = ({productos}) => {
+const ProductoGrid = ({productos, carritoCambio}) => {
+
+    // Los items del carrito, para que cada card sepa si su producto ya está agregado
+    const [itemsCarrito, setItemsCarrito] = useState([])
+
+    // Lo pedimos de nuevo si cambian los productos (por ejemplo, al pasar a otro producto relacionado)
+    useEffect(()=>{
+        if(localStorage.getItem('token') === null || localStorage.getItem('carritoId') === null){
+            return
+        }
+        obtenerCarrito()
+        .then((data)=>setItemsCarrito(data.items))
+        .catch((error)=>console.error('Error al cargar el carrito', error))
+    }, [productos])
+
+    // Cuántas unidades de ese producto hay en el carrito (0 si no está)
+    const cantidadEnCarrito = (productoId) => {
+        const item = itemsCarrito.find((value)=>value.productoId === productoId)
+        return item === undefined ? 0 : item.cantidad
+    }
 
     if(productos.length === 0){
         return <p className="text-body-lg text-on-surface-variant py-space-xl">No hay productos para mostrar.</p>
@@ -19,7 +40,8 @@ const ProductoGrid = ({productos}) => {
                     precioConDescuento={value.precioConDescuento}
                     tieneDescuento={value.tieneDescuento}
                     stock={value.stock}
-                    imagenUrl={value.imagenUrl}
+                    cantidadEnCarrito={cantidadEnCarrito(value.productoId)}
+                    carritoCambio={carritoCambio}
                     />
                 ))
             }

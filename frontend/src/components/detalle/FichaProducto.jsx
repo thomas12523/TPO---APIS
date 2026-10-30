@@ -6,14 +6,17 @@ import ProductosRelacionados from "./ProductosRelacionados"
 import BreadcrumbProducto from "./breadcrumb/BreadcrumbProducto"
 import SeccionResenas from "../resenas/SeccionResenas"
 import { URL, leerRespuesta } from "../../utils/api"
+import { urlImagen } from "../../utils/imagenes"
 
-const FichaProducto = () => {
+const FichaProducto = ({carritoCambio}) => {
 
+    // El id sale de la URL: /producto/:productoId
     const { productoId } = useParams()
     const [producto, setProducto] = useState(null)
     const [imagenes, setImagenes] = useState([])
     const [error, setError] = useState('')
 
+    // Se vuelve a ejecutar si cambia el id (por ejemplo, al entrar a un producto relacionado)
     useEffect(()=>{
         fetch(`${URL}/Producto/${productoId}`)
         .then(leerRespuesta)
@@ -36,15 +39,13 @@ const FichaProducto = () => {
         return <p className="max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-xl text-body-lg text-on-surface-variant">{error}</p>
     }
 
+    // Mientras la promesa está pendiente todavía no hay producto para mostrar
     if(producto === null){
         return null
     }
 
-    const urlsExtra = imagenes.map((value)=>(
-        value.imagenUrl !== null ? value.imagenUrl : `data:${value.tipoContenido};base64,${value.imagenBase64}`
-    ))
-
-    const urls = [producto.imagenUrl, ...urlsExtra]
+    // Las imágenes llegan en base64; la primera es la principal
+    const urls = imagenes.map(urlImagen)
 
     return(
         <>
@@ -61,11 +62,12 @@ const FichaProducto = () => {
                 precioConDescuento={producto.precioConDescuento}
                 tieneDescuento={producto.tieneDescuento}
                 stock={producto.stock}
+                carritoCambio={carritoCambio}
                 />
             </div>
         </section>
         <SeccionResenas productoId={producto.productoId} />
-        <ProductosRelacionados productoId={producto.productoId} categoriaId={producto.categoriaId} />
+        <ProductosRelacionados productoId={producto.productoId} categoriaId={producto.categoriaId} carritoCambio={carritoCambio} />
         </>
     )
 }

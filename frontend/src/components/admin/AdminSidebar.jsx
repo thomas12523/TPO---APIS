@@ -3,7 +3,8 @@ const secciones = [
     {ruta: '/admin/productos', texto: 'Productos', icono: 'inventory_2'},
     {ruta: '/admin/categorias', texto: 'Categorías', icono: 'category'},
     {ruta: '/admin/descuentos', texto: 'Descuentos', icono: 'sell'},
-    {ruta: '/admin/usuarios', texto: 'Usuarios', icono: 'group'}
+    {ruta: '/admin/usuarios', texto: 'Usuarios', icono: 'group'},
+    {ruta: '/admin/pedidos', texto: 'Pedidos', icono: 'receipt_long'}
 ]
 
 const AdminSidebar = ({activa}) => {

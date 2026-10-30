@@ -2,13 +2,12 @@ import MetodoPagoOpcion from "../MetodoPagoOpcion"
 
 const metodosPago = [
     {valor: 'TARJETA_CREDITO', titulo: 'Tarjeta de crédito', descripcion: 'Hasta 6 cuotas sin interés', icono: 'credit_card'},
-    {valor: 'TARJETA_DEBITO', titulo: 'Tarjeta de débito', descripcion: 'Se debita en el momento', icono: 'payments'},
-    {valor: 'TRANSFERENCIA', titulo: 'Transferencia', descripcion: 'Te enviamos los datos por mail', icono: 'account_balance'}
+    {valor: 'TARJETA_DEBITO', titulo: 'Tarjeta de débito', descripcion: 'Se debita en el momento', icono: 'payments'}
 ]
 
 const SeleccionMetodoPago = ({metodoPago, handleChange}) => {
     return(
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-space-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-space-sm">
             {
                 metodosPago.map((value)=>(
                     <MetodoPagoOpcion

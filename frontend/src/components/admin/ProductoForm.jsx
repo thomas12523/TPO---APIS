@@ -2,8 +2,11 @@ import { useState } from "react"
 import Campo from "../ui/Campo"
 import CampoSelect from "../ui/CampoSelect"
 import MensajeError from "../ui/MensajeError"
+import SelectorImagenes from "./imagenes/SelectorImagenes"
+import ImagenesActuales from "./imagenes/ImagenesActuales"
 
-const productoVacio = {categoriaId: '', nombreProducto: '', descripcion: '', precioUnitario: '', stock: '', imagenUrl: ''}
+// Los nombres coinciden con ProductoRequest
+const productoVacio = {categoriaId: '', nombreProducto: '', descripcion: '', precioUnitario: '', stock: ''}
 
 const ProductoForm = ({inicial, categorias, guardarProducto, cancelarEdicion}) => {
 
@@ -12,9 +15,10 @@ const ProductoForm = ({inicial, categorias, guardarProducto, cancelarEdicion}) =
         nombreProducto: inicial.nombreProducto,
         descripcion: inicial.descripcion,
         precioUnitario: inicial.precioUnitario,
-        stock: inicial.stock,
-        imagenUrl: inicial.imagenUrl
+        stock: inicial.stock
     })
+    // Las imágenes nuevas se suben después de guardar el producto (necesitan su id)
+    const [archivos, setArchivos] = useState([])
     const [error, setError] = useState('')
 
     const handleChange = (e) => {setProducto({...producto, [e.target.name]: e.target.value})}
@@ -29,10 +33,15 @@ const ProductoForm = ({inicial, categorias, guardarProducto, cancelarEdicion}) =
             setError('El precio tiene que ser mayor a 0 y el stock no puede ser negativo')
             return
         }
+        if(inicial === null && archivos.length === 0){
+            setError('Elegí al menos una imagen')
+            return
+        }
         setError('')
-        guardarProducto({...producto, categoriaId: Number(producto.categoriaId), precioUnitario: Number(producto.precioUnitario), stock: Number(producto.stock)})
+        guardarProducto({...producto, categoriaId: Number(producto.categoriaId), precioUnitario: Number(producto.precioUnitario), stock: Number(producto.stock)}, archivos)
         .then(()=>{
             setProducto(productoVacio)
+            setArchivos([])
         })
         .catch((error)=>{
             console.error('Error al guardar el producto', error)
@@ -50,8 +59,9 @@ const ProductoForm = ({inicial, categorias, guardarProducto, cancelarEdicion}) =
                 <Campo label="Precio unitario" type="number" name="precioUnitario" value={producto.precioUnitario} onChange={handleChange} />
                 <Campo label="Stock" type="number" name="stock" value={producto.stock} onChange={handleChange} />
             </div>
-            <Campo label="URL de la imagen" name="imagenUrl" value={producto.imagenUrl} onChange={handleChange} placeholder="https://..." />
             <Campo label="Descripción" name="descripcion" value={producto.descripcion} onChange={handleChange} />
+            {inicial !== null && <ImagenesActuales productoId={inicial.productoId} />}
+            <SelectorImagenes archivos={archivos} cambiarArchivos={setArchivos} />
             <MensajeError mensaje={error} />
             <div className="flex justify-end gap-space-sm">
                 {inicial !== null && (

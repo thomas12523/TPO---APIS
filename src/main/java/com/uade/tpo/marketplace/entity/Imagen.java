@@ -21,9 +21,6 @@ public class Imagen {
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
-    @Column
-    private String imagenUrl;
-
     @Lob
     @Column(length = 16777215) // 2^24 - 1 bytes (16 MB) maximo de una imagen
     private byte[] datos;
@@ -46,9 +43,6 @@ public class Imagen {
 
     public Producto getProducto() { return producto; }
     public void setProducto(Producto producto) { this.producto = producto; }
-
-    public String getImagenUrl() { return imagenUrl; }
-    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
 
     public byte[] getDatos() { return datos; }
     public void setDatos(byte[] datos) { this.datos = datos; }

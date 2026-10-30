@@ -25,6 +25,7 @@ import com.uade.tpo.marketplace.entity.dto.response.ResenaResponse;
 import com.uade.tpo.marketplace.exceptions.ProductoNotFoundException;
 import com.uade.tpo.marketplace.exceptions.ResenaDuplicateException;
 import com.uade.tpo.marketplace.exceptions.ResenaInvalidaException;
+import com.uade.tpo.marketplace.exceptions.ResenaSinCompraException;
 import com.uade.tpo.marketplace.service.resena.IResenaService;
 
 @RestController
@@ -50,9 +51,15 @@ public class ResenaController {
         return ResponseEntity.notFound().build();
     }
 
+    // Le dice al front si el usuario logueado compro el producto (y entonces puede resenarlo)
+    @GetMapping("compra/{productoId}")
+    public ResponseEntity<Boolean> compro(@AuthenticationPrincipal Usuario usuarioActual, @PathVariable int productoId) {
+        return ResponseEntity.ok(resenaService.compro(productoId, usuarioActual));
+    }
+
     @PostMapping
     public ResponseEntity<Object> crearResena(@AuthenticationPrincipal Usuario usuarioActual, @RequestBody ResenaRequest resenaRequest)
-            throws ResenaInvalidaException, ResenaDuplicateException, ProductoNotFoundException {
+            throws ResenaInvalidaException, ResenaDuplicateException, ProductoNotFoundException, ResenaSinCompraException {
         Resena result = resenaService.crearResena(resenaRequest, usuarioActual);
         return ResponseEntity.ok(new ResenaResponse(result));
     }

@@ -6,10 +6,12 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.uade.tpo.marketplace.entity.Pedido;
+import com.uade.tpo.marketplace.entity.Role;
 import com.uade.tpo.marketplace.entity.Usuario;
 import com.uade.tpo.marketplace.entity.dto.request.PedidoRequest;
 import com.uade.tpo.marketplace.exceptions.PedidoNoCanceladoException;
@@ -90,6 +92,23 @@ public class PedidoServiceImpl implements IPedidoService {
             return pedido;
 
         pedido.setEstado("CANCELADO");
+        return pedidoRepository.save(pedido);
+    }
+
+    // un cliente solo puede ver o cancelar sus propios pedidos; el admin, todos
+    public void validarAcceso(Pedido pedido, Usuario usuarioActual) {
+        if (pedido.getUsuario().getUsuarioId() != usuarioActual.getUsuarioId() && usuarioActual.getRole() != Role.ADMIN)
+            throw new AccessDeniedException("No podes ver los pedidos de otro usuario");
+    }
+
+    // las reglas de que cambio se permite estan en PedidoOrchestratorServiceImpl
+    public Pedido actualizarEstado(int pedidoId, String estado) {
+        Optional<Pedido> existente = pedidoRepository.findById(pedidoId);
+        if (existente.isEmpty())
+            return null;
+
+        Pedido pedido = existente.get();
+        pedido.setEstado(estado);
         return pedidoRepository.save(pedido);
     }
 

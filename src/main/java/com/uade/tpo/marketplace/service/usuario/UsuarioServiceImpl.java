@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.uade.tpo.marketplace.entity.Role;
 import com.uade.tpo.marketplace.entity.Usuario;
+import com.uade.tpo.marketplace.entity.dto.request.ContraseniaRequest;
 import com.uade.tpo.marketplace.entity.dto.request.UsuarioRequest;
+import com.uade.tpo.marketplace.exceptions.ContraseniaIncorrectaException;
 import com.uade.tpo.marketplace.exceptions.UsuarioDuplicateException;
 import com.uade.tpo.marketplace.repository.IUsuarioRepository;
 
@@ -62,6 +64,21 @@ public class UsuarioServiceImpl implements IUsuarioService {
                 usuario.setContrasenia(passwordEncoder.encode(usuarioRequest.getContrasenia()));
             return usuarioRepository.save(usuario);
         });
+    }
+
+    // Antes de cambiarla verificamos que la contrasenia actual sea la correcta
+    public Optional<Usuario> cambiarContrasenia(int usuarioId, ContraseniaRequest contraseniaRequest)
+            throws ContraseniaIncorrectaException {
+        Optional<Usuario> existente = usuarioRepository.findById(usuarioId);
+        if (existente.isEmpty())
+            return Optional.empty();
+
+        Usuario usuario = existente.get();
+        if (!passwordEncoder.matches(contraseniaRequest.getContraseniaActual(), usuario.getContrasenia()))
+            throw new ContraseniaIncorrectaException();
+
+        usuario.setContrasenia(passwordEncoder.encode(contraseniaRequest.getContraseniaNueva()));
+        return Optional.of(usuarioRepository.save(usuario));
     }
 
     public Optional<Usuario> actualizarPermisos(int usuarioId, Role role) {

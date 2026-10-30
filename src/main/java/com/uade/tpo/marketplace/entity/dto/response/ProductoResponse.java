@@ -15,7 +15,6 @@ public class ProductoResponse {
     private double precioConDescuento;
     private boolean tieneDescuento;
     private int stock;
-    private String imagenUrl;
     private boolean activo;
 
     public ProductoResponse(Producto producto, double precioConDescuento) {
@@ -28,7 +27,6 @@ public class ProductoResponse {
         this.precioConDescuento = precioConDescuento;
         this.tieneDescuento = precioConDescuento < producto.getPrecioUnitario();
         this.stock = producto.getStock();
-        this.imagenUrl = producto.getImagenUrl();
         this.activo = producto.isActivo();
     }
 }

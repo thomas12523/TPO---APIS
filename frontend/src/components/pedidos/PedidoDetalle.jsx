@@ -6,6 +6,7 @@ const PedidoDetalle = ({pedidoId}) => {
 
     const [detalles, setDetalles] = useState(null)
 
+    // Se monta cuando el usuario abre el detalle, así que recién ahí pedimos los productos del pedido
     useEffect(()=>{
         fetch(`${URL}/DetallePedido?pedidoId=${pedidoId}`, opciones('GET'))
         .then(leerRespuesta)
@@ -13,6 +14,7 @@ const PedidoDetalle = ({pedidoId}) => {
         .catch((error)=>console.error('Error al cargar el detalle del pedido', error))
     }, [pedidoId])
 
+    // Mientras la promesa está pendiente todavía no hay detalle para mostrar
     if(detalles === null){
         return null
     }
