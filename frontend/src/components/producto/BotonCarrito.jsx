@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import SelectorCantidad from "../ui/SelectorCantidad"
-import MensajeError from "../ui/MensajeError"
 import Aviso from "../ui/Aviso"
 import { agregarAlCarrito, actualizarCantidad, sacarDelCarrito } from "../../utils/carrito"
 import { fetchCarrito, activarAnimacion } from "../../store/slices/carritoSlice"
 
 const BotonCarrito = ({ productoId, precio, stock, cantidadEnCarrito, carritoCambio }) => {
     const dispatch = useDispatch()
+    const { role } = useSelector((state) => state.auth)
     const [cantidad, setCantidad] = useState(cantidadEnCarrito)
     const [error, setError] = useState('')
     const [aviso, setAviso] = useState('')
@@ -19,9 +19,18 @@ const BotonCarrito = ({ productoId, precio, stock, cantidadEnCarrito, carritoCam
     }, [cantidadEnCarrito])
 
     useEffect(() => {
-        const temporizador = setTimeout(() => setAviso(''), 2500)
-        return () => clearTimeout(temporizador)
+        if (aviso) {
+            const temporizador = setTimeout(() => setAviso(''), 2500)
+            return () => clearTimeout(temporizador)
+        }
     }, [aviso])
+
+    useEffect(() => {
+        if (error) {
+            const temporizador = setTimeout(() => setError(''), 2500)
+            return () => clearTimeout(temporizador)
+        }
+    }, [error])
 
     const notificarCambio = () => {
         dispatch(fetchCarrito())
@@ -33,6 +42,10 @@ const BotonCarrito = ({ productoId, precio, stock, cantidadEnCarrito, carritoCam
     const agregar = () => {
         if (localStorage.getItem('token') === null) {
             navigate('/login')
+            return
+        }
+        if (role === 'ADMIN' || localStorage.getItem('role') === 'ADMIN') {
+            setError('Los productos son exclusivos para usuarios')
             return
         }
         setError('')
@@ -50,6 +63,10 @@ const BotonCarrito = ({ productoId, precio, stock, cantidadEnCarrito, carritoCam
     }
 
     const cambiarCantidad = (nueva) => {
+        if (role === 'ADMIN' || localStorage.getItem('role') === 'ADMIN') {
+            setError('Los productos son exclusivos para usuarios')
+            return
+        }
         setError('')
         if (nueva === 0) {
             sacarDelCarrito(productoId)
@@ -81,12 +98,8 @@ const BotonCarrito = ({ productoId, precio, stock, cantidadEnCarrito, carritoCam
             ) : (
                 <SelectorCantidad cantidad={cantidad} cambiarCantidad={cambiarCantidad} maximo={stock} minimo={0} />
             )}
-            {error !== '' && (
-                <div className="w-full">
-                    <MensajeError mensaje={error} />
-                </div>
-            )}
             <Aviso mensaje={aviso} />
+            <Aviso mensaje={error} tipo="error" />
         </>
     )
 }

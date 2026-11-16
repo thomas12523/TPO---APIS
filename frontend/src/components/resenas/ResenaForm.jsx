@@ -1,7 +1,6 @@
 import { useState } from "react"
 import MensajeError from "../ui/MensajeError"
 
-// Los nombres coinciden con ResenaRequest (puntuacion, comentario)
 const resenaInicial = {puntuacion: '5', comentario: ''}
 
 const ResenaForm = ({agregarResena}) => {

@@ -59,14 +59,13 @@ public class UsuarioServiceImpl implements IUsuarioService {
             usuario.setEmail(usuarioRequest.getEmail());
             usuario.setNombre(usuarioRequest.getNombre());
             usuario.setApellido(usuarioRequest.getApellido());
-            // la contrasenia solo se cambia si viene en el request (editar el perfil no la manda)
+
             if (usuarioRequest.getContrasenia() != null && !usuarioRequest.getContrasenia().isBlank())
                 usuario.setContrasenia(passwordEncoder.encode(usuarioRequest.getContrasenia()));
             return usuarioRepository.save(usuario);
         });
     }
 
-    // Antes de cambiarla verificamos que la contrasenia actual sea la correcta
     public Optional<Usuario> cambiarContrasenia(int usuarioId, ContraseniaRequest contraseniaRequest)
             throws ContraseniaIncorrectaException {
         Optional<Usuario> existente = usuarioRepository.findById(usuarioId);

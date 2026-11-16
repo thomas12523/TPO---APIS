@@ -41,12 +41,12 @@ public class UsuarioController {
         return ResponseEntity.ok(usuarioService.getUsuarios(PageRequest.of(page, size)).map(UsuarioResponse::new));
     }
 
-    @GetMapping("me") // perfil propio del usuario autenticado(se inyecta directamenete) sin necesidad del usuarioId.
+    @GetMapping("me")
     public ResponseEntity<UsuarioResponse> getMiPerfil(@AuthenticationPrincipal Usuario usuarioActual) {
         return ResponseEntity.ok(new UsuarioResponse(usuarioActual));
     }
 
-    @PutMapping("me") // actualizacion del perfil propio del usuario autenticado sin necesidad del usuarioId.
+    @PutMapping("me")
     public ResponseEntity<UsuarioResponse> actualizarMiPerfil(@AuthenticationPrincipal Usuario usuarioActual,
             @RequestBody UsuarioRequest usuarioRequest) {
         Optional<Usuario> result = usuarioService.actualizarUsuario(usuarioActual.getUsuarioId(), usuarioRequest);
@@ -56,7 +56,7 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-    @PatchMapping("me/contrasenia") // cambio de contrasenia del usuario autenticado: pide la actual para confirmar
+    @PatchMapping("me/contrasenia")
     public ResponseEntity<UsuarioResponse> cambiarMiContrasenia(@AuthenticationPrincipal Usuario usuarioActual,
             @RequestBody ContraseniaRequest contraseniaRequest) throws ContraseniaIncorrectaException {
         Optional<Usuario> result = usuarioService.cambiarContrasenia(usuarioActual.getUsuarioId(), contraseniaRequest);
@@ -66,7 +66,7 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("{usuarioId}") // solo ROLE_ADMIN (ver SecurityConfig)
+    @GetMapping("{usuarioId}")
     public ResponseEntity<UsuarioResponse> getUsuarioById(@PathVariable int usuarioId) {
         Optional<Usuario> result = usuarioService.getUsuarioById(usuarioId);
         if (result.isPresent())
@@ -81,7 +81,7 @@ public class UsuarioController {
         return ResponseEntity.ok(new UsuarioResponse(result));
     }
 
-    @PutMapping("{usuarioId}") // solo ROLE_ADMIN (ver SecurityConfig)
+    @PutMapping("{usuarioId}")
     public ResponseEntity<UsuarioResponse> actualizarUsuario(@PathVariable int usuarioId, @RequestBody UsuarioRequest usuarioRequest) {
         Optional<Usuario> result = usuarioService.actualizarUsuario(usuarioId, usuarioRequest);
         if (result.isPresent())
@@ -90,7 +90,7 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-    @PatchMapping("{usuarioId}/permisos") // actualizo los permisos de un usuario (USER o ADMIN)
+    @PatchMapping("{usuarioId}/permisos")
     public ResponseEntity<UsuarioResponse> actualizarPermisos(@PathVariable int usuarioId, @RequestParam Role role) {
         Optional<Usuario> result = usuarioService.actualizarPermisos(usuarioId, role);
         if (result.isPresent())
@@ -99,7 +99,7 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-    @PatchMapping("{usuarioId}/estado") // activo/desactivo la cuenta (bloquea el login si activo=false)
+    @PatchMapping("{usuarioId}/estado")
     public ResponseEntity<UsuarioResponse> actualizarEstado(@PathVariable int usuarioId, @RequestParam boolean activo) {
         Optional<Usuario> result = usuarioService.actualizarEstado(usuarioId, activo);
         if (result.isPresent())
@@ -108,7 +108,7 @@ public class UsuarioController {
         return ResponseEntity.notFound().build();
     }
 
-    @PatchMapping("{usuarioId}") // baja logica: desactiva la cuenta en vez de borrar la fila
+    @PatchMapping("{usuarioId}")
     public ResponseEntity<Object> deleteUsuario(@PathVariable int usuarioId) {
         Optional<Usuario> result = usuarioService.deleteUsuario(usuarioId);
         if (result.isEmpty())

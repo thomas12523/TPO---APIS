@@ -5,7 +5,7 @@ const TablaProductos = ({productos, editarProducto, cambiarEstado}) => {
     return(
         <div className="bg-surface-container-low overflow-x-auto">
             <table className="w-full">
-                <EncabezadoTabla columnas={['Producto', 'Categoría', 'Precio', 'Stock', 'Estado', 'Acciones']} />
+                <EncabezadoTabla columnas={['Producto', 'Categoría', 'Precio', 'Descuento', 'Stock', 'Estado', 'Acciones']} />
                 <tbody>
                     {
                         productos.map((value)=>(
@@ -15,6 +15,9 @@ const TablaProductos = ({productos, editarProducto, cambiarEstado}) => {
                             nombreProducto={value.nombreProducto}
                             categoriaNombre={value.categoriaNombre}
                             precioUnitario={value.precioUnitario}
+                            precioConDescuento={value.precioConDescuento}
+                            tieneDescuento={value.tieneDescuento}
+                            porcentajeDescuento={value.porcentajeDescuento}
                             stock={value.stock}
                             activo={value.activo}
                             editarProducto={editarProducto}

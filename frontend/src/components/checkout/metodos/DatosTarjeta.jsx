@@ -4,14 +4,13 @@ import { marcaTarjeta } from "../../../utils/tarjeta"
 
 const cuotasPosibles = [1, 3, 6]
 
-// Los datos los guarda FormCheckout: acá solo se muestran y se avisa cada cambio
 const DatosTarjeta = ({tarjeta, handleChange, conCuotas, total}) => {
 
     const marca = marcaTarjeta(tarjeta.numero)
 
     return(
         <div className="flex flex-col gap-space-md">
-            {/* Vista previa de la tarjeta, se completa mientras el usuario escribe */}
+
             <div className="max-w-sm aspect-[1.6] p-space-lg flex flex-col justify-between bg-linear-to-br from-surface-container-highest to-surface-container-low border border-white/10">
                 <div className="flex items-center justify-between">
                     <span className="material-symbols-outlined text-primary-container text-3xl">memory</span>

@@ -3,7 +3,6 @@ import Campo from "../ui/Campo"
 import CampoSelect from "../ui/CampoSelect"
 import MensajeError from "../ui/MensajeError"
 
-// Los nombres coinciden con DescuentoRequest (activo se maneja desde la tabla)
 const descuentoVacio = {productoId: '', porcentaje: '', fechaInicio: '', fechaFin: ''}
 
 const DescuentoForm = ({inicial, productos, guardarDescuento, cancelarEdicion}) => {

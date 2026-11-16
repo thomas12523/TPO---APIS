@@ -9,7 +9,7 @@ import { URL, opciones, leerRespuesta } from "../../utils/api"
 const GestionPedidos = () => {
 
     const [usuarios, setUsuarios] = useState([])
-    // '' = todos los clientes
+
     const [clienteId, setClienteId] = useState('')
     const [pedidos, setPedidos] = useState([])
     const [filtro, setFiltro] = useState('TODOS')
@@ -17,7 +17,6 @@ const GestionPedidos = () => {
     const [error, setError] = useState('')
     const [aviso, setAviso] = useState('')
 
-    // El aviso se borra solo a los 2,5 segundos
     useEffect(()=>{
         const temporizador = setTimeout(()=>setAviso(''), 2500)
         return ()=>clearTimeout(temporizador)
@@ -30,13 +29,12 @@ const GestionPedidos = () => {
         .catch((error)=>console.error('Error al cargar los usuarios', error))
     }, [])
 
-    // Cada vez que elige otro cliente, pedimos sus pedidos (o los de todos)
     useEffect(()=>{
         const parametroCliente = clienteId === '' ? '' : `&usuarioId=${clienteId}`
         fetch(`${URL}/Pedido?size=100${parametroCliente}`, opciones('GET'))
         .then(leerRespuesta)
         .then((data)=>{
-            // Mostramos primero los más nuevos
+
             setPedidos([...data.content].reverse())
             setPedidoAbierto(null)
         })
@@ -50,7 +48,6 @@ const GestionPedidos = () => {
         setPedidoAbierto(pedidoAbierto === pedidoId ? null : pedidoId)
     }
 
-    // El back valida que el cambio esté permitido; si cancela, también devuelve el stock
     const cambiarEstado = (pedidoId, estado) => {
         fetch(`${URL}/Pedido/${pedidoId}/estado?estado=${estado}`, opciones('PATCH'))
         .then(leerRespuesta)

@@ -23,6 +23,7 @@ import com.uade.tpo.marketplace.entity.dto.response.CarritoResponse;
 import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.entity.dto.request.CheckoutRequest;
 import com.uade.tpo.marketplace.entity.dto.response.PedidoResponse;
+import com.uade.tpo.marketplace.exceptions.AdminNoPuedeComprarException;
 import com.uade.tpo.marketplace.exceptions.CarritoVacioException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.service.carrito.ICarritoService;
@@ -77,7 +78,7 @@ public class CarritoController {
     }
 
     @PostMapping("{carritoId}/checkout")
-    public ResponseEntity<Object> checkout(@PathVariable int carritoId, @RequestBody CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException {
+    public ResponseEntity<Object> checkout(@PathVariable int carritoId, @RequestBody CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException, AdminNoPuedeComprarException {
         Pedido result = checkoutService.checkout(carritoId, checkoutRequest);
         return ResponseEntity.ok(new PedidoResponse(result));
     }

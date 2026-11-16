@@ -23,17 +23,16 @@ import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.exceptions.CategoryDuplicateException;
 import com.uade.tpo.marketplace.service.categories.ICategoriesService;
 
-@RestController // capa de trafico, con esto delimitamos para eso
-@RequestMapping("Categories") //ENDPOINT mappea request con lo siguiente del localhost/Categories
+@RestController
+@RequestMapping("Categories")
 public class CategoriesController {
 
-    @Autowired // para que spring sepa que tiene que inyectar la dependencia
+    @Autowired
     private ICategoriesService categoriesService;
 
-
-    @GetMapping //localhost/8080/Categories
+    @GetMapping
     public ResponseEntity<Page<CategoryResponse>> getCategories(
-            @RequestParam(required = false, defaultValue = "true") boolean soloActivos, // el admin pide false para ver tambien las desactivadas
+            @RequestParam(required = false, defaultValue = "true") boolean soloActivos,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer size) {
         Page<Category> resultado = soloActivos
@@ -42,8 +41,8 @@ public class CategoriesController {
         return ResponseEntity.ok(resultado.map(CategoryResponse::new));
     }
 
-    @GetMapping("{categoryId}") //localhost/8080/Categories/id
-    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable int categoryId) { //PATH VARIABLE es porque va a cambiar y que lo vaya cambiando
+    @GetMapping("{categoryId}")
+    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable int categoryId) {
         Optional<Category> result = categoriesService.getCategoryById(categoryId);
         if (result.isPresent())
             return ResponseEntity.ok(new CategoryResponse(result.get()));
@@ -66,7 +65,7 @@ public class CategoriesController {
         return ResponseEntity.ok(new CategoryResponse(result));
     }
 
-    @PatchMapping("{categoryId}/estado") // activa o desactiva la categoria (asi se puede volver a habilitar)
+    @PatchMapping("{categoryId}/estado")
     public ResponseEntity<CategoryResponse> actualizarEstado(@PathVariable int categoryId, @RequestParam boolean activo) {
         Optional<Category> result = categoriesService.actualizarEstado(categoryId, activo);
         if (result.isPresent())

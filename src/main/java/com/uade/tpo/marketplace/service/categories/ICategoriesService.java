@@ -8,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import com.uade.tpo.marketplace.entity.Category;
 import com.uade.tpo.marketplace.exceptions.CategoryDuplicateException;
 
-
 public interface ICategoriesService {
 
     public Page<Category> getCategories(PageRequest pageRequest);

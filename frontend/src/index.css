@@ -1,9 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Chivo:wght@300..900&family=Space+Grotesk:wght@300..700&display=swap');
-/* Los íconos van en la capa "base" para que las clases de Tailwind (text-3xl, flex...) les ganen */
+
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap') layer(base);
 @import "tailwindcss";
 
-/* Tema "Kinetic Volt" sacado del DESIGN.md de Stitch */
 @theme {
   --color-background: #131313;
   --color-surface: #131313;
@@ -61,7 +60,6 @@
   --text-label-tag: 0.625rem;
   --text-label-tag--line-height: 0.75rem;
 
-  /* Animaciones del contador del carrito y del aviso */
   --animate-pop: pop 0.3s ease-out;
   --animate-entrar: entrar 0.3s ease-out;
 
@@ -86,8 +84,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Edge le agrega su propio ojito a los campos de contraseña: lo ocultamos
-   porque CampoContrasenia ya tiene el suyo (si no, aparecen dos) */
 input::-ms-reveal,
 input::-ms-clear {
   display: none;

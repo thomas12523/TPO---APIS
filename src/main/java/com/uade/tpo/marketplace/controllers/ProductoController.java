@@ -55,9 +55,6 @@ public class ProductoController {
                 .map(producto -> new ProductoResponse(producto, descuentoService.getPrecioConDescuento(producto))));
     }
 
-    // orden: precioAsc (menor a mayor), precioDesc (mayor a menor) o nombre (A-Z).
-    // Sin orden (o uno desconocido) quedan en el orden en que se cargaron.
-    // El precio es el precioUnitario (sin descuento), porque el descuento no esta en la tabla.
     private Sort armarOrden(String orden) {
         if ("precioAsc".equals(orden))
             return Sort.by("precioUnitario").ascending();

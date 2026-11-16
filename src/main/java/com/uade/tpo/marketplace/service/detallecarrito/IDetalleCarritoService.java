@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.uade.tpo.marketplace.entity.DetalleCarrito;
 import com.uade.tpo.marketplace.entity.dto.request.DetalleCarritoRequest;
+import com.uade.tpo.marketplace.exceptions.AdminNoPuedeComprarException;
 import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 
@@ -14,9 +15,9 @@ public interface IDetalleCarritoService {
 
     public Optional<DetalleCarrito> getDetalleCarritoById(int carritoId, int productoId);
 
-    public DetalleCarrito crearDetalleCarrito(DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException, StockInsuficienteException;
+    public DetalleCarrito crearDetalleCarrito(DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException, StockInsuficienteException, AdminNoPuedeComprarException;
 
-    public DetalleCarrito actualizarDetalleCarrito(int carritoId, int productoId, DetalleCarritoRequest detalleCarritoRequest) throws StockInsuficienteException;
+    public DetalleCarrito actualizarDetalleCarrito(int carritoId, int productoId, DetalleCarritoRequest detalleCarritoRequest) throws StockInsuficienteException, AdminNoPuedeComprarException;
 
     public Optional<DetalleCarrito> deleteDetalleCarrito(int carritoId, int productoId);
 

@@ -3,7 +3,6 @@ import Precio from "../ui/Precio"
 import BotonCarrito from "./BotonCarrito"
 import ImagenPrincipal from "./ImagenPrincipal"
 
-// cantidadEnCarrito y carritoCambio se los pasamos al botón del carrito
 const ProductoCard = ({productoId, nombreProducto, categoriaNombre, precioUnitario, precioConDescuento, tieneDescuento, stock, cantidadEnCarrito, carritoCambio}) => {
     return(
         <article className="group flex flex-col bg-surface-container-low border border-white/5 hover:border-primary-container transition-colors">
@@ -18,7 +17,10 @@ const ProductoCard = ({productoId, nombreProducto, categoriaNombre, precioUnitar
             </Link>
 
             <div className="flex flex-col flex-1 gap-space-xs p-space-md">
-                <p className="font-bold text-label-tag uppercase tracking-widest text-on-surface-variant">{categoriaNombre}</p>
+                <div className="flex items-center justify-between">
+                    <p className="font-bold text-label-tag uppercase tracking-widest text-on-surface-variant">{categoriaNombre}</p>
+
+                </div>
                 <Link to={`/producto/${productoId}`} className="font-headline font-extrabold text-headline-sm uppercase text-primary line-clamp-2 min-h-10">{nombreProducto}</Link>
                 <div className="flex flex-wrap items-center justify-between gap-space-xs mt-auto pt-space-sm">
                     <Precio precioUnitario={precioUnitario} precioConDescuento={precioConDescuento} tieneDescuento={tieneDescuento} />

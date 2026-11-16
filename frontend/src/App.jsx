@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
 import Home from "./views/Home"
 import Catalogo from "./views/Catalogo"
 import DetalleProducto from "./views/DetalleProducto"
@@ -12,7 +12,6 @@ import Registro from "./views/Registro"
 import NoEncontrado from "./views/NoEncontrado"
 import AdminProductos from "./views/admin/AdminProductos"
 import AdminCategorias from "./views/admin/AdminCategorias"
-import AdminDescuentos from "./views/admin/AdminDescuentos"
 import AdminUsuarios from "./views/admin/AdminUsuarios"
 import AdminPedidos from "./views/admin/AdminPedidos"
 
@@ -32,7 +31,7 @@ const App = () => {
         <Route path="/registro" element={<Registro />} />
         <Route path="/admin/productos" element={<AdminProductos />} />
         <Route path="/admin/categorias" element={<AdminCategorias />} />
-        <Route path="/admin/descuentos" element={<AdminDescuentos />} />
+        <Route path="/admin/descuentos" element={<Navigate to="/admin/productos" replace />} />
         <Route path="/admin/usuarios" element={<AdminUsuarios />} />
         <Route path="/admin/pedidos" element={<AdminPedidos />} />
         <Route path="*" element={<NoEncontrado />} />

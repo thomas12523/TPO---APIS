@@ -19,4 +19,6 @@ public interface IImagenService {
     public Imagen subirImagen(int productoId, MultipartFile archivo) throws IOException;
 
     public Optional<Imagen> deleteImagen(int imagenId);
+
+    public List<Imagen> actualizarOrden(List<Integer> imagenIds);
 }

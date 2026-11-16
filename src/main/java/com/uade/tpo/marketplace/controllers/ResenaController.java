@@ -51,7 +51,6 @@ public class ResenaController {
         return ResponseEntity.notFound().build();
     }
 
-    // Le dice al front si el usuario logueado compro el producto (y entonces puede resenarlo)
     @GetMapping("compra/{productoId}")
     public ResponseEntity<Boolean> compro(@AuthenticationPrincipal Usuario usuarioActual, @PathVariable int productoId) {
         return ResponseEntity.ok(resenaService.compro(productoId, usuarioActual));
@@ -74,7 +73,7 @@ public class ResenaController {
         return ResponseEntity.ok(new ResenaResponse(result.get()));
     }
 
-    @PatchMapping("{resenaId}") // baja logica: desactiva la resena en vez de borrar la fila
+    @PatchMapping("{resenaId}")
     public ResponseEntity<Object> deleteResena(@AuthenticationPrincipal Usuario usuarioActual, @PathVariable int resenaId) {
         Optional<Resena> result = resenaService.deleteResena(resenaId, usuarioActual);
         if (result.isEmpty())

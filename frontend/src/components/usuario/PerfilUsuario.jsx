@@ -29,12 +29,11 @@ const PerfilUsuario = () => {
         })
     }, [token])
 
-    // Devolvemos la promesa para que el formulario sepa si salió bien o mal
     const guardarCambios = (datos) => {
         return fetch(`${URL}/Usuario/me`, opciones('PUT', datos))
         .then(leerRespuesta)
         .then((data)=>{
-            // El token tiene adentro el username: si cambió, hay que volver a iniciar sesión
+
             if(data.username !== usuario.username){
                 cerrarSesion()
                 navigate('/login')
@@ -44,7 +43,6 @@ const PerfilUsuario = () => {
         })
     }
 
-    // El back verifica la contraseña actual antes de guardar la nueva
     const cambiarContrasenia = (datos) => {
         return fetch(`${URL}/Usuario/me/contrasenia`, opciones('PATCH', datos))
         .then(leerRespuesta)
@@ -54,7 +52,6 @@ const PerfilUsuario = () => {
         return <AvisoSesion mensaje="Iniciá sesión para ver tu perfil." />
     }
 
-    // Si falló la carga mostramos el error, pero dejamos cerrar sesión
     if(error !== ''){
         return(
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_20rem] gap-space-lg">
@@ -64,7 +61,6 @@ const PerfilUsuario = () => {
         )
     }
 
-    // Mientras la promesa está pendiente todavía no hay usuario para mostrar
     if(usuario === null){
         return null
     }

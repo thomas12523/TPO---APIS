@@ -11,8 +11,7 @@ import com.uade.tpo.marketplace.entity.Imagen;
 @Repository
 public interface IImagenRepository extends JpaRepository<Imagen, Integer> {
 
-    // ordenadas por id para que la primera sea la principal; las filas viejas sin archivo no se devuelven
-    @Query(value = "select i from Imagen i where i.producto.productoId = ?1 and i.activo = true and i.datos is not null order by i.imagenId")
+    @Query(value = "select i from Imagen i where i.producto.productoId = ?1 and i.activo = true and i.datos is not null order by coalesce(i.orden, i.imagenId), i.imagenId")
     List<Imagen> findByProductoId(int productoId);
 
     List<Imagen> findByActivoTrue();

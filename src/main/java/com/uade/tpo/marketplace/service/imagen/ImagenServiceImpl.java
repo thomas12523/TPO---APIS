@@ -1,6 +1,7 @@
 package com.uade.tpo.marketplace.service.imagen;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +39,6 @@ public class ImagenServiceImpl implements IImagenService {
         return imagenRepository.findById(imagenId);
     }
 
-    // la imagen principal es la primera que se subio (la de menor id)
     @Transactional
     public Optional<Imagen> getImagenPrincipal(int productoId) {
         return imagenRepository.findByProductoId(productoId).stream().findFirst();
@@ -48,10 +48,13 @@ public class ImagenServiceImpl implements IImagenService {
         Producto producto = productoService.getProductoById(productoId)
                 .orElseThrow(ProductoNotFoundException::new);
 
+        List<Imagen> existentes = imagenRepository.findByProductoId(productoId);
+
         Imagen imagen = new Imagen();
         imagen.setProducto(producto);
         imagen.setDatos(archivo.getBytes());
         imagen.setTipoContenido(archivo.getContentType());
+        imagen.setOrden(existentes.size());
         return imagenRepository.save(imagen);
     }
 
@@ -63,5 +66,21 @@ public class ImagenServiceImpl implements IImagenService {
         Imagen imagen = existente.get();
         imagen.setActivo(false);
         return Optional.of(imagenRepository.save(imagen));
+    }
+
+    public List<Imagen> actualizarOrden(List<Integer> imagenIds) {
+        List<Imagen> actualizadas = new ArrayList<>();
+        if (imagenIds == null)
+            return actualizadas;
+
+        for (int i = 0; i < imagenIds.size(); i++) {
+            Optional<Imagen> existente = imagenRepository.findById(imagenIds.get(i));
+            if (existente.isPresent()) {
+                Imagen imagen = existente.get();
+                imagen.setOrden(i);
+                actualizadas.add(imagenRepository.save(imagen));
+            }
+        }
+        return actualizadas;
     }
 }

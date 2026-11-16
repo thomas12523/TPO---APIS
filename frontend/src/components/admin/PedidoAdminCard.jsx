@@ -1,7 +1,6 @@
 import PedidoDetalle from "../pedidos/PedidoDetalle"
 import { iconoEstado, siguientesEstados } from "../pedidos/estados"
 
-// Como la card de Mis pedidos, pero en vez de cancelar el admin elige el próximo estado
 const PedidoAdminCard = ({pedidoId, numeroPedido, cliente, fechaCreacion, estado, total, metodoPago, abierto, alternarDetalle, cambiarEstado}) => {
 
     const siguientes = siguientesEstados[estado] === undefined ? [] : siguientesEstados[estado]
@@ -24,7 +23,7 @@ const PedidoAdminCard = ({pedidoId, numeroPedido, cliente, fechaCreacion, estado
                     {siguientes.length === 0 ? (
                         <span className="flex items-center px-space-md py-space-sm font-bold text-label-md uppercase text-on-surface-variant">Estado final</span>
                     ) : (
-                        // Siempre muestra "Cambiar a…": al elegir una opción se manda al back y la lista se actualiza
+
                         <select value="" onChange={(e)=>cambiarEstado(pedidoId, e.target.value)} title="Cambiar estado"
                             className="bg-surface-container-high text-primary font-bold text-label-md uppercase px-space-md py-space-sm border border-white/10 focus:border-primary-container focus:outline-none">
                             <option value="" disabled>Cambiar a…</option>

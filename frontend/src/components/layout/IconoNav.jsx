@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom"
 
-// contador es opcional: si es mayor a 0 se muestra el numerito arriba del ícono.
-// animar determina si se reproduce la animación de pop (solo al agregar un producto).
 const IconoNav = ({ ruta, icono, titulo, contador, animar = false, onAnimationEnd }) => {
     return (
         <Link to={ruta} title={titulo} className="relative w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-on-surface hover:bg-surface-container">

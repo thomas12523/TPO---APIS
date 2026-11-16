@@ -10,13 +10,11 @@ import { urlImagen } from "../../utils/imagenes"
 
 const FichaProducto = ({carritoCambio}) => {
 
-    // El id sale de la URL: /producto/:productoId
     const { productoId } = useParams()
     const [producto, setProducto] = useState(null)
     const [imagenes, setImagenes] = useState([])
     const [error, setError] = useState('')
 
-    // Se vuelve a ejecutar si cambia el id (por ejemplo, al entrar a un producto relacionado)
     useEffect(()=>{
         fetch(`${URL}/Producto/${productoId}`)
         .then(leerRespuesta)
@@ -39,12 +37,10 @@ const FichaProducto = ({carritoCambio}) => {
         return <p className="max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-xl text-body-lg text-on-surface-variant">{error}</p>
     }
 
-    // Mientras la promesa está pendiente todavía no hay producto para mostrar
     if(producto === null){
         return null
     }
 
-    // Las imágenes llegan en base64; la primera es la principal
     const urls = imagenes.map(urlImagen)
 
     return(

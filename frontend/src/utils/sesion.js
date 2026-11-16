@@ -3,8 +3,6 @@ import store from "../store"
 import { setSesion, cerrarSesionRedux } from "../store/slices/authSlice"
 import { setCarritoId, limpiarCarrito, fetchCarrito } from "../store/slices/carritoSlice"
 
-// El login y el registro solo devuelven el token. Lo guardamos en el localStorage y en Redux,
-// y con el token, le pedimos al back quién es el usuario y cuál es su carrito.
 export const iniciarSesion = (token) => {
     localStorage.setItem('token', token)
     return fetch(`${URL}/Usuario/me`, opciones('GET'))

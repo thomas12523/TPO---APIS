@@ -15,14 +15,13 @@ const GestionProductos = () => {
     const [error, setError] = useState('')
     const [aviso, setAviso] = useState('')
 
-    // El aviso se borra solo a los 2,5 segundos
     useEffect(()=>{
         const temporizador = setTimeout(()=>setAviso(''), 2500)
         return ()=>clearTimeout(temporizador)
     }, [aviso])
 
     useEffect(()=>{
-        // soloActivos=false para que el admin vea también los productos desactivados
+
         fetch(`${URL}/Producto?size=100&soloActivos=false`)
         .then(leerRespuesta)
         .then((data)=>setProductos(data.content))
@@ -34,22 +33,66 @@ const GestionProductos = () => {
         .catch((error)=>console.error('Error al cargar las categorías', error))
     }, [])
 
-    // Devolvemos la promesa para que el formulario sepa si salió bien o mal.
-    // Guardamos lo que devuelve el back, que ya trae la categoría y el precio con descuento.
-    // Las imágenes se suben después, porque necesitan el id del producto
-    const guardarProducto = (datos, archivos) => {
+    const guardarProducto = (datos, archivos, datosDescuento) => {
         if(editando === null){
             return fetch(`${URL}/Producto`, opciones('POST', datos))
             .then(leerRespuesta)
-            .then((data)=>subirImagenes(data.productoId, archivos).then(()=>data))
+            .then((data)=>{
+                const tareas = [subirImagenes(data.productoId, archivos)]
+                if (datosDescuento && datosDescuento.aplicar && Number(datosDescuento.porcentaje) > 0) {
+                    tareas.push(
+                        fetch(`${URL}/Descuento`, opciones('POST', {
+                            productoId: data.productoId,
+                            porcentaje: Number(datosDescuento.porcentaje),
+                            fechaInicio: datosDescuento.fechaInicio,
+                            fechaFin: datosDescuento.fechaFin,
+                            activo: true
+                        })).then(leerRespuesta)
+                    )
+                }
+                return Promise.all(tareas).then(()=>data)
+            })
+            .then((data)=>{
+                return fetch(`${URL}/Producto/${data.productoId}`).then(leerRespuesta)
+            })
             .then((data)=>{
                 setProductos([...productos, data])
                 setAviso(`Producto "${data.nombreProducto}" creado correctamente`)
             })
         }
+
         return fetch(`${URL}/Producto/${editando.productoId}`, opciones('PUT', datos))
         .then(leerRespuesta)
-        .then((data)=>subirImagenes(data.productoId, archivos).then(()=>data))
+        .then((data)=>{
+            const tareas = [subirImagenes(data.productoId, archivos)]
+            if (datosDescuento) {
+                if (datosDescuento.descuentoId) {
+                    tareas.push(
+                        fetch(`${URL}/Descuento/${datosDescuento.descuentoId}`, opciones('PUT', {
+                            productoId: data.productoId,
+                            porcentaje: Number(datosDescuento.porcentaje),
+                            fechaInicio: datosDescuento.fechaInicio,
+                            fechaFin: datosDescuento.fechaFin,
+                            activo: datosDescuento.aplicar
+                        })).then(leerRespuesta)
+                    )
+                } else if (datosDescuento.aplicar && Number(datosDescuento.porcentaje) > 0) {
+                    tareas.push(
+                        fetch(`${URL}/Descuento`, opciones('POST', {
+                            productoId: data.productoId,
+                            porcentaje: Number(datosDescuento.porcentaje),
+                            fechaInicio: datosDescuento.fechaInicio,
+                            fechaFin: datosDescuento.fechaFin,
+                            activo: true
+                        })).then(leerRespuesta)
+                    )
+                }
+            }
+            return Promise.all(tareas).then(()=>data)
+        })
+        .then((data)=>{
+            return fetch(`${URL}/Producto/${data.productoId}`).then(leerRespuesta)
+        })
         .then((data)=>{
             setProductos(productos.map((value)=>(value.productoId === data.productoId ? data : value)))
             setEditando(null)
@@ -83,7 +126,7 @@ const GestionProductos = () => {
         <MensajeError mensaje={error} />
         <Aviso mensaje={aviso} />
         <TablaProductos productos={productos} editarProducto={editarProducto} cambiarEstado={cambiarEstado} />
-        {/* Al tocar la lapicera, el formulario de edición se abre encima de la tabla */}
+
         {editando !== null && (
             <Modal cerrar={()=>setEditando(null)}>
                 <ProductoForm

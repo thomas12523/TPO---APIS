@@ -41,12 +41,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
-                        // Auth: publico
+
                         .requestMatchers("/error").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Auth/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/Auth/authenticate").permitAll()
 
-                        // Catalogo: lectura publica
                         .requestMatchers(HttpMethod.GET, "/Producto").permitAll()
                         .requestMatchers(HttpMethod.GET, "/Producto/{productoId}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/Categories").permitAll()
@@ -59,33 +58,28 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/Resena").permitAll()
                         .requestMatchers(HttpMethod.GET, "/Resena/{resenaId}").permitAll()
 
-                        // Producto: alta/gestion solo vendedor (ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, "/Producto").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/Producto/{productoId}").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/Producto/{productoId}/stock").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/Producto/{productoId}/estado").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/Producto/{productoId}").hasAuthority("ROLE_ADMIN")
 
-                        // Categories: gestion solo vendedor (ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, "/Categories").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/Categories/{categoryId}").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/Categories/{categoryId}").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/Categories/{categoryId}").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/Categories/{categoryId}/estado").hasAuthority("ROLE_ADMIN")
 
-                        // Imagen: gestion solo vendedor (ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, "/Imagen/upload").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/Imagen/{imagenId}").hasAuthority("ROLE_ADMIN")
 
-                        // Descuento: gestion solo vendedor (ROLE_ADMIN)
                         .requestMatchers(HttpMethod.POST, "/Descuento").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/Descuento/{descuentoId}").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/Descuento/{descuentoId}").hasAuthority("ROLE_ADMIN")
 
-                        // Usuario: administracion de cuentas solo vendedor (ROLE_ADMIN)
                         .requestMatchers(HttpMethod.GET, "/Usuario").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/Usuario").hasAuthority("ROLE_ADMIN")
-                        // Usuario: perfil propio (cualquier autenticado)
+
                         .requestMatchers(HttpMethod.GET, "/Usuario/me").authenticated()
                         .requestMatchers(HttpMethod.PUT, "/Usuario/me").authenticated()
                         .requestMatchers(HttpMethod.PATCH, "/Usuario/me/contrasenia").authenticated()
@@ -95,8 +89,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/Usuario/{usuarioId}/estado").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/Usuario/{usuarioId}").hasAuthority("ROLE_ADMIN")
 
-                        // Pedido: cambiar el estado y el ABM a mano solo vendedor (ROLE_ADMIN).
-                        // Los clientes crean pedidos con el checkout y solo ven/cancelan los suyos (lo valida el controller)
                         .requestMatchers(HttpMethod.PATCH, "/Pedido/{pedidoId}/estado").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/Pedido").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/Pedido/{pedidoId}").hasAuthority("ROLE_ADMIN")
@@ -105,8 +97,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/DetallePedido/{detallePedidoId}").hasAuthority("ROLE_ADMIN")
                         .requestMatchers(HttpMethod.PATCH, "/DetallePedido/{detallePedidoId}").hasAuthority("ROLE_ADMIN")
 
-                        // Todo lo demas: cualquier usuario autenticado (Carrito, DetalleCarrito,
-                        // Pedido, DetallePedido)
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)

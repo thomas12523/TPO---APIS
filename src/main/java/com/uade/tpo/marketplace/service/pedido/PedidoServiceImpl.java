@@ -95,13 +95,11 @@ public class PedidoServiceImpl implements IPedidoService {
         return pedidoRepository.save(pedido);
     }
 
-    // un cliente solo puede ver o cancelar sus propios pedidos; el admin, todos
     public void validarAcceso(Pedido pedido, Usuario usuarioActual) {
         if (pedido.getUsuario().getUsuarioId() != usuarioActual.getUsuarioId() && usuarioActual.getRole() != Role.ADMIN)
             throw new AccessDeniedException("No podes ver los pedidos de otro usuario");
     }
 
-    // las reglas de que cambio se permite estan en PedidoOrchestratorServiceImpl
     public Pedido actualizarEstado(int pedidoId, String estado) {
         Optional<Pedido> existente = pedidoRepository.findById(pedidoId);
         if (existente.isEmpty())

@@ -46,7 +46,6 @@ public class PedidoOrchestratorServiceImpl implements IPedidoOrchestratorService
         return pedidoService.cancelarPedido(pedidoId);
     }
 
-    // a que estados puede pasar un pedido desde cada estado (solo hacia adelante)
     private static final Map<String, List<String>> TRANSICIONES = Map.of(
             "PENDIENTE", List.of("ACEPTADO", "CANCELADO"),
             "ACEPTADO", List.of("ENVIADO", "CANCELADO"),
@@ -54,7 +53,6 @@ public class PedidoOrchestratorServiceImpl implements IPedidoOrchestratorService
             "ENTREGADO", List.of(),
             "CANCELADO", List.of());
 
-    // el cliente solo puede cancelar mientras el pedido no fue aceptado
     public Pedido cancelarPedidoCliente(int pedidoId) throws PedidoEstadoInvalidoException {
         Optional<Pedido> pedidoOpt = pedidoService.getPedidoById(pedidoId);
         if (pedidoOpt.isEmpty())
@@ -66,7 +64,6 @@ public class PedidoOrchestratorServiceImpl implements IPedidoOrchestratorService
         return cancelarPedido(pedidoId);
     }
 
-    // lo usa el admin; si cancela, se devuelve el stock igual que cuando cancela el cliente
     public Pedido cambiarEstado(int pedidoId, String nuevoEstado) throws PedidoEstadoInvalidoException {
         Optional<Pedido> pedidoOpt = pedidoService.getPedidoById(pedidoId);
         if (pedidoOpt.isEmpty())
@@ -81,7 +78,7 @@ public class PedidoOrchestratorServiceImpl implements IPedidoOrchestratorService
 
         return pedidoService.actualizarEstado(pedidoId, nuevoEstado);
     }
-    
+
     public Optional<Pedido> eliminarPedido(int pedidoId) throws PedidoNoCanceladoException {
         return pedidoService.deletePedido(pedidoId);
     }

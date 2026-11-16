@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom"
 
-// Se muestra en las pantallas que necesitan estar logueado
 const AvisoSesion = ({mensaje}) => {
     return(
         <div className="bg-surface-container-low p-space-xl flex flex-col items-center text-center gap-space-md">

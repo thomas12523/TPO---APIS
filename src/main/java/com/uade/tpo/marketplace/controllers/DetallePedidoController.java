@@ -40,7 +40,6 @@ public class DetallePedidoController {
     @Autowired
     private IPedidoService pedidoService;
 
-    // un cliente solo puede ver el detalle de sus pedidos; sin pedidoId (todos los detalles) es solo para el admin
     @GetMapping
     public ResponseEntity<List<DetallePedidoResponse>> getDetallesPedido(@AuthenticationPrincipal Usuario usuarioActual,
             @RequestParam(required = false) Integer pedidoId) {

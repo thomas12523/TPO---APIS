@@ -22,7 +22,7 @@ public class Imagen {
     private Producto producto;
 
     @Lob
-    @Column(length = 16777215) // 2^24 - 1 bytes (16 MB) maximo de una imagen
+    @Column(length = 16777215)
     private byte[] datos;
 
     @Column
@@ -30,6 +30,9 @@ public class Imagen {
 
     @Column(nullable = false)
     private boolean activo;
+
+    @Column
+    private Integer orden;
 
     @PrePersist
     private void prePersist() {
@@ -52,4 +55,7 @@ public class Imagen {
 
     public boolean isActivo() { return activo; }
     public void setActivo(boolean activo) { this.activo = activo; }
+
+    public Integer getOrden() { return orden; }
+    public void setOrden(Integer orden) { this.orden = orden; }
 }

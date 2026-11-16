@@ -48,7 +48,6 @@ public class ResenaServiceImpl implements IResenaService {
         return resenaRepository.findById(resenaId);
     }
 
-    // Solo cuenta como compra si el producto esta en un pedido que no se cancelo
     @Transactional
     public boolean compro(int productoId, Usuario usuarioActual) {
         return detallePedidoRepository.existeCompra(usuarioActual.getUsuarioId(), productoId);

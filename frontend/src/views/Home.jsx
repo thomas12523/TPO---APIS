@@ -9,7 +9,6 @@ import FondoHome from "../components/home/FondoHome"
 
 const Home = () => {
 
-    // Sube en uno cada vez que se agrega algo al carrito, así el navbar actualiza el contador
     const [cambiosCarrito, setCambiosCarrito] = useState(0)
     const carritoCambio = () => setCambiosCarrito((valor)=>valor + 1)
 

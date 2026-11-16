@@ -10,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.uade.tpo.marketplace.entity.Carrito;
 import com.uade.tpo.marketplace.entity.DetalleCarrito;
 import com.uade.tpo.marketplace.entity.Producto;
+import com.uade.tpo.marketplace.entity.Role;
 import com.uade.tpo.marketplace.entity.dto.request.DetalleCarritoRequest;
+import com.uade.tpo.marketplace.exceptions.AdminNoPuedeComprarException;
 import com.uade.tpo.marketplace.exceptions.CarritoNotFoundException;
 import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
 import com.uade.tpo.marketplace.exceptions.ProductoNotFoundException;
@@ -49,13 +51,17 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
         return detalleCarritoRepository.findByCarritoIdAndProductoId(carritoId, productoId);
     }
 
-    public DetalleCarrito crearDetalleCarrito(DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException, StockInsuficienteException {
+    public DetalleCarrito crearDetalleCarrito(DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException, StockInsuficienteException, AdminNoPuedeComprarException {
+        Carrito carrito = carritoService.getCarritoById(detalleCarritoRequest.getCarritoId())
+                .orElseThrow(CarritoNotFoundException::new);
+
+        if (carrito.getUsuario() != null && carrito.getUsuario().getRole() == Role.ADMIN) {
+            throw new AdminNoPuedeComprarException();
+        }
+
         if (detalleCarritoRepository.findByCarritoIdAndProductoId(
                 detalleCarritoRequest.getCarritoId(), detalleCarritoRequest.getProductoId()).isPresent())
             throw new DetalleCarritoDuplicateException();
-
-        Carrito carrito = carritoService.getCarritoById(detalleCarritoRequest.getCarritoId())
-                .orElseThrow(CarritoNotFoundException::new);
 
         Producto producto = productoService.getProductoById(detalleCarritoRequest.getProductoId())
                 .orElseThrow(ProductoNotFoundException::new);
@@ -71,12 +77,17 @@ public class DetalleCarritoServiceImpl implements IDetalleCarritoService {
         return detalleCarritoRepository.save(detalleCarrito);
     }
 
-    public DetalleCarrito actualizarDetalleCarrito(int carritoId, int productoId, DetalleCarritoRequest detalleCarritoRequest) throws StockInsuficienteException {
+    public DetalleCarrito actualizarDetalleCarrito(int carritoId, int productoId, DetalleCarritoRequest detalleCarritoRequest) throws StockInsuficienteException, AdminNoPuedeComprarException {
         Optional<DetalleCarrito> existente = detalleCarritoRepository.findByCarritoIdAndProductoId(carritoId, productoId);
         if (existente.isEmpty())
             return null;
 
         DetalleCarrito detalleCarrito = existente.get();
+
+        if (detalleCarrito.getCarrito().getUsuario() != null && detalleCarrito.getCarrito().getUsuario().getRole() == Role.ADMIN) {
+            throw new AdminNoPuedeComprarException();
+        }
+
         if (detalleCarritoRequest.getCantidad() > detalleCarrito.getProducto().getStock())
             throw new StockInsuficienteException();
 

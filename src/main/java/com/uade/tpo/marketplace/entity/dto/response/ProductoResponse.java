@@ -14,6 +14,7 @@ public class ProductoResponse {
     private double precioUnitario;
     private double precioConDescuento;
     private boolean tieneDescuento;
+    private Double porcentajeDescuento;
     private int stock;
     private boolean activo;
 
@@ -26,6 +27,9 @@ public class ProductoResponse {
         this.precioUnitario = producto.getPrecioUnitario();
         this.precioConDescuento = precioConDescuento;
         this.tieneDescuento = precioConDescuento < producto.getPrecioUnitario();
+        if (this.tieneDescuento && producto.getPrecioUnitario() > 0) {
+            this.porcentajeDescuento = (double) Math.round((1 - precioConDescuento / producto.getPrecioUnitario()) * 100);
+        }
         this.stock = producto.getStock();
         this.activo = producto.isActivo();
     }

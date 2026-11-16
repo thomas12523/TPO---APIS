@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import Precio from "../ui/Precio"
 import SelectorCantidad from "../ui/SelectorCantidad"
 import BotonPrincipal from "../ui/BotonPrincipal"
-import MensajeError from "../ui/MensajeError"
 import Aviso from "../ui/Aviso"
 import { agregarAlCarrito } from "../../utils/carrito"
 import { fetchCarrito, activarAnimacion } from "../../store/slices/carritoSlice"
 
 const InfoProducto = ({ productoId, nombreProducto, categoriaNombre, descripcion, precioUnitario, precioConDescuento, tieneDescuento, stock, carritoCambio }) => {
     const dispatch = useDispatch()
+    const { role } = useSelector((state) => state.auth)
     const [cantidad, setCantidad] = useState(1)
     const [error, setError] = useState('')
     const [aviso, setAviso] = useState('')
@@ -22,13 +22,26 @@ const InfoProducto = ({ productoId, nombreProducto, categoriaNombre, descripcion
     }, [productoId])
 
     useEffect(() => {
-        const temporizador = setTimeout(() => setAviso(''), 2500)
-        return () => clearTimeout(temporizador)
+        if (aviso) {
+            const temporizador = setTimeout(() => setAviso(''), 2500)
+            return () => clearTimeout(temporizador)
+        }
     }, [aviso])
+
+    useEffect(() => {
+        if (error) {
+            const temporizador = setTimeout(() => setError(''), 2500)
+            return () => clearTimeout(temporizador)
+        }
+    }, [error])
 
     const handleClick = () => {
         if (localStorage.getItem('token') === null) {
             navigate('/login')
+            return
+        }
+        if (role === 'ADMIN' || localStorage.getItem('role') === 'ADMIN') {
+            setError('Los productos son exclusivos para usuarios')
             return
         }
         setError('')
@@ -57,6 +70,27 @@ const InfoProducto = ({ productoId, nombreProducto, categoriaNombre, descripcion
                 </div>
             </div>
 
+            <div className="flex items-center gap-space-xs">
+                {stock > 0 ? (
+                    <div className="flex flex-wrap items-center gap-space-xs text-body-md">
+                        <span className="w-2.5 h-2.5 rounded-full bg-primary-container inline-block"></span>
+                        <span className="text-on-surface-variant font-medium">
+                            Stock disponible: <strong className="text-primary font-bold">{stock} {stock === 1 ? 'unidad' : 'unidades'}</strong>
+                        </span>
+                        {stock <= 5 && (
+                            <span className="ml-space-xs text-label-tag font-bold uppercase text-on-tertiary-container bg-tertiary-container/20 px-space-xs py-0.5 border border-on-tertiary-container/30">
+                                ¡Últimas unidades!
+                            </span>
+                        )}
+                    </div>
+                ) : (
+                    <div className="flex items-center gap-space-xs text-body-md text-error">
+                        <span className="w-2.5 h-2.5 rounded-full bg-error inline-block"></span>
+                        <span className="font-bold uppercase tracking-wider">Agotado / Sin stock</span>
+                    </div>
+                )}
+            </div>
+
             <p className="text-body-md text-on-surface-variant leading-relaxed">{descripcion}</p>
 
             <div className="flex items-center gap-space-md pt-space-md border-t border-white/5">
@@ -64,8 +98,8 @@ const InfoProducto = ({ productoId, nombreProducto, categoriaNombre, descripcion
                 <BotonPrincipal texto="Agregar al carrito" icono="shopping_bag" onClick={handleClick} disabled={stock === 0} />
             </div>
 
-            <MensajeError mensaje={error} />
             <Aviso mensaje={aviso} />
+            <Aviso mensaje={error} tipo="error" />
         </div>
     )
 }

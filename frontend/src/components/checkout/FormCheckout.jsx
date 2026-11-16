@@ -15,9 +15,9 @@ import { vaciarCarrito, setCarrito as setCarritoRedux } from "../../store/slices
 const FormCheckout = () => {
     const dispatch = useDispatch()
     const [carrito, setCarrito] = useState(null)
-    // El nombre coincide con CheckoutRequest (metodoPago)
+
     const [checkout, setCheckout] = useState({ metodoPago: '' })
-    // El pago es simulado: los datos de la tarjeta solo se validan acá, no viajan al back
+
     const [tarjeta, setTarjeta] = useState(tarjetaVacia)
     const [error, setError] = useState('')
     const navigate = useNavigate()
@@ -43,7 +43,6 @@ const FormCheckout = () => {
         setError('')
     }
 
-    // Cada campo de la tarjeta se formatea mientras se escribe (por ejemplo, el número en bloques de 4)
     const handleChangeTarjeta = (e) => {
         setTarjeta({ ...tarjeta, [e.target.name]: formatearCampo(e.target.name, e.target.value, tarjeta.numero) })
     }
@@ -60,13 +59,12 @@ const FormCheckout = () => {
         }
         setError('')
 
-        // El back arma el pedido con lo que hay en el carrito, descuenta el stock y vacía el carrito
         fetch(`${URL}/Carrito/${carritoId}/checkout`, opciones('POST', checkout))
             .then(leerRespuesta)
             .then((data) => {
-                // Vaciamos el carrito en Redux de inmediato para que el badge del Navbar desaparezca al instante
+
                 dispatch(vaciarCarrito())
-                // Le pasamos el pedido creado a la vista de confirmación por el state de la ruta
+
                 navigate('/pedido-confirmado', { state: data })
             })
             .catch((err) => {

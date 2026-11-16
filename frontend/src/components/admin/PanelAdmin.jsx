@@ -4,10 +4,8 @@ import AdminSidebar from "./AdminSidebar"
 import TituloPagina from "../ui/TituloPagina"
 import AvisoSesion from "../ui/AvisoSesion"
 
-// Arma la estructura que comparten todas las vistas del admin
 const PanelAdmin = ({activa, contenido}) => {
 
-    // El rol lo guardamos al iniciar sesión (ver utils/sesion.js)
     if(localStorage.getItem('role') !== 'ADMIN'){
         return(
             <>

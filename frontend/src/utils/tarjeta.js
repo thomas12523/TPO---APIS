@@ -1,10 +1,8 @@
-// Simulación de pago con tarjeta: nada se manda al back, solo validamos que los datos tengan sentido
 
 export const tarjetaVacia = {numero: '', titular: '', vencimiento: '', cvv: '', dni: '', cuotas: '1'}
 
 const soloDigitos = (texto) => texto.replace(/\D/g, '')
 
-// La marca sale de los primeros dígitos (así lo hacen las tarjetas reales)
 export const marcaTarjeta = (numero) => {
     const digitos = soloDigitos(numero)
     if(/^4/.test(digitos)){
@@ -19,18 +17,16 @@ export const marcaTarjeta = (numero) => {
     return ''
 }
 
-// American Express tiene 15 dígitos y CVV de 4; las demás, 16 y 3
 const largoNumero = (numero) => marcaTarjeta(numero) === 'AMEX' ? 15 : 16
 const largoCvv = (numero) => marcaTarjeta(numero) === 'AMEX' ? 4 : 3
 
-// Cada campo se va formateando mientras el usuario escribe (solo deja escribir lo que corresponde)
 export const formatearCampo = (name, value, numero) => {
     if(name === 'numero'){
-        // Bloques de 4: 4111 1111 1111 1111
+
         return soloDigitos(value).slice(0, largoNumero(value)).replace(/(\d{4})(?=\d)/g, '$1 ')
     }
     if(name === 'vencimiento'){
-        // MM/AA: la barra se pone sola
+
         const digitos = soloDigitos(value).slice(0, 4)
         return digitos.length > 2 ? `${digitos.slice(0, 2)}/${digitos.slice(2)}` : digitos
     }
@@ -46,9 +42,6 @@ export const formatearCampo = (name, value, numero) => {
     return value
 }
 
-
-
-// Vencida si el mes ya pasó (vence el último día del mes que figura)
 const estaVencida = (mes, anio) => {
     const hoy = new Date()
     const anioActual = hoy.getFullYear() % 100
@@ -56,7 +49,6 @@ const estaVencida = (mes, anio) => {
     return anio < anioActual || (anio === anioActual && mes < mesActual)
 }
 
-// Devuelve el primer error que encuentra, o '' si la tarjeta está bien
 export const validarTarjeta = (tarjeta) => {
     const digitos = soloDigitos(tarjeta.numero)
     if(Object.values(tarjeta).some((value)=>value.trim() === '')){

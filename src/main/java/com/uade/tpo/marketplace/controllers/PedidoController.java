@@ -38,7 +38,7 @@ public class PedidoController {
     @Autowired
     private IPedidoOrchestratorService pedidoOrchestratorService;
 
-    @GetMapping // el admin ve los de todos (o filtra por usuarioId); un cliente siempre ve solo los suyos
+    @GetMapping
     public ResponseEntity<Page<PedidoResponse>> getPedidos(@AuthenticationPrincipal Usuario usuarioActual,
             @RequestParam(required = false) Integer usuarioId,
             @RequestParam(required = false, defaultValue = "0") Integer page,
@@ -84,7 +84,7 @@ public class PedidoController {
         return ResponseEntity.ok(new PedidoResponse(result));
     }
 
-    @PostMapping("{pedidoId}/cancelar") // el cliente solo puede cancelar si el pedido esta PENDIENTE
+    @PostMapping("{pedidoId}/cancelar")
     public ResponseEntity<PedidoResponse> cancelarPedido(@AuthenticationPrincipal Usuario usuarioActual, @PathVariable int pedidoId)
             throws PedidoEstadoInvalidoException {
         Optional<Pedido> pedido = pedidoService.getPedidoById(pedidoId);
@@ -99,7 +99,7 @@ public class PedidoController {
         return ResponseEntity.ok(new PedidoResponse(result));
     }
 
-    @PatchMapping("{pedidoId}/estado") // solo ROLE_ADMIN: PENDIENTE -> ACEPTADO -> ENVIADO -> ENTREGADO (o CANCELADO)
+    @PatchMapping("{pedidoId}/estado")
     public ResponseEntity<PedidoResponse> cambiarEstado(@PathVariable int pedidoId, @RequestParam String estado)
             throws PedidoEstadoInvalidoException {
         Pedido result = pedidoOrchestratorService.cambiarEstado(pedidoId, estado);

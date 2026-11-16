@@ -4,7 +4,6 @@ import MensajeError from "../ui/MensajeError"
 
 const PerfilForm = ({usuario, guardarCambios}) => {
 
-    // Los nombres coinciden con UsuarioRequest
     const datosIniciales = {nombre: usuario.nombre, apellido: usuario.apellido, dni: String(usuario.dni), username: usuario.username, email: usuario.email}
 
     const [datos, setDatos] = useState(datosIniciales)

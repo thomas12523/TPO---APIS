@@ -1,4 +1,4 @@
-// textoVacio es opcional: el texto de la primera opción (la que no elige nada)
+
 const CampoSelect = ({label, name, value, onChange, opciones, textoVacio = 'Elegí una opción'}) => {
     return(
         <div className="flex flex-col gap-space-xs">

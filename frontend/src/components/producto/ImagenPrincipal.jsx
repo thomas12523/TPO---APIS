@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { urlPrincipal } from "../../utils/imagenes"
 
-// Si el producto todavía no tiene imágenes, el back responde 404 y mostramos un ícono en su lugar
 const ImagenPrincipal = ({productoId, nombreProducto}) => {
 
     const [sinImagen, setSinImagen] = useState(false)

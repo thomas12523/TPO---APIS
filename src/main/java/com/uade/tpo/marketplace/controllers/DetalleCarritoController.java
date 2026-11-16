@@ -20,6 +20,7 @@ import com.uade.tpo.marketplace.entity.DetalleCarrito;
 import com.uade.tpo.marketplace.entity.dto.request.DetalleCarritoRequest;
 import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
 import com.uade.tpo.marketplace.entity.dto.response.DetalleCarritoResponse;
+import com.uade.tpo.marketplace.exceptions.AdminNoPuedeComprarException;
 import com.uade.tpo.marketplace.exceptions.DetalleCarritoDuplicateException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.service.detallecarrito.IDetalleCarritoService;
@@ -48,13 +49,13 @@ public class DetalleCarritoController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> crearDetalleCarrito(@RequestBody DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException, StockInsuficienteException {
+    public ResponseEntity<Object> crearDetalleCarrito(@RequestBody DetalleCarritoRequest detalleCarritoRequest) throws DetalleCarritoDuplicateException, StockInsuficienteException, AdminNoPuedeComprarException {
         DetalleCarrito result = detalleCarritoService.crearDetalleCarrito(detalleCarritoRequest);
         return ResponseEntity.ok(new DetalleCarritoResponse(result));
     }
 
     @PutMapping("{carritoId}/{productoId}")
-    public ResponseEntity<DetalleCarritoResponse> actualizarDetalleCarrito(@PathVariable int carritoId, @PathVariable int productoId, @RequestBody DetalleCarritoRequest detalleCarritoRequest) throws StockInsuficienteException {
+    public ResponseEntity<DetalleCarritoResponse> actualizarDetalleCarrito(@PathVariable int carritoId, @PathVariable int productoId, @RequestBody DetalleCarritoRequest detalleCarritoRequest) throws StockInsuficienteException, AdminNoPuedeComprarException {
         DetalleCarrito result = detalleCarritoService.actualizarDetalleCarrito(carritoId, productoId, detalleCarritoRequest);
         if (result == null)
             return ResponseEntity.notFound().build();

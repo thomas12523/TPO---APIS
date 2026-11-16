@@ -10,17 +10,15 @@ const Navbar = ({ cambiosCarrito }) => {
     const { token, role } = useSelector((state) => state.auth)
     const { cantidadTotal, carritoId, animarBadge, datos } = useSelector((state) => state.carrito)
 
-    // Solo pedimos el carrito si aún no se cargó en el store, o si se fuerza por cambiosCarrito
     useEffect(() => {
-        if (!token || !carritoId) {
+        if (!token || !carritoId || role === 'ADMIN') {
             return
         }
         if (datos === null || cambiosCarrito) {
             dispatch(fetchCarrito())
         }
-    }, [dispatch, token, carritoId, datos, cambiosCarrito])
+    }, [dispatch, token, carritoId, datos, cambiosCarrito, role])
 
-    // Limpia la animación en caso de que termine o no dispare onAnimationEnd
     useEffect(() => {
         if (animarBadge) {
             const timer = setTimeout(() => {
@@ -64,15 +62,19 @@ const Navbar = ({ cambiosCarrito }) => {
                                 Panel admin
                             </Link>
                         )}
-                        <IconoNav ruta="/mis-pedidos" icono="local_shipping" titulo="Mis pedidos" />
-                        <IconoNav
-                            ruta="/carrito"
-                            icono="shopping_bag"
-                            titulo="Carrito"
-                            contador={cantidadTotal}
-                            animar={animarBadge}
-                            onAnimationEnd={handleAnimationEnd}
-                        />
+                        {role !== 'ADMIN' && (
+                            <>
+                                <IconoNav ruta="/mis-pedidos" icono="local_shipping" titulo="Mis pedidos" />
+                                <IconoNav
+                                    ruta="/carrito"
+                                    icono="shopping_bag"
+                                    titulo="Carrito"
+                                    contador={cantidadTotal}
+                                    animar={animarBadge}
+                                    onAnimationEnd={handleAnimationEnd}
+                                />
+                            </>
+                        )}
                         <Link to="/perfil" title="Mi perfil" className="ml-space-xs w-8 h-8 rounded-full bg-primary flex items-center justify-center">
                             <span className="material-symbols-outlined text-on-primary text-lg">person</span>
                         </Link>

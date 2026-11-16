@@ -13,6 +13,7 @@ public class ImagenResponse {
     private String tipoContenido;
     private String imagenBase64;
     private boolean activo;
+    private Integer orden;
 
     public ImagenResponse(Imagen imagen) {
         this.imagenId = imagen.getImagenId();
@@ -21,5 +22,6 @@ public class ImagenResponse {
         if (imagen.getDatos() != null)
             this.imagenBase64 = Base64.getEncoder().encodeToString(imagen.getDatos());
         this.activo = imagen.isActivo();
+        this.orden = imagen.getOrden();
     }
 }

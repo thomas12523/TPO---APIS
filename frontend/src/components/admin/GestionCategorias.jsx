@@ -13,21 +13,19 @@ const GestionCategorias = () => {
     const [error, setError] = useState('')
     const [aviso, setAviso] = useState('')
 
-    // El aviso se borra solo a los 2,5 segundos
     useEffect(()=>{
         const temporizador = setTimeout(()=>setAviso(''), 2500)
         return ()=>clearTimeout(temporizador)
     }, [aviso])
 
     useEffect(()=>{
-        // soloActivos=false para que el admin vea también las categorías desactivadas
+
         fetch(`${URL}/Categories?size=100&soloActivos=false`)
         .then(leerRespuesta)
         .then((data)=>setCategorias(data.content))
         .catch((error)=>console.error('Error al cargar las categorías', error))
     }, [])
 
-    // Devolvemos la promesa para que el formulario sepa si salió bien o mal
     const guardarCategoria = (datos) => {
         if(editando === null){
             return fetch(`${URL}/Categories`, opciones('POST', datos))
@@ -50,7 +48,6 @@ const GestionCategorias = () => {
         setEditando(categorias.find((value)=>value.id === id))
     }
 
-    // Activa o desactiva la categoría (baja lógica), igual que con los productos
     const cambiarEstado = (id) => {
         const categoria = categorias.find((value)=>value.id === id)
 
@@ -73,7 +70,7 @@ const GestionCategorias = () => {
         <MensajeError mensaje={error} />
         <Aviso mensaje={aviso} />
         <TablaCategorias categorias={categorias} editarCategoria={editarCategoria} cambiarEstado={cambiarEstado} />
-        {/* Al tocar la lapicera, el formulario de edición se abre encima de la tabla */}
+
         {editando !== null && (
             <Modal cerrar={()=>setEditando(null)}>
                 <CategoriaForm

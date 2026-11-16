@@ -4,10 +4,8 @@ import { obtenerCarrito } from "../../utils/carrito"
 
 const ProductoGrid = ({productos, carritoCambio}) => {
 
-    // Los items del carrito, para que cada card sepa si su producto ya está agregado
     const [itemsCarrito, setItemsCarrito] = useState([])
 
-    // Lo pedimos de nuevo si cambian los productos (por ejemplo, al pasar a otro producto relacionado)
     useEffect(()=>{
         if(localStorage.getItem('token') === null || localStorage.getItem('carritoId') === null){
             return
@@ -17,7 +15,6 @@ const ProductoGrid = ({productos, carritoCambio}) => {
         .catch((error)=>console.error('Error al cargar el carrito', error))
     }, [productos])
 
-    // Cuántas unidades de ese producto hay en el carrito (0 si no está)
     const cantidadEnCarrito = (productoId) => {
         const item = itemsCarrito.find((value)=>value.productoId === productoId)
         return item === undefined ? 0 : item.cantidad

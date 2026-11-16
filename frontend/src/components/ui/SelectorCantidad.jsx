@@ -1,4 +1,4 @@
-// minimo es opcional: en las cards vale 0, porque bajar de 1 saca el producto del carrito
+
 const SelectorCantidad = ({cantidad, cambiarCantidad, maximo, minimo = 1}) => {
     return(
         <div className="flex items-center bg-surface-container-high">

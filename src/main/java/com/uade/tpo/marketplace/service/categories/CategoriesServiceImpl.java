@@ -25,7 +25,6 @@ public class CategoriesServiceImpl implements ICategoriesService {
         return categoriesRepository.findByActivoTrue(pageRequest);
     }
 
-    // incluye las desactivadas (para el panel admin)
     @Transactional
     public Page<Category> getTodasCategories(PageRequest pageRequest) {
         return categoriesRepository.findAll(pageRequest);

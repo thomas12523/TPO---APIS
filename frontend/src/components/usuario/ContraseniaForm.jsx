@@ -2,7 +2,6 @@ import { useState } from "react"
 import CampoContrasenia from "../ui/CampoContrasenia"
 import MensajeError from "../ui/MensajeError"
 
-// Los nombres coinciden con ContraseniaRequest (la confirmación solo se usa acá)
 const contraseniasIniciales = {contraseniaActual: '', contraseniaNueva: '', confirmacion: ''}
 
 const ContraseniaForm = ({cambiarContrasenia}) => {
