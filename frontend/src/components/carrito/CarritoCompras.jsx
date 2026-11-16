@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useSelector, useDispatch } from "react-redux"
 import CarritoVacio from "./vacio/CarritoVacio"
 import ListaItems from "./lista/ListaItems"
 import ResumenOrden from "./ResumenOrden"
@@ -6,76 +7,76 @@ import AvisoSesion from "../ui/AvisoSesion"
 import MensajeError from "../ui/MensajeError"
 import { URL, opciones, leerRespuesta } from "../../utils/api"
 import { obtenerCarrito } from "../../utils/carrito"
+import { setCarrito } from "../../store/slices/carritoSlice"
 
-// carritoCambio viene de la vista: lo llamamos para que el contador del navbar se actualice
-const CarritoCompras = ({carritoCambio}) => {
-
-    const [carrito, setCarrito] = useState(null)
+const CarritoCompras = ({ carritoCambio }) => {
+    const dispatch = useDispatch()
+    const carrito = useSelector((state) => state.carrito.datos)
+    const carritoId = useSelector((state) => state.carrito.carritoId) || localStorage.getItem('carritoId')
     const [error, setError] = useState('')
-    const carritoId = localStorage.getItem('carritoId')
 
-    useEffect(()=>{
-        if(carritoId === null){
+    useEffect(() => {
+        if (!carritoId) {
             return
         }
         obtenerCarrito()
-        .then((data)=>setCarrito(data))
-        .catch((error)=>{
-            console.error('Error al cargar el carrito', error)
-            setError('No pudimos cargar tu carrito. Probá cerrar sesión y volver a entrar.')
-        })
-    }, [carritoId])
+            .then((data) => dispatch(setCarrito(data)))
+            .catch((err) => {
+                console.error('Error al cargar el carrito', err)
+                setError('No pudimos cargar tu carrito. Probá cerrar sesión y volver a entrar.')
+            })
+    }, [carritoId, dispatch])
 
-    // Después de cada cambio volvemos a pedir el carrito, porque los totales con descuento los calcula el back
     const actualizarCarrito = () => {
         obtenerCarrito()
-        .then((data)=>{
-            setCarrito(data)
-            setError('')
-            carritoCambio()
-        })
-        .catch((error)=>console.error('Error al actualizar el carrito', error))
+            .then((data) => {
+                dispatch(setCarrito(data))
+                setError('')
+                if (typeof carritoCambio === 'function') {
+                    carritoCambio()
+                }
+            })
+            .catch((err) => console.error('Error al actualizar el carrito', err))
     }
 
     const cambiarCantidad = (indice, cantidad) => {
         const item = carrito.items[indice]
-        const datosAEnviar = {carritoId: item.carritoId, productoId: item.productoId, cantidad: cantidad, precioUnitario: item.precioUnitario}
+        const datosAEnviar = { carritoId: item.carritoId, productoId: item.productoId, cantidad: cantidad, precioUnitario: item.precioUnitario }
 
         fetch(`${URL}/DetalleCarrito/${item.carritoId}/${item.productoId}`, opciones('PUT', datosAEnviar))
-        .then(leerRespuesta)
-        .then(()=>actualizarCarrito())
-        .catch((error)=>{
-            console.error('Error al cambiar la cantidad', error)
-            setError(error.message)
-        })
+            .then(leerRespuesta)
+            .then(() => actualizarCarrito())
+            .catch((err) => {
+                console.error('Error al cambiar la cantidad', err)
+                setError(err.message)
+            })
     }
 
     const eliminarItem = (indice) => {
         const item = carrito.items[indice]
 
         fetch(`${URL}/DetalleCarrito/${item.carritoId}/${item.productoId}`, opciones('DELETE'))
-        .then(leerRespuesta)
-        .then(()=>actualizarCarrito())
-        .catch((error)=>{
-            console.error('Error al eliminar el producto', error)
-            setError(error.message)
-        })
+            .then(leerRespuesta)
+            .then(() => actualizarCarrito())
+            .catch((err) => {
+                console.error('Error al eliminar el producto', err)
+                setError(err.message)
+            })
     }
 
-    if(carritoId === null){
+    if (!carritoId) {
         return <AvisoSesion mensaje="Iniciá sesión para ver tu carrito." />
     }
 
-    // Mientras la promesa está pendiente todavía no hay carrito para mostrar (o falló la carga)
-    if(carrito === null){
+    if (!carrito) {
         return <MensajeError mensaje={error} />
     }
 
-    if(carrito.items.length === 0){
+    if (carrito.items.length === 0) {
         return <CarritoVacio />
     }
 
-    return(
+    return (
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-space-lg">
             <div className="flex flex-col gap-space-md">
                 <MensajeError mensaje={error} />

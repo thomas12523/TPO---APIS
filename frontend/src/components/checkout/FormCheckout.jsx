@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { useDispatch } from "react-redux"
 import SeleccionMetodoPago from "./metodos/SeleccionMetodoPago"
 import DatosTarjeta from "./metodos/DatosTarjeta"
 import ResumenCheckout from "./ResumenCheckout"
@@ -9,48 +10,51 @@ import CarritoVacio from "../carrito/vacio/CarritoVacio"
 import { URL, opciones, leerRespuesta } from "../../utils/api"
 import { obtenerCarrito } from "../../utils/carrito"
 import { tarjetaVacia, formatearCampo, validarTarjeta } from "../../utils/tarjeta"
+import { vaciarCarrito, setCarrito as setCarritoRedux } from "../../store/slices/carritoSlice"
 
 const FormCheckout = () => {
-
+    const dispatch = useDispatch()
     const [carrito, setCarrito] = useState(null)
     // El nombre coincide con CheckoutRequest (metodoPago)
-    const [checkout, setCheckout] = useState({metodoPago: ''})
+    const [checkout, setCheckout] = useState({ metodoPago: '' })
     // El pago es simulado: los datos de la tarjeta solo se validan acá, no viajan al back
     const [tarjeta, setTarjeta] = useState(tarjetaVacia)
     const [error, setError] = useState('')
     const navigate = useNavigate()
     const carritoId = localStorage.getItem('carritoId')
 
-    useEffect(()=>{
-        if(carritoId === null){
+    useEffect(() => {
+        if (carritoId === null) {
             return
         }
         obtenerCarrito()
-        .then((data)=>setCarrito(data))
-        .catch((error)=>{
-            console.error('Error al cargar el carrito', error)
-            setError('No pudimos cargar tu carrito. Probá cerrar sesión y volver a entrar.')
-        })
-    }, [carritoId]) 
+            .then((data) => {
+                setCarrito(data)
+                dispatch(setCarritoRedux(data))
+            })
+            .catch((err) => {
+                console.error('Error al cargar el carrito', err)
+                setError('No pudimos cargar tu carrito. Probá cerrar sesión y volver a entrar.')
+            })
+    }, [carritoId, dispatch])
 
     const handleChange = (e) => {
-        setCheckout({...checkout, [e.target.name]: e.target.value})
+        setCheckout({ ...checkout, [e.target.name]: e.target.value })
         setError('')
     }
 
     // Cada campo de la tarjeta se formatea mientras se escribe (por ejemplo, el número en bloques de 4)
     const handleChangeTarjeta = (e) => {
-        setTarjeta({...tarjeta, [e.target.name]: formatearCampo(e.target.name, e.target.value, tarjeta.numero)})
+        setTarjeta({ ...tarjeta, [e.target.name]: formatearCampo(e.target.name, e.target.value, tarjeta.numero) })
     }
-
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        if(checkout.metodoPago === ''){
+        if (checkout.metodoPago === '') {
             setError('Elegí un método de pago')
             return
         }
-        if(validarTarjeta(tarjeta) !== ''){
+        if (validarTarjeta(tarjeta) !== '') {
             setError(validarTarjeta(tarjeta))
             return
         }
@@ -58,30 +62,32 @@ const FormCheckout = () => {
 
         // El back arma el pedido con lo que hay en el carrito, descuenta el stock y vacía el carrito
         fetch(`${URL}/Carrito/${carritoId}/checkout`, opciones('POST', checkout))
-        .then(leerRespuesta)
-        .then((data)=>{
-            // Le pasamos el pedido creado a la vista de confirmación por el state de la ruta
-            navigate('/pedido-confirmado', {state: data})
-        })
-        .catch((error)=>{
-            console.error('Error al confirmar la compra', error)
-            setError(error.message)
-        })
+            .then(leerRespuesta)
+            .then((data) => {
+                // Vaciamos el carrito en Redux de inmediato para que el badge del Navbar desaparezca al instante
+                dispatch(vaciarCarrito())
+                // Le pasamos el pedido creado a la vista de confirmación por el state de la ruta
+                navigate('/pedido-confirmado', { state: data })
+            })
+            .catch((err) => {
+                console.error('Error al confirmar la compra', err)
+                setError(err.message)
+            })
     }
 
-    if(carritoId === null){
+    if (carritoId === null) {
         return <AvisoSesion mensaje="Iniciá sesión para finalizar tu compra." />
     }
 
-    if(carrito === null){
+    if (carrito === null) {
         return <MensajeError mensaje={error} />
     }
 
-    if(carrito.items.length === 0){
+    if (carrito.items.length === 0) {
         return <CarritoVacio />
     }
 
-    return(
+    return (
         <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-[1fr_24rem] gap-space-lg">
             <section className="bg-surface-container-low p-space-lg flex flex-col gap-space-md h-fit">
                 <h2 className="flex items-center gap-space-sm font-headline font-extrabold text-headline-md uppercase text-primary">

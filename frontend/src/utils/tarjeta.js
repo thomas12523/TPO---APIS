@@ -46,19 +46,7 @@ export const formatearCampo = (name, value, numero) => {
     return value
 }
 
-// Algoritmo de Luhn: el dígito verificador que tienen todas las tarjetas de verdad
-const pasaLuhn = (digitos) => {
-    const suma = [...digitos].reverse()
-        .map((value, index)=>{
-            const numero = Number(value)
-            if(index % 2 === 0){
-                return numero
-            }
-            return numero * 2 > 9 ? numero * 2 - 9 : numero * 2
-        })
-        .reduce((total, value)=>total + value, 0)
-    return suma % 10 === 0
-}
+
 
 // Vencida si el mes ya pasó (vence el último día del mes que figura)
 const estaVencida = (mes, anio) => {
@@ -77,7 +65,7 @@ export const validarTarjeta = (tarjeta) => {
     if(marcaTarjeta(digitos) === ''){
         return 'Solo aceptamos Visa, Mastercard o American Express'
     }
-    if(digitos.length !== largoNumero(digitos) || !pasaLuhn(digitos)){
+    if(digitos.length !== largoNumero(digitos)){
         return 'El número de tarjeta no es válido'
     }
     if(tarjeta.titular.trim().split(/\s+/).length < 2){

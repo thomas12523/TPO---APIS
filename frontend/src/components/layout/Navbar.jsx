@@ -1,29 +1,40 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Link } from "react-router-dom"
+import { useSelector, useDispatch } from "react-redux"
 import Buscador from "./Buscador"
 import IconoNav from "./IconoNav"
-import { obtenerCarrito } from "../../utils/carrito"
+import { fetchCarrito, desactivarAnimacion } from "../../store/slices/carritoSlice"
 
-// cambiosCarrito lo manda la vista: sube en uno cada vez que se agrega o se saca algo del carrito
-const Navbar = ({cambiosCarrito}) => {
+const Navbar = ({ cambiosCarrito }) => {
+    const dispatch = useDispatch()
+    const { token, role } = useSelector((state) => state.auth)
+    const { cantidadTotal, carritoId, animarBadge, datos } = useSelector((state) => state.carrito)
 
-    // Lo guardamos al iniciar sesión (ver utils/sesion.js)
-    const token = localStorage.getItem('token')
-    const role = localStorage.getItem('role')
-    const carritoId = localStorage.getItem('carritoId')
-    const [cantidadCarrito, setCantidadCarrito] = useState(0)
-
-    // Al montarse y cada vez que cambia el carrito, volvemos a pedirlo para contar los productos
-    useEffect(()=>{
-        if(token === null || carritoId === null){
+    // Solo pedimos el carrito si aún no se cargó en el store, o si se fuerza por cambiosCarrito
+    useEffect(() => {
+        if (!token || !carritoId) {
             return
         }
-        obtenerCarrito()
-        .then((data)=>setCantidadCarrito(data.items.length))
-        .catch((error)=>console.error('Error al contar el carrito', error))
-    }, [cambiosCarrito])
+        if (datos === null || cambiosCarrito) {
+            dispatch(fetchCarrito())
+        }
+    }, [dispatch, token, carritoId, datos, cambiosCarrito])
 
-    return(
+    // Limpia la animación en caso de que termine o no dispare onAnimationEnd
+    useEffect(() => {
+        if (animarBadge) {
+            const timer = setTimeout(() => {
+                dispatch(desactivarAnimacion())
+            }, 350)
+            return () => clearTimeout(timer)
+        }
+    }, [animarBadge, dispatch])
+
+    const handleAnimationEnd = () => {
+        dispatch(desactivarAnimacion())
+    }
+
+    return (
         <header className="fixed top-0 left-0 right-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl shadow-lg">
             <div className="h-20 max-w-7xl mx-auto px-margin md:px-margin-desktop flex items-center justify-between gap-space-md">
                 <Link to="/" className="flex items-center gap-space-xs shrink-0">
@@ -54,7 +65,14 @@ const Navbar = ({cambiosCarrito}) => {
                             </Link>
                         )}
                         <IconoNav ruta="/mis-pedidos" icono="local_shipping" titulo="Mis pedidos" />
-                        <IconoNav ruta="/carrito" icono="shopping_bag" titulo="Carrito" contador={cantidadCarrito} />
+                        <IconoNav
+                            ruta="/carrito"
+                            icono="shopping_bag"
+                            titulo="Carrito"
+                            contador={cantidadTotal}
+                            animar={animarBadge}
+                            onAnimationEnd={handleAnimationEnd}
+                        />
                         <Link to="/perfil" title="Mi perfil" className="ml-space-xs w-8 h-8 rounded-full bg-primary flex items-center justify-center">
                             <span className="material-symbols-outlined text-on-primary text-lg">person</span>
                         </Link>
