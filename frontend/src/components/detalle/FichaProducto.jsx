@@ -58,6 +58,7 @@ const FichaProducto = ({carritoCambio}) => {
                 precioConDescuento={producto.precioConDescuento}
                 tieneDescuento={producto.tieneDescuento}
                 stock={producto.stock}
+                activo={producto.activo}
                 carritoCambio={carritoCambio}
                 />
             </div>

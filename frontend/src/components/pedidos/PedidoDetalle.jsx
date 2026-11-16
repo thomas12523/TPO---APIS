@@ -37,6 +37,7 @@ const PedidoDetalle = ({pedidoId}) => {
                         detalles.map((value)=>(
                             <DetallePedidoItem
                             key={value.detallePedidoId}
+                            productoId={value.productoId}
                             productoNombre={value.productoNombre}
                             cantidad={value.cantidad}
                             precioUnitario={value.precioUnitario}

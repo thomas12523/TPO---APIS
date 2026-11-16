@@ -8,6 +8,7 @@ const ListaItems = ({items, cambiarCantidad, eliminarItem}) => {
                     <CarritoItem
                     key={value.detalleCarritoId}
                     index={index}
+                    productoId={value.productoId}
                     productoNombre={value.productoNombre}
                     precioUnitario={value.precioUnitario}
                     cantidad={value.cantidad}

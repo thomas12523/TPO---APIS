@@ -17,6 +17,7 @@ import com.uade.tpo.marketplace.entity.dto.request.PedidoRequest;
 import com.uade.tpo.marketplace.exceptions.AdminNoPuedeComprarException;
 import com.uade.tpo.marketplace.exceptions.CarritoNotFoundException;
 import com.uade.tpo.marketplace.exceptions.CarritoVacioException;
+import com.uade.tpo.marketplace.exceptions.ProductoNoDisponibleException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.service.carrito.ICarritoService;
 import com.uade.tpo.marketplace.service.detallecarrito.IDetalleCarritoService;
@@ -43,7 +44,7 @@ public class CheckoutServiceImpl implements ICheckoutService {
     private IProductoService productoService;
 
     @Transactional(rollbackFor = Throwable.class)
-    public Pedido checkout(int carritoId, CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException, AdminNoPuedeComprarException {
+    public Pedido checkout(int carritoId, CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException, AdminNoPuedeComprarException, ProductoNoDisponibleException {
         Carrito carrito = carritoService.getCarritoById(carritoId)
                 .orElseThrow(CarritoNotFoundException::new);
 
@@ -56,6 +57,8 @@ public class CheckoutServiceImpl implements ICheckoutService {
             throw new CarritoVacioException();
 
         for (DetalleCarrito item : items) {
+            if (!item.getProducto().isActivo())
+                throw new ProductoNoDisponibleException();
             if (item.getCantidad() > item.getProducto().getStock())
                 throw new StockInsuficienteException();
         }

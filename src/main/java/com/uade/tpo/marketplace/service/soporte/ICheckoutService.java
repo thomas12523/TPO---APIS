@@ -4,9 +4,10 @@ import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.dto.request.CheckoutRequest;
 import com.uade.tpo.marketplace.exceptions.AdminNoPuedeComprarException;
 import com.uade.tpo.marketplace.exceptions.CarritoVacioException;
+import com.uade.tpo.marketplace.exceptions.ProductoNoDisponibleException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 
 public interface ICheckoutService {
 
-    public Pedido checkout(int carritoId, CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException, AdminNoPuedeComprarException;
+    public Pedido checkout(int carritoId, CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException, AdminNoPuedeComprarException, ProductoNoDisponibleException;
 }

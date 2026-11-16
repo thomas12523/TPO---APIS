@@ -37,6 +37,7 @@ const ProductoGrid = ({productos, carritoCambio}) => {
                     precioConDescuento={value.precioConDescuento}
                     tieneDescuento={value.tieneDescuento}
                     stock={value.stock}
+                    activo={value.activo}
                     cantidadEnCarrito={cantidadEnCarrito(value.productoId)}
                     carritoCambio={carritoCambio}
                     />

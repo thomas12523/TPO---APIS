@@ -6,7 +6,7 @@ import Aviso from "../ui/Aviso"
 import { agregarAlCarrito, actualizarCantidad, sacarDelCarrito } from "../../utils/carrito"
 import { fetchCarrito, activarAnimacion } from "../../store/slices/carritoSlice"
 
-const BotonCarrito = ({ productoId, precio, stock, cantidadEnCarrito, carritoCambio }) => {
+const BotonCarrito = ({ productoId, precio, stock, activo, cantidadEnCarrito, carritoCambio }) => {
     const dispatch = useDispatch()
     const { role } = useSelector((state) => state.auth)
     const [cantidad, setCantidad] = useState(cantidadEnCarrito)
@@ -48,6 +48,10 @@ const BotonCarrito = ({ productoId, precio, stock, cantidadEnCarrito, carritoCam
             setError('Los productos son exclusivos para usuarios')
             return
         }
+        if (activo === false) {
+            setError('Este producto no está disponible')
+            return
+        }
         setError('')
         agregarAlCarrito(productoId, 1, precio)
             .then((data) => {
@@ -58,13 +62,17 @@ const BotonCarrito = ({ productoId, precio, stock, cantidadEnCarrito, carritoCam
             })
             .catch((err) => {
                 console.error('Error al agregar al carrito', err)
-                setError(err.message)
+                setError(err.message || 'Este producto no está disponible')
             })
     }
 
     const cambiarCantidad = (nueva) => {
         if (role === 'ADMIN' || localStorage.getItem('role') === 'ADMIN') {
             setError('Los productos son exclusivos para usuarios')
+            return
+        }
+        if (activo === false && nueva > cantidad) {
+            setError('Este producto no está disponible')
             return
         }
         setError('')
@@ -86,13 +94,13 @@ const BotonCarrito = ({ productoId, precio, stock, cantidadEnCarrito, carritoCam
                 setCantidad(nueva)
                 notificarCambio()
             })
-            .catch((err) => setError(err.message))
+            .catch((err) => setError(err.message || 'Este producto no está disponible'))
     }
 
     return (
         <>
             {cantidad === 0 ? (
-                <button onClick={agregar} disabled={stock === 0} title="Agregar al carrito" className="w-9 h-9 flex items-center justify-center bg-surface-container-high text-primary hover:bg-primary-container hover:text-surface-container-lowest disabled:opacity-30">
+                <button onClick={agregar} disabled={stock === 0 && activo !== false} title="Agregar al carrito" className="w-9 h-9 flex items-center justify-center bg-surface-container-high text-primary hover:bg-primary-container hover:text-surface-container-lowest disabled:opacity-30">
                     <span className="material-symbols-outlined">add</span>
                 </button>
             ) : (

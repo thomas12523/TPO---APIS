@@ -1,12 +1,16 @@
+import { Link } from "react-router-dom"
 import SelectorCantidad from "../ui/SelectorCantidad"
+import ImagenPrincipal from "../producto/ImagenPrincipal"
 
-const CarritoItem = ({index, productoNombre, precioUnitario, cantidad, subtotal, cambiarCantidad, eliminarItem}) => {
+const CarritoItem = ({index, productoId, productoNombre, precioUnitario, cantidad, subtotal, cambiarCantidad, eliminarItem}) => {
     return(
         <article className="grid grid-cols-[4rem_1fr] md:grid-cols-[4rem_1fr_8rem_8rem_8rem] items-center gap-space-md bg-surface-container-low p-space-md">
-            <div className="w-16 h-16 flex items-center justify-center bg-surface-container-high text-primary-container">
-                <span className="material-symbols-outlined text-3xl">fitness_center</span>
-            </div>
-            <h3 className="font-headline font-extrabold text-headline-sm uppercase text-primary">{productoNombre}</h3>
+            <Link to={`/producto/${productoId}`} className="w-16 h-16 overflow-hidden bg-surface-container-high flex items-center justify-center shrink-0 border border-white/5">
+                <ImagenPrincipal productoId={productoId} nombreProducto={productoNombre} />
+            </Link>
+            <Link to={`/producto/${productoId}`} className="font-headline font-extrabold text-headline-sm uppercase text-primary hover:text-primary-container transition-colors">
+                {productoNombre}
+            </Link>
             <p className="font-bold text-body-lg text-on-surface-variant">${precioUnitario.toFixed(2)}</p>
             <SelectorCantidad cantidad={cantidad} cambiarCantidad={(nuevaCantidad)=>cambiarCantidad(index, nuevaCantidad)} maximo={99} />
             <div className="text-right">

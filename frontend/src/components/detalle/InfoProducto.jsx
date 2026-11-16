@@ -8,7 +8,7 @@ import Aviso from "../ui/Aviso"
 import { agregarAlCarrito } from "../../utils/carrito"
 import { fetchCarrito, activarAnimacion } from "../../store/slices/carritoSlice"
 
-const InfoProducto = ({ productoId, nombreProducto, categoriaNombre, descripcion, precioUnitario, precioConDescuento, tieneDescuento, stock, carritoCambio }) => {
+const InfoProducto = ({ productoId, nombreProducto, categoriaNombre, descripcion, precioUnitario, precioConDescuento, tieneDescuento, stock, activo, carritoCambio }) => {
     const dispatch = useDispatch()
     const { role } = useSelector((state) => state.auth)
     const [cantidad, setCantidad] = useState(1)
@@ -44,6 +44,10 @@ const InfoProducto = ({ productoId, nombreProducto, categoriaNombre, descripcion
             setError('Los productos son exclusivos para usuarios')
             return
         }
+        if (activo === false) {
+            setError('Este producto no está disponible')
+            return
+        }
         setError('')
         agregarAlCarrito(productoId, cantidad, precioConDescuento)
             .then(() => {
@@ -56,7 +60,7 @@ const InfoProducto = ({ productoId, nombreProducto, categoriaNombre, descripcion
             })
             .catch((err) => {
                 console.error('Error al agregar al carrito', err)
-                setError(err.message)
+                setError(err.message || 'Este producto no está disponible')
             })
     }
 
@@ -70,8 +74,13 @@ const InfoProducto = ({ productoId, nombreProducto, categoriaNombre, descripcion
                 </div>
             </div>
 
-            <div className="flex items-center gap-space-xs">
-                {stock > 0 ? (
+            <div className="flex flex-col gap-space-xs">
+                {activo === false ? (
+                    <div className="flex items-center gap-space-xs text-body-md text-error">
+                        <span className="w-2.5 h-2.5 rounded-full bg-error inline-block"></span>
+                        <span className="font-bold uppercase tracking-wider">Producto no disponible</span>
+                    </div>
+                ) : stock > 0 ? (
                     <div className="flex flex-wrap items-center gap-space-xs text-body-md">
                         <span className="w-2.5 h-2.5 rounded-full bg-primary-container inline-block"></span>
                         <span className="text-on-surface-variant font-medium">
@@ -95,7 +104,7 @@ const InfoProducto = ({ productoId, nombreProducto, categoriaNombre, descripcion
 
             <div className="flex items-center gap-space-md pt-space-md border-t border-white/5">
                 <SelectorCantidad cantidad={cantidad} cambiarCantidad={setCantidad} maximo={stock} minimo={1} />
-                <BotonPrincipal texto="Agregar al carrito" icono="shopping_bag" onClick={handleClick} disabled={stock === 0} />
+                <BotonPrincipal texto="Agregar al carrito" icono="shopping_bag" onClick={handleClick} disabled={stock === 0 && activo !== false} />
             </div>
 
             <Aviso mensaje={aviso} />

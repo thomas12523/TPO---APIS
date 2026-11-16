@@ -19,12 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uade.tpo.marketplace.entity.Carrito;
 import com.uade.tpo.marketplace.entity.Pedido;
 import com.uade.tpo.marketplace.entity.dto.request.CarritoRequest;
+import com.uade.tpo.marketplace.entity.dto.request.CheckoutRequest;
 import com.uade.tpo.marketplace.entity.dto.response.CarritoResponse;
 import com.uade.tpo.marketplace.entity.dto.response.DeleteResponse;
-import com.uade.tpo.marketplace.entity.dto.request.CheckoutRequest;
 import com.uade.tpo.marketplace.entity.dto.response.PedidoResponse;
 import com.uade.tpo.marketplace.exceptions.AdminNoPuedeComprarException;
 import com.uade.tpo.marketplace.exceptions.CarritoVacioException;
+import com.uade.tpo.marketplace.exceptions.ProductoNoDisponibleException;
 import com.uade.tpo.marketplace.exceptions.StockInsuficienteException;
 import com.uade.tpo.marketplace.service.carrito.ICarritoService;
 import com.uade.tpo.marketplace.service.detallecarrito.IDetalleCarritoService;
@@ -78,7 +79,7 @@ public class CarritoController {
     }
 
     @PostMapping("{carritoId}/checkout")
-    public ResponseEntity<Object> checkout(@PathVariable int carritoId, @RequestBody CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException, AdminNoPuedeComprarException {
+    public ResponseEntity<Object> checkout(@PathVariable int carritoId, @RequestBody CheckoutRequest checkoutRequest) throws CarritoVacioException, StockInsuficienteException, AdminNoPuedeComprarException, ProductoNoDisponibleException {
         Pedido result = checkoutService.checkout(carritoId, checkoutRequest);
         return ResponseEntity.ok(new PedidoResponse(result));
     }

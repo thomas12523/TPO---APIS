@@ -4,6 +4,7 @@ import FiltroEstados from "../pedidos/FiltroEstados"
 import CampoSelect from "../ui/CampoSelect"
 import MensajeError from "../ui/MensajeError"
 import Aviso from "../ui/Aviso"
+import Modal from "../ui/Modal"
 import { URL, opciones, leerRespuesta } from "../../utils/api"
 
 const GestionPedidos = () => {
@@ -14,6 +15,7 @@ const GestionPedidos = () => {
     const [pedidos, setPedidos] = useState([])
     const [filtro, setFiltro] = useState('TODOS')
     const [pedidoAbierto, setPedidoAbierto] = useState(null)
+    const [pedidoACancelar, setPedidoACancelar] = useState(null)
     const [error, setError] = useState('')
     const [aviso, setAviso] = useState('')
 
@@ -48,18 +50,28 @@ const GestionPedidos = () => {
         setPedidoAbierto(pedidoAbierto === pedidoId ? null : pedidoId)
     }
 
-    const cambiarEstado = (pedidoId, estado) => {
+    const ejecutarCambioEstado = (pedidoId, estado) => {
         fetch(`${URL}/Pedido/${pedidoId}/estado?estado=${estado}`, opciones('PATCH'))
         .then(leerRespuesta)
         .then((data)=>{
             setPedidos(pedidos.map((value)=>(value.pedidoId === pedidoId ? data : value)))
             setError('')
             setAviso(`Pedido #${data.numeroPedido} pasó a ${data.estado}`)
+            setPedidoACancelar(null)
         })
         .catch((error)=>{
             console.error('Error al cambiar el estado del pedido', error)
             setError(error.message)
+            setPedidoACancelar(null)
         })
+    }
+
+    const cambiarEstado = (pedidoId, estado) => {
+        if(estado === 'CANCELADO'){
+            setPedidoACancelar(pedidoId)
+            return
+        }
+        ejecutarCambioEstado(pedidoId, estado)
     }
 
     const nombreCliente = (usuarioId) => {
@@ -98,6 +110,33 @@ const GestionPedidos = () => {
                 ))
             }
         </div>
+
+        {pedidoACancelar !== null && (
+            <Modal cerrar={()=>setPedidoACancelar(null)}>
+                <div className="bg-surface-container-low border border-white/10 p-space-xl max-w-md mx-auto text-center">
+                    <span className="material-symbols-outlined text-error text-5xl mb-space-sm">warning</span>
+                    <h3 className="font-headline font-bold text-headline-sm uppercase text-primary mb-space-md">
+                        ¿Estas seguro que quieres cancelar el pedido?
+                    </h3>
+                    <div className="flex justify-center gap-space-md mt-space-lg">
+                        <button
+                            type="button"
+                            onClick={()=>setPedidoACancelar(null)}
+                            className="bg-surface-container-high text-primary font-bold text-label-md uppercase px-space-lg py-space-sm hover:bg-surface-container-highest transition-colors"
+                        >
+                            Volver
+                        </button>
+                        <button
+                            type="button"
+                            onClick={()=>ejecutarCambioEstado(pedidoACancelar, 'CANCELADO')}
+                            className="bg-error text-surface-container-lowest font-bold text-label-md uppercase px-space-lg py-space-sm hover:opacity-90 transition-opacity"
+                        >
+                            Confirmar
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+        )}
         </>
     )
 }
